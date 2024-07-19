@@ -21,6 +21,7 @@ return function()
         lspconfig.bashls.setup(opts)
         lspconfig.eslint.setup(opts)
         lspconfig.relay_lsp.setup(opts)
+        lspconfig.standardrb.setup(opts)
         lspconfig.sorbet.setup(opts)
         lspconfig.tsserver.setup(opts)
     end
