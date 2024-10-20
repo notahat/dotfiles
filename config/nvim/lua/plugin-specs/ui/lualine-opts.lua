@@ -6,21 +6,27 @@ end
 
 return {
     extensions = { "lazy", "man", "mason", "quickfix" },
-    options = { disabled_filetypes = { "neo-tree" } },
+    options = { globalstatus = true },
+    -- options = { disabled_filetypes = { "neo-tree" }, globalstatus = true },
     sections = {
         lualine_a = { "mode" },
         lualine_b = { "diagnostics" },
         lualine_c = { { "filename", on_click = copy_relative_path, path = 1, shorting_target = 20 } },
-        lualine_x = { "branch" },
+        lualine_x = {
+            function()
+                return require("lsp-progress").progress()
+            end,
+        },
         lualine_y = { "searchcount" },
         lualine_z = { "%p%%/%L" },
     },
-    inactive_sections = {
-        lualine_a = {},
-        lualine_b = {},
-        lualine_c = { { "filename", path = 1, shorting_target = 0 } },
-        lualine_x = {},
-        lualine_y = {},
-        lualine_z = {},
-    },
+    -- This stuff doesn't matter with globalstatus enabled:
+    -- inactive_sections = {
+    --     lualine_a = {},
+    --     lualine_b = {},
+    --     lualine_c = { { "filename", path = 1, shorting_target = 0 } },
+    --     lualine_x = {},
+    --     lualine_y = {},
+    --     lualine_z = {},
+    -- },
 }

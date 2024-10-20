@@ -35,6 +35,7 @@ local function install_and_load_plugins(colorscheme)
             -- Lazy tries to use this colorscheme during installation.
             colorscheme = { colorscheme },
         },
+        rocks = { enabled = false },
     })
 end
 

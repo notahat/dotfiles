@@ -14,9 +14,7 @@ local fidget_spec = {
             override_vim_notify = true,
             window = { border = "rounded", winblend = 0 },
         },
-        progress = {
-            display = { done_ttl = 5 },
-        },
+        progress = { poll_rate = false },
     },
 }
 
@@ -34,10 +32,17 @@ local lightbulb_spec = {
     opts = { autocmd = { enabled = true } },
 }
 
+local lsp_progress_spec = {
+    -- https://github.com/linrongbin16/lsp-progress.nvim
+    "linrongbin16/lsp-progress.nvim",
+    opts = { decay = 1500 },
+}
+
 -- Make the status line look clean and pretty.
 local lualine_spec = {
     -- https://github.com/nvim-lualine/lualine.nvim
     "nvim-lualine/lualine.nvim",
+    dependencies = { lsp_progress_spec },
     opts = require("plugin-specs.ui.lualine-opts"),
 }
 
@@ -86,6 +91,7 @@ return {
     -- mini_notify_spec,
     lightbulb_spec,
     lualine_spec,
+    lsp_progress_spec,
     nightfox_spec,
     which_key_spec,
 }

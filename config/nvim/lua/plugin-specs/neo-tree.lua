@@ -41,7 +41,7 @@ local neo_tree_spec = {
                 { source = "git_status" },
                 { source = "buffers" },
             },
-            statusline = true,
+            winbar = true,
         },
         window = { position = "right", width = 49 },
     },
