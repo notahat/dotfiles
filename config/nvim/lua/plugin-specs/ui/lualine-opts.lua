@@ -7,7 +7,7 @@ end
 return {
     extensions = { "lazy", "man", "mason", "quickfix" },
     options = { globalstatus = true },
-    -- options = { disabled_filetypes = { "neo-tree" }, globalstatus = true },
+    -- options = { disabled_filetypes = { "neo-tree" } },
     sections = {
         lualine_a = { "mode" },
         lualine_b = { "diagnostics" },

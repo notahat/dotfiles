@@ -32,6 +32,7 @@ local lightbulb_spec = {
     opts = { autocmd = { enabled = true } },
 }
 
+-- Show LSP progress in the status line.
 local lsp_progress_spec = {
     -- https://github.com/linrongbin16/lsp-progress.nvim
     "linrongbin16/lsp-progress.nvim",
