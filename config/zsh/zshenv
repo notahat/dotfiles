@@ -1,3 +1,5 @@
+echo ".zshenv $$"
+
 # ------------------------------------------------------------------------------------------
 # Start with clean paths.
 
@@ -17,7 +19,7 @@ if [[ -x /opt/homebrew/bin/brew ]] {
   fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
   fpath=($HOMEBREW_PREFIX/share/zsh-completions $fpath)
 }
-
+#
 # ------------------------------------------------------------------------------------------
 # Set up mise.
 #
@@ -51,6 +53,7 @@ if [[ $DOTFILES_ENV == 'work' ]] {
   export UP_HOME_PATH=$HOME/src/up
 
   export ANDROID_HOME=$HOME/Library/Android/sdk
+  export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
 
   export PATH=$ANDROID_HOME/emulator:$PATH
   export PATH=$ANDROID_HOME/tools:$PATH

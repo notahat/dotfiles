@@ -1,5 +1,16 @@
 -- neo-tree gives us a sidebar in which we can explore the file system, files
 -- changed according to git status, and open buffers.
+
+local sort_function = function(a, b)
+    if string.find(a.path, "features") ~= nil and string.find(b.path, "features") ~= nil then
+        return a.path < b.path
+    elseif a.type == b.type then
+        return a.path < b.path
+    else
+        return a.type < b.type
+    end
+end
+
 local neo_tree_spec = {
     -- https://github.com/nvim-neo-tree/neo-tree.nvim
     "nvim-neo-tree/neo-tree.nvim",
@@ -33,6 +44,7 @@ local neo_tree_spec = {
             use_libuv_file_watcher = true,
         },
         hide_root_node = true,
+        sort_function = sort_function,
         sources = { "filesystem", "buffers", "git_status" },
         source_selector = {
             content_layout = "center",

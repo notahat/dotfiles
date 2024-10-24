@@ -17,8 +17,9 @@
     "inline_blame": { "enabled": false }
   },
   "indent_guides": {
-    "enabled": false
+    "enabled": true
   },
+  "tab_size": 2,
   "relative_line_numbers": true,
   "vim_mode": true
 }
