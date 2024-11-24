@@ -1,4 +1,4 @@
-echo ".zshrc $$"
+# echo ".zshrc $$"
 
 # See also .zshenv, which gets run before .zshrc to set environment variables.
 # That sets up things like homebrew and mise.
