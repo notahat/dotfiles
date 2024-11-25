@@ -17,7 +17,7 @@ return function()
     if dotfiles_env == "work" then
         sources = {
             formatting.prettierd.with({
-                disabled_filetypes = { "yaml" },
+                disabled_filetypes = { "ruby", "yaml" },
             }),
             formatting.stylua,
         }
