@@ -85,6 +85,7 @@ local function map_global_keys()
     map(everywhere, "<d-s>", actions.write_all, { desc = "save all files" })
     map(everywhere, "<d-q>", actions.write_all_and_quit, { desc = "save all files and quit" })
     map(nx, "<d-w>", vim.cmd.close, { desc = "close window" })
+    map(everywhere, "<d-z>", vim.cmd.undo, { desc = "undo one change" })
 
     -- Jump between git changes in the buffer.
     map(nx, "[g", gitsigns.prev_hunk, { desc = "previous git hunk in buffer" })
