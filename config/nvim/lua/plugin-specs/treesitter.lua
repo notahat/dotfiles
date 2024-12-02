@@ -11,16 +11,6 @@ local treesitter_textobjects = {
             ["[p"] = { query = "@parameter.inner", desc = "previous parameter" },
         },
     },
-    select = {
-        enable = true,
-        lookahead = true,
-        keymaps = {
-            ["af"] = { query = "@function.outer", desc = "a function" },
-            ["if"] = { query = "@function.inner", desc = "inner function" },
-            ["ap"] = { query = "@parameter.outer", desc = "a parameter" },
-            ["ip"] = { query = "@parameter.inner", desc = "inner parameter" },
-        },
-    },
     swap = {
         enable = true,
         swap_next = {
@@ -51,7 +41,7 @@ local treesitter_spec = {
             textobjects = treesitter_textobjects,
         })
 
-        -- Make Treesitter movements are repeatable.
+        -- Make Treesitter movements repeatable.
         --
         -- Taken from:
         -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects?tab=readme-ov-file#text-objects-move
@@ -63,12 +53,20 @@ local treesitter_spec = {
         -- Make , and ; repeat the last Treesitter move.
         map(nxo, ";", repeatable_move.repeat_last_move_next)
         map(nxo, ",", repeatable_move.repeat_last_move_previous)
+    end,
+}
 
-        -- Make repeating the builtins work properly too.
-        map(nxo, "f", repeatable_move.builtin_f_expr, { expr = true })
-        map(nxo, "F", repeatable_move.builtin_F_expr, { expr = true })
-        map(nxo, "t", repeatable_move.builtin_t_expr, { expr = true })
-        map(nxo, "T", repeatable_move.builtin_T_expr, { expr = true })
+local mini_ai_spec = {
+    "echasnovski/mini.ai",
+    dependencies = { treesitter_spec },
+    config = function()
+        local mini_ai = require("mini.ai")
+        mini_ai.setup({
+            custom_textobjects = {
+                ["a"] = mini_ai.gen_spec.treesitter({ a = "@parameter.outer", i = "@parameter.inner" }),
+                ["f"] = mini_ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }),
+            },
+        })
     end,
 }
 
@@ -90,4 +88,4 @@ local treesj_spec = {
     lazy = true,
 }
 
-return { treesitter_spec, refactoring_spec, treesj_spec }
+return { mini_ai_spec, treesitter_spec, refactoring_spec, treesj_spec }
