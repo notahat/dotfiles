@@ -9,11 +9,11 @@ return {
     -- https://github.com/bogado/file-line
     "bogado/file-line",
 
+    -- https://github.com/echasnovski/mini.surround
+    { "echasnovski/mini.surround", config = true },
+
     -- https://github.com/windwp/nvim-autopairs
     { "windwp/nvim-autopairs", config = true },
-
-    -- https://github.com/kylechui/nvim-surround
-    { "kylechui/nvim-surround", config = true },
 
     -- https://github.com/tpope/vim-rails
     "tpope/vim-rails",
