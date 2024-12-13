@@ -28,15 +28,12 @@ local treesitter_spec = {
     dependencies = {
         -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
         "nvim-treesitter/nvim-treesitter-textobjects",
-        -- https://github.com/windwp/nvim-ts-autotag
-        "windwp/nvim-ts-autotag",
     },
     build = ":TSUpdate",
     config = function()
         local treesitter = require("nvim-treesitter.configs")
         treesitter.setup({
             auto_install = true,
-            autotag = { enable = true },
             highlight = { enable = true },
             textobjects = treesitter_textobjects,
         })
@@ -54,6 +51,12 @@ local treesitter_spec = {
         map(nxo, ";", repeatable_move.repeat_last_move_next)
         map(nxo, ",", repeatable_move.repeat_last_move_previous)
     end,
+}
+
+local nvim_ts_autotag_spec = {
+    -- https://github.com/windwp/nvim-ts-autotag
+    "windwp/nvim-ts-autotag",
+    config = true,
 }
 
 local mini_ai_spec = {
@@ -88,4 +91,4 @@ local treesj_spec = {
     lazy = true,
 }
 
-return { mini_ai_spec, treesitter_spec, refactoring_spec, treesj_spec }
+return { treesitter_spec, nvim_ts_autotag_spec, mini_ai_spec, refactoring_spec, treesj_spec }
