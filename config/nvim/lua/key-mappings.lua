@@ -10,7 +10,7 @@ local which_key = require("which-key")
 -- vim.keymap.set(...) every time.
 local map = vim.keymap.set
 
--- The first parameter to map is the modes in which the mappings apply.
+-- The first parameter to `map` is the modes in which the mappings apply.
 --
 -- Neovim's modes are:
 --   n = Normal mode
@@ -115,7 +115,7 @@ local function map_lsp_keys(args)
     map(nx, "<leader>ts", telescope.lsp_document_symbols, { buffer = buffer, desc = "find document symbols" })
 end
 
--- This sets things up so we tell Kitty when Neovim is open, so it can pass
+-- This sets things up to tell Kitty when Neovim is open, so it can pass
 -- command keys through correctly.
 local function let_kitty_know_about_editor()
     -- Code Taken from:
