@@ -1,4 +1,4 @@
--- Nicer UI for message, command line, and other bits and pieces.
+-- Improve the UI for messages, command line, and other bits and pieces.
 return {
   "folke/noice.nvim",
   event = "VeryLazy",

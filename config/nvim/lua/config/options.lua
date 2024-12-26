@@ -7,7 +7,7 @@ vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 
--- Use relative line numbering, but display the actual line
+-- Show relative line numbers, but display the actual line
 -- number on the current line, and highlight it.
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -23,17 +23,17 @@ vim.opt.linebreak = true
 vim.opt.mouse = "a"
 vim.opt.mousescroll = "ver:1"
 
--- Get rid of the ~ characters on empty lines.
-vim.opt.fillchars = { eob = " " }
+-- Keep a few extra lines on the screen when scrolling.
+vim.opt.scrolloff = 3
 
 -- Don't show the default startup message.
 vim.opt.shortmess:append({ I = true })
 
+-- Get rid of the ~ characters on empty lines.
+vim.opt.fillchars = { eob = " " }
+
 -- Make the ~ command behave like an operator.
 vim.opt.tildeop = true
-
--- Keep a few extra lines on the screen when scrolling.
-vim.opt.scrolloff = 3
 
 -- Disable unused language providers, so checkhealth doesn't complain.
 vim.g.loaded_node_provider = 0

@@ -1,7 +1,8 @@
--- Hook non-LSP sources into Neovim's LSP system for formatting.
+-- Auto-format files.
 --
--- This is a fork of null-ls, hence the requires for null-ls rather than
--- none-ls.
+-- This hooks non-LSP formatters into Neovim's LSP system.
+--
+-- It's a fork of null-ls, hence the requires for null-ls rather than none-ls.
 return {
   "nvimtools/none-ls.nvim",
   config = function()

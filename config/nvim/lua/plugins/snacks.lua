@@ -1,4 +1,4 @@
--- Display Neovim notifications nicely.
+-- Display notifications nicely.
 return {
   "folke/snacks.nvim",
   priority = 1000,

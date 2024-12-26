@@ -1,4 +1,4 @@
--- Fancy language parsing for syntax highlighting and textobjects.
+-- Provide syntax highlighting and textobjects through the treesitter parser.
 return {
   "nvim-treesitter/nvim-treesitter",
   dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },

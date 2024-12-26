@@ -1,3 +1,4 @@
+-- Use Mason to install needed tools.
 return {
   "WhoIsSethDaniel/mason-tool-installer.nvim",
   opts = {

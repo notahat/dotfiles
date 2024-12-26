@@ -1,5 +1,4 @@
--- This sets things up to tell Kitty when Neovim is open, so it can pass
--- command keys through correctly.
+-- Tell Kitty when Neovim is open, so it can pass command keys through.
 
 -- Code Taken from:
 -- https://sw.kovidgoyal.net/kitty/mapping/#conditional-mappings-depending-on-the-state-of-the-focused-window

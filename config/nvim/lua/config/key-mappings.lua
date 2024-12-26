@@ -44,7 +44,7 @@ local function previous_git_hunk()
   require("gitsigns").prev_hunk()
 end
 
--- Tip: Try to have few custom mappings, and use built-in keys as much as
+-- Tip: Try to have few custom mappings, and use built-in mappings as much as
 -- possible. Stick to mostly "<leader>*" mappings, rather than going deeper.
 
 -- The first parameter to `vim.keymap.set` is the modes in which the mappings

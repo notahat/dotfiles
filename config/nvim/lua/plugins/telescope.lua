@@ -1,4 +1,4 @@
--- Telescope does fuzzy finding over all sorts of things.
+-- Fuzzy search over files and all sorts of other things.
 return {
   "nvim-telescope/telescope.nvim",
   lazy = true,

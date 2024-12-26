@@ -1,4 +1,4 @@
--- Configure language servers.
+-- Configure language server integration.
 return {
   "neovim/nvim-lspconfig",
   config = function()
