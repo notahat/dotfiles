@@ -8,6 +8,7 @@ return {
       "shellcheck",
       "lua-language-server",
       "prettierd",
+      "stree",
       "stylua",
       "typescript-language-server",
     },
