@@ -36,6 +36,14 @@ local function telescope_noice()
   require("telescope").extensions.noice.noice()
 end
 
+local function next_git_hunk()
+  require("gitsigns").next_hunk()
+end
+
+local function previous_git_hunk()
+  require("gitsigns").prev_hunk()
+end
+
 -- Tip: Try to have few custom mappings, and use built-in keys as much as
 -- possible. Stick to mostly "<leader>*" mappings, rather than going deeper.
 
@@ -61,6 +69,10 @@ vim.keymap.set(everywhere, "<d-s>", vim.cmd.wall, { desc = "Save all files" })
 vim.keymap.set(everywhere, "<d-q>", vim.cmd.xall, { desc = "Save all files and quit" })
 vim.keymap.set({ "n", "x" }, "<d-w>", vim.cmd.close, { desc = "Close window" })
 vim.keymap.set(everywhere, "<d-z>", vim.cmd.undo, { desc = "Undo one change" })
+
+-- Jump between git changes in the buffer.
+vim.keymap.set({ "n", "x" }, "[g", previous_git_hunk, { desc = "previous git hunk in buffer" })
+vim.keymap.set({ "n", "x" }, "]g", next_git_hunk, { desc = "next git hunk in buffer" })
 
 -- Replace the standard LSP actions with nicer versions.
 require("which-key").add({ "gr", group = "LSP actions" })

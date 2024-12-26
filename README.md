@@ -43,14 +43,3 @@ the steps.
 
 The `environments` directory contains separate `Brewfile`s and `mise.toml`
 files for my home and work machines.
-
-## Annoyances
-
-These are things that bug me about my current setup that I'd love to improve.
-
-- Neovim
-  - Neo-tree doesn't automatically pick up changes after git operations in the
-    terminal, and I have to manually refresh it with R.
-  - I kinda wish Neo-tree didn't bind /, so I could use it to move around.
-  - mini.\* default key bindings don't show up in which-key.
-  - I still don't love the way notifications work.
