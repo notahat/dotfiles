@@ -39,7 +39,7 @@ if [[ -x $HOMEBREW_PREFIX/bin/nvim ]] {
 # ------------------------------------------------------------------------------------------
 # Decide whether this is a home or work machine, based on the hostname.
 
-case $(hostname -s) {
+case $(scutil --get LocalHostName) {
   Knuth)
     export DOTFILES_ENV=home;;
   *)
