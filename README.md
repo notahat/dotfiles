@@ -21,10 +21,10 @@ I remove anything I'm not using to keep it simple.
 A whole bunch of things, but key components are:
 
 - [Neovim](https://neovim.io). I've got a [pretty fancy setup](config/nvim).
-  It's got lots of IDE features, but is a lot cleaner than an IDE. It's pretty
-  well commented. It starts up in less than 100ms.
+  It's got lots of IDE features, but is a lot cleaner than an IDE. It's well
+  commented. It starts up in less than 100ms.
 - [Zsh](https://zsh.org) config. I like it fast (so none of this [Oh My
-  Zsh](https://ohmyz.sh) nonsense), but with a nice prompt and completion. Also
+  Zsh](https://ohmyz.sh) nonsense), but with a nice prompt and completion. It
   starts up in about 100ms.
 - [Kitty](https://sw.kovidgoyal.net/kitty/). It's fast, configurable, and has
   great documentation.

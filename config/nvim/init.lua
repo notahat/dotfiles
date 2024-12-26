@@ -3,8 +3,8 @@
 -- * Plugin management with lazy.nvim
 -- * Automatic installation of language servers and formatters with mason.nvim
 -- * Language server support with nvim-lspconfig
--- * Auto-formatting with null-ls
--- * Completion with nvim-cmp
+-- * Auto-formatting with none-ls
+-- * Completion with blink.cmp
 -- * Syntax highlighting with nvim-treesitter
 -- * File explorer with oil.nvim
 -- * Fuzzy finding of all sorts of things with Telescope
