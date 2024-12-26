@@ -26,9 +26,14 @@ vim.opt.mousescroll = "ver:1"
 -- Get rid of the ~ characters on empty lines.
 vim.opt.fillchars = { eob = " " }
 
-vim.opt.shortmess:append({
-  I = true, -- Don't show the default startup message.
-})
+-- Don't show the default startup message.
+vim.opt.shortmess:append({ I = true })
+
+-- Make the ~ command behave like an operator.
+vim.opt.tildeop = true
+
+-- Keep a few extra lines on the screen when scrolling.
+vim.opt.scrolloff = 3
 
 -- Disable unused language providers, so checkhealth doesn't complain.
 vim.g.loaded_node_provider = 0
