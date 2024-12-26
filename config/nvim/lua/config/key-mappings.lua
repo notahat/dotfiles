@@ -47,6 +47,26 @@ end
 -- Tip: Try to have few custom mappings, and use built-in keys as much as
 -- possible. Stick to mostly "<leader>*" mappings, rather than going deeper.
 
+-- The first parameter to `vim.keymap.set` is the modes in which the mappings
+-- apply.
+--
+-- Neovim's modes are:
+--   n = Normal mode
+--   i = Insert mode
+--   c = Command mode, typing a command after hitting ":"
+--   x = Visual mode, when text is selected
+--   s = Select mode, text is selected and will be replaced with typing
+--   o = Operator-pending mode, waiting for an operator after d, y, c, etc.
+--   t = Terminal mode, inside a terminal
+--   l = Lang-arg mode, used for language mappings
+--
+-- "v" is a shortcut for both visual (x) and select (s) modes.
+--
+-- An empty string means normal (n), visual (x), select (s), and
+-- operator-pending (o) modes.
+--
+-- See Neovim's help for map-modes
+
 vim.keymap.set("n", "<leader><leader>", telescope_find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "<leader>b", telescope_buffers, { desc = "Telescope buffers" })
 vim.keymap.set("n", "<leader>h", telescope_help_tags, { desc = "Telescope help tags" })
