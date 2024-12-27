@@ -1,0 +1,9 @@
+adjust-cell-height = 5
+background = "black"
+font-family = "BerkeleyMono Nerd Font"
+font-size = 14
+font-thicken = false
+macos-titlebar-style = "tabs"
+theme = "nord"
+window-padding-x = 16
+shell-integration-features = no-title
