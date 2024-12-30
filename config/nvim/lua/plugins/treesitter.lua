@@ -50,15 +50,15 @@ return {
         swap = {
           enable = true,
           swap_next = {
-            ["<leader>sf"] = { query = "@function.outer", desc = "Swap functions" },
-            ["<leader>sp"] = { query = "@parameter.inner", desc = "Swap parameters" },
+            ["<leader>sf"] = { query = "@function.outer", desc = " functions" },
+            ["<leader>sp"] = { query = "@parameter.inner", desc = " parameters" },
           },
         },
       },
     })
 
     local which_key = require("which-key")
-    which_key.add({ "<leader>s", group = "swap objects" })
+    which_key.add({ "<leader>s", group = "swap" })
 
     local repeatable_move = require("nvim-treesitter.textobjects.repeatable_move")
     vim.keymap.set({ "n", "x", "o" }, ";", repeatable_move.repeat_last_move_next)
