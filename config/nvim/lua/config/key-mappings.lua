@@ -24,6 +24,10 @@ local function telescope_live_grep()
   require("telescope.builtin").live_grep()
 end
 
+local function telescope_lsp_definitions()
+  require("telescope.builtin").lsp_definitions()
+end
+
 local function telescope_lsp_implementation()
   require("telescope.builtin").lsp_implementations()
 end
@@ -100,6 +104,9 @@ vim.keymap.set("n", "gra", vim.lsp.buf.code_action, { desc = "Code actions" })
 vim.keymap.set("n", "gri", telescope_lsp_implementation, { desc = "Go to implementation" })
 vim.keymap.set("n", "grn", vim.lsp.buf.rename, { desc = "Rename" })
 vim.keymap.set("n", "grr", telescope_lsp_references, { desc = "Go to references" })
+
+-- Add LSP definition lookup too, in the same style as the above.
+vim.keymap.set("n", "grd", telescope_lsp_definitions, { desc = "Go to definitions" })
 
 -- Reselect the visual area when changing indenting in visual mode.
 vim.keymap.set("x", "<", "<gv", { desc = "Indent left" })
