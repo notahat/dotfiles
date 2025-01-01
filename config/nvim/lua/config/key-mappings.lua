@@ -1,7 +1,7 @@
 -- Tip: Make sure to require plugins inside of functions, to help with lazy loading.
 
 local function delete_buffer()
-  require("bufdelete").bufdelete()
+  require("snacks").bufdelete()
 end
 
 local function open_oil()
