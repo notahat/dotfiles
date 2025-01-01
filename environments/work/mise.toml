@@ -1,6 +1,7 @@
 [tools]
 
-node = "20.18.0"
-ruby = "3.3.5"
+node = "latest"
+ruby = "latest"
+rust = "nightly"
 usage = "latest"
-yarn = "1.22.22"
+yarn = "latest"

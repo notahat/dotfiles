@@ -1,7 +1,5 @@
 # Pete's dotfiles
 
-![Screenshot with my Kitty and Neovim config](screenshot.png)
-
 This does 80% of the work of setting up a Mac the way I like it:
 
 ```sh
@@ -21,10 +19,10 @@ I remove anything I'm not using to keep it simple.
 A whole bunch of things, but key components are:
 
 - [Neovim](https://neovim.io). I've got a [pretty fancy setup](config/nvim).
-  It's got lots of IDE features, but is a lot cleaner than other IDEs I've
-  used. My config is extensively commented. Starts up in about 100ms.
+  It's got lots of IDE features, but is a lot cleaner than an IDE. It's well
+  commented. It starts up in less than 100ms.
 - [Zsh](https://zsh.org) config. I like it fast (so none of this [Oh My
-  Zsh](https://ohmyz.sh) nonsense), but with a nice prompt and completion. Also
+  Zsh](https://ohmyz.sh) nonsense), but with a nice prompt and completion. It
   starts up in about 100ms.
 - [Kitty](https://sw.kovidgoyal.net/kitty/). It's fast, configurable, and has
   great documentation.
@@ -43,14 +41,3 @@ the steps.
 
 The `environments` directory contains separate `Brewfile`s and `mise.toml`
 files for my home and work machines.
-
-## Annoyances
-
-These are things that bug me about my current setup that I'd love to improve.
-
-- Neovim
-  - Neo-tree doesn't automatically pick up changes after git operations in the
-    terminal, and I have to manually refresh it with R.
-  - I kinda wish Neo-tree didn't bind /, so I could use it to move around.
-  - mini.\* default key bindings don't show up in which-key.
-  - I still don't love the way notifications work.

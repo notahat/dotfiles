@@ -2,4 +2,4 @@
 
 mkdir -p ~/.config
 link_file config/nvim ~/.config/nvim
-link_file config/nvim/editconfig ~/.editorconfig
+link_file config/nvim/.editorconfig ~/.editorconfig

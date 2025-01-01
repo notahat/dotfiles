@@ -2,4 +2,6 @@
 
 node = "latest"
 ruby = "latest"
+rust = "nightly"
 usage = "latest"
+yarn = "latest"
