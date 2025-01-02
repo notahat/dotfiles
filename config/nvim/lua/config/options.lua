@@ -1,12 +1,6 @@
 -- Use space as the leader key.
 vim.g.mapleader = " "
 
--- Use 2 spaces for indentation.
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.softtabstop = 2
-vim.opt.expandtab = true
-
 -- Show relative line numbers, but display the actual line
 -- number on the current line, and highlight it.
 vim.opt.number = true
