@@ -18,6 +18,10 @@ local function lsp_progess()
   return require("lsp-progress").progress()
 end
 
+local function open_diagnostics()
+  require("trouble").open("diagnostics")
+end
+
 local function show_lsp_info()
   vim.cmd("checkhealth lspconfig")
 end
@@ -30,7 +34,7 @@ return {
     options = { globalstatus = true },
     sections = {
       lualine_a = { "mode" },
-      lualine_b = { "diagnostics" },
+      lualine_b = { { "diagnostics", on_click = open_diagnostics } },
       lualine_c = { { "filename", on_click = copy_relative_path, path = 1, shorting_target = 20 } },
       lualine_x = {
         -- Show macro recording messages.

@@ -4,6 +4,10 @@ local function delete_buffer()
   require("snacks").bufdelete()
 end
 
+local function open_diagnostics()
+  require("trouble").open("diagnostics")
+end
+
 local function open_oil()
   require("oil").open()
 end
@@ -77,6 +81,7 @@ end
 
 vim.keymap.set("n", "<leader><leader>", telescope_find_files, { desc = "Find files" })
 vim.keymap.set("n", "<leader>b", telescope_buffers, { desc = "Buffers" })
+vim.keymap.set("n", "<leader>d", open_diagnostics, { desc = "Diagnostics" })
 vim.keymap.set("n", "<leader>h", telescope_help_tags, { desc = "Help" })
 vim.keymap.set("n", "<leader>j", toggle_join, { desc = "Join/split" })
 vim.keymap.set("n", "<leader>n", telescope_noice, { desc = "Notifications" })
