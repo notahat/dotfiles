@@ -5,7 +5,11 @@ local function delete_buffer()
 end
 
 local function open_diagnostics()
-  require("trouble").open("diagnostics")
+  require("trouble").open({ mode = "diagnostics", auto_close = true })
+end
+
+local function open_notifications()
+  require("noice").cmd("all")
 end
 
 local function open_oil()
@@ -38,10 +42,6 @@ end
 
 local function telescope_lsp_references()
   require("telescope.builtin").lsp_references()
-end
-
-local function telescope_noice()
-  require("telescope").extensions.noice.noice()
 end
 
 local function toggle_join()
@@ -84,7 +84,7 @@ vim.keymap.set("n", "<leader>b", telescope_buffers, { desc = "Buffers" })
 vim.keymap.set("n", "<leader>d", open_diagnostics, { desc = "Diagnostics" })
 vim.keymap.set("n", "<leader>h", telescope_help_tags, { desc = "Help" })
 vim.keymap.set("n", "<leader>j", toggle_join, { desc = "Join/split" })
-vim.keymap.set("n", "<leader>n", telescope_noice, { desc = "Notifications" })
+vim.keymap.set("n", "<leader>n", open_notifications, { desc = "Notifications" })
 vim.keymap.set("n", "<leader>q", vim.cmd.xall, { desc = "Quit" })
 vim.keymap.set("n", "<leader>w", vim.cmd.wall, { desc = "Write all" })
 vim.keymap.set("n", "<leader>x", delete_buffer, { desc = "Delete buffer" })
