@@ -45,8 +45,5 @@ return {
         },
       },
     })
-
-    -- Make virtual error text easier to read.
-    vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", { fg = "#ffaaaa", bg = "#4b3d48" })
   end,
 }
