@@ -26,7 +26,7 @@
   "snacks.nvim": { "branch": "main", "commit": "d312053f78b4fb55523def179ac502438dd93193" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "dae2eac9d91464448b584c7949a31df8faefec56" },
   "telescope.nvim": { "branch": "master", "commit": "2eca9ba22002184ac05eddbe47a7fe2d5a384dfc" },
-  "treesj": { "branch": "main", "commit": "94f6df623f2d15630b1b617abff39962024cb501" },
+  "treesj": { "branch": "main", "commit": "9006b6b32da607519845c6540073a95a304b2e01" },
   "trouble.nvim": { "branch": "main", "commit": "46cf952fc115f4c2b98d4e208ed1e2dce08c9bf6" },
   "which-key.nvim": { "branch": "main", "commit": "8ab96b38a2530eacba5be717f52e04601eb59326" }
 }

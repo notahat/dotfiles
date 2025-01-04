@@ -6,12 +6,12 @@ local function copy_relative_path()
   vim.notify("Path copied: " .. path)
 end
 
-local function open_diagnostics()
-  require("trouble").open("diagnostics")
+local function lsp_progress()
+  return require("lsp-progress").progress()
 end
 
-local function show_lsp_info()
-  vim.cmd("checkhealth lspconfig")
+local function open_diagnostics()
+  require("trouble").open("diagnostics")
 end
 
 local function register_recording()
@@ -23,8 +23,8 @@ local function register_recording()
   end
 end
 
-local function lsp_progress()
-  return require("lsp-progress").progress()
+local function show_lsp_info()
+  vim.cmd("checkhealth lspconfig")
 end
 
 return {
