@@ -14,7 +14,7 @@
   "nui.nvim": { "branch": "main", "commit": "53e907ffe5eedebdca1cd503b00aa8692068ca46" },
   "nvim-autopairs": { "branch": "master", "commit": "b464658e9b880f463b9f7e6ccddd93fb0013f559" },
   "nvim-lightbulb": { "branch": "master", "commit": "3ac0791be37ba9cc7939f1ad90ebc5e75abf4eea" },
-  "nvim-lspconfig": { "branch": "master", "commit": "a8ef5e6e497b3ebeaaf35b939c07c211563b2e05" },
+  "nvim-lspconfig": { "branch": "master", "commit": "f4ed656e876e45cf914d7beb972830561178e232" },
   "nvim-notify": { "branch": "master", "commit": "bd9cd51f9ef2f6326fc2bc9931d0718c1794e247" },
   "nvim-surround": { "branch": "main", "commit": "9f0cb495f25bff32c936062d85046fbda0c43517" },
   "nvim-treesitter": { "branch": "master", "commit": "fae21737be2846a04ae06a41d70b7fc8ad4bf9eb" },
@@ -27,6 +27,7 @@
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "dae2eac9d91464448b584c7949a31df8faefec56" },
   "telescope.nvim": { "branch": "master", "commit": "2eca9ba22002184ac05eddbe47a7fe2d5a384dfc" },
   "treesj": { "branch": "main", "commit": "9006b6b32da607519845c6540073a95a304b2e01" },
+  "treewalker.nvim": { "branch": "main", "commit": "fd89db80910a5d3c0e736c09f765dcad26cf0fd3" },
   "trouble.nvim": { "branch": "main", "commit": "46cf952fc115f4c2b98d4e208ed1e2dce08c9bf6" },
   "which-key.nvim": { "branch": "main", "commit": "8ab96b38a2530eacba5be717f52e04601eb59326" }
 }

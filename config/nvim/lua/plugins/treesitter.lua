@@ -47,13 +47,13 @@ return {
             ["ip"] = { query = "@parameter.inner", desc = "inner parameter" },
           },
         },
-        swap = {
-          enable = true,
-          swap_next = {
-            ["<leader>sf"] = { query = "@function.outer", desc = " functions" },
-            ["<leader>sp"] = { query = "@parameter.inner", desc = " parameters" },
-          },
-        },
+        -- swap = {
+        --   enable = true,
+        --   swap_next = {
+        --     ["<leader>sf"] = { query = "@function.outer", desc = " functions" },
+        --     ["<leader>sp"] = { query = "@parameter.inner", desc = " parameters" },
+        --   },
+        -- },
       },
     })
 

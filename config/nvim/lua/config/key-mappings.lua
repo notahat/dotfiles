@@ -91,19 +91,6 @@ vim.keymap.set("n", "<leader>x", delete_buffer, { desc = "Delete buffer" })
 vim.keymap.set("n", "<leader>/", telescope_live_grep, { desc = "Live grep" })
 vim.keymap.set("n", "-", open_oil, { desc = "Oil" })
 
--- Make command keys do sensible things. There's some stuff in kitty.conf
--- to tell Kitty to pass these through to Neovim.
-local everywhere = { "n", "i", "c", "x", "s", "o", "t" }
-vim.keymap.set("x", "<d-x>", '"*d', { desc = "Cut" })
-vim.keymap.set("x", "<d-c>", '"*ygv', { desc = "Copy" })
-vim.keymap.set({ "n", "x" }, "<d-v>", '"*p', { desc = "Paste" })
-vim.keymap.set("i", "<d-v>", '<esc>"*pa', { desc = "Paste" })
-vim.keymap.set("c", "<d-v>", "<c-R>*", { desc = "Paste" })
-vim.keymap.set(everywhere, "<d-s>", vim.cmd.wall, { desc = "Save all" })
-vim.keymap.set(everywhere, "<d-q>", vim.cmd.xall, { desc = "Quit" })
-vim.keymap.set({ "n", "x" }, "<d-w>", vim.cmd.close, { desc = "Close window" })
-vim.keymap.set(everywhere, "<d-z>", vim.cmd.undo, { desc = "Undo" })
-
 -- Jump between git changes in the buffer.
 vim.keymap.set({ "n", "x" }, "[g", previous_git_hunk, { desc = "Previous git hunk" })
 vim.keymap.set({ "n", "x" }, "]g", next_git_hunk, { desc = "Next git hunk" })
