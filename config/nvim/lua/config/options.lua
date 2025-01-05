@@ -1,5 +1,6 @@
 -- Use space as the leader key.
 vim.g.mapleader = " "
+vim.g.localleader = "\\"
 
 -- Show relative line numbers, but display the actual line
 -- number on the current line, and highlight it.

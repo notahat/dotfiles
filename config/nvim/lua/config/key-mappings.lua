@@ -56,6 +56,10 @@ local function previous_git_hunk()
   require("gitsigns").prev_hunk()
 end
 
+local function search_and_replace()
+  require("grug-far").open()
+end
+
 -- Tip: Try to have few custom mappings, and use built-in mappings as much as
 -- possible. Stick to mostly "<leader>*" mappings, rather than going deeper.
 
@@ -86,6 +90,7 @@ vim.keymap.set("n", "<leader>h", telescope_help_tags, { desc = "Help" })
 vim.keymap.set("n", "<leader>j", toggle_join, { desc = "Join/split" })
 vim.keymap.set("n", "<leader>n", open_notifications, { desc = "Notifications" })
 vim.keymap.set("n", "<leader>q", vim.cmd.xall, { desc = "Quit" })
+vim.keymap.set("n", "<leader>r", search_and_replace, { desc = "Search and replace" })
 vim.keymap.set("n", "<leader>w", vim.cmd.wall, { desc = "Write all" })
 vim.keymap.set("n", "<leader>x", delete_buffer, { desc = "Delete buffer" })
 vim.keymap.set("n", "<leader>/", telescope_live_grep, { desc = "Live grep" })
