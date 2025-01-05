@@ -1,5 +1,5 @@
 require("config.options")
 require("config.lazy")
 require("config.key-mappings")
-require("config.format-on-save")
+-- require("config.format-on-save")
 require("config.kitty-integration")

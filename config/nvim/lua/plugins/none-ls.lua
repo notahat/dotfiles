@@ -5,6 +5,7 @@
 -- It's a fork of null-ls, hence the requires for null-ls rather than none-ls.
 return {
   "nvimtools/none-ls.nvim",
+  enabled = false,
   config = function()
     local null_ls = require("null-ls")
     null_ls.setup({
