@@ -9,13 +9,4 @@ want my code front-and-centre with not too much other information.
 But I also like modern tools for navigating and editing code, like languagge
 servers and treesitter.
 
-Highlights of this config are:
-
-- Plugin management with lazy.nvim
-- Completion with blink.cmp
-- Syntax highlighting with nvim-treesitter
-- File explorer with oil.nvim
-- Fuzzy finding of all sorts of things with Telescope
-- Language server support with nvim-lspconfig
-- Auto-formatting with none-ls
-- Automatic installation of language servers and formatters with mason.nvim
+And it must be fast. Startup time is less than 100 ms.
