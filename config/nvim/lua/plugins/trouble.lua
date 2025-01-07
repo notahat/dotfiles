@@ -1,3 +1,4 @@
+-- Fancy display of diagnostics.
 return {
   "folke/trouble.nvim",
   lazy = true,
