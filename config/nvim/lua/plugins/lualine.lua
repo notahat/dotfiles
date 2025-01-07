@@ -32,7 +32,6 @@ return {
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
     extensions = { "lazy", "man", "mason", "oil", "quickfix" },
-    options = { globalstatus = true },
     sections = {
       lualine_a = { "mode" },
       lualine_b = { { "diagnostics", on_click = open_diagnostics } },
@@ -45,6 +44,16 @@ return {
       },
       lualine_y = { "searchcount" },
       lualine_z = { "%p%%/%L" },
+    },
+    inactive_sections = {
+      lualine_a = {},
+      lualine_b = {},
+      lualine_c = {
+        { "filename", on_click = copy_relative_path, path = 1, shorting_target = 20 },
+      },
+      lualine_x = {},
+      lualine_y = {},
+      lualine_z = {},
     },
   },
 }
