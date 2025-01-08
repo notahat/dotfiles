@@ -7,7 +7,6 @@ return {
 
     lspconfig.bashls.setup({ capabilities = capabilities })
     lspconfig.eslint.setup({ capabilities = capabilities })
-    -- lspconfig.syntax_tree.setup({ capabilities = capabilities })
     lspconfig.ts_ls.setup({ capabilities = capabilities })
 
     if os.getenv("DOTFILES_ENV") == "work" then
