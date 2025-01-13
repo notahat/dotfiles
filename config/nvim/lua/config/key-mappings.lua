@@ -60,6 +60,18 @@ local function search_and_replace()
   require("grug-far").open()
 end
 
+local function toggle_mark()
+  require("navimark.stack").mark_toggle()
+end
+
+local function telescope_marks()
+  require("navimark.tele").open_mark_picker()
+end
+
+local function telescope_grep_string()
+  require("telescope.builtin").grep_string()
+end
+
 -- Tip: Try to have few custom mappings, and use built-in mappings as much as
 -- possible. Stick to mostly "<leader>*" mappings, rather than going deeper.
 
@@ -88,12 +100,16 @@ vim.keymap.set("n", "<leader>b", telescope_buffers, { desc = "Buffers" })
 vim.keymap.set("n", "<leader>d", open_diagnostics, { desc = "Diagnostics" })
 vim.keymap.set("n", "<leader>h", telescope_help_tags, { desc = "Help" })
 vim.keymap.set("n", "<leader>j", toggle_join, { desc = "Join/split" })
+vim.keymap.set("n", "<leader>m", toggle_mark, { desc = "Toggle mark" })
+vim.keymap.set("n", "<leader>M", telescope_marks, { desc = "Marks" })
 vim.keymap.set("n", "<leader>n", open_notifications, { desc = "Notifications" })
 vim.keymap.set("n", "<leader>q", vim.cmd.xall, { desc = "Quit" })
 vim.keymap.set("n", "<leader>r", search_and_replace, { desc = "Search and replace" })
 vim.keymap.set("n", "<leader>w", vim.cmd.wall, { desc = "Write all" })
 vim.keymap.set("n", "<leader>x", delete_buffer, { desc = "Delete buffer" })
 vim.keymap.set("n", "<leader>/", telescope_live_grep, { desc = "Live grep" })
+vim.keymap.set("n", "<leader>*", telescope_grep_string, { desc = "Live grep word under cursor" })
+
 vim.keymap.set("n", "-", open_oil, { desc = "Oil" })
 
 -- Jump between git changes in the buffer.
