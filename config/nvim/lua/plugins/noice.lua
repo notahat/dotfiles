@@ -1,6 +1,7 @@
 -- Improve the UI for messages, command line, and other bits and pieces.
 return {
   "folke/noice.nvim",
+  enabled = false,
   event = "VeryLazy",
   dependencies = {
     "MunifTanjim/nui.nvim",
