@@ -50,8 +50,8 @@ return {
       },
     })
 
-    local which_key = require("which-key")
-    which_key.add({ "<leader>s", group = "swap" })
+    -- local which_key = require("which-key")
+    -- which_key.add({ "<leader>s", group = "swap" })
 
     local repeatable_move = require("nvim-treesitter.textobjects.repeatable_move")
     vim.keymap.set({ "n", "x", "o" }, ";", repeatable_move.repeat_last_move_next)

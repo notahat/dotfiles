@@ -6,6 +6,7 @@ end
 
 return {
   "folke/which-key.nvim",
+  enabled = false,
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
     icons = { mappings = false },

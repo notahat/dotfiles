@@ -1,16 +1,16 @@
 -- Tip: Make sure to require plugins inside of functions, to help with lazy loading.
 
 local function delete_buffer()
-  require("snacks").bufdelete()
+  require("bufdelete").bufdelete()
 end
 
 local function open_diagnostics()
   require("trouble").open({ mode = "diagnostics", auto_close = true })
 end
 
-local function open_notifications()
-  require("noice").cmd("all")
-end
+-- local function open_notifications()
+--   require("noice").cmd("all")
+-- end
 
 local function open_oil()
   require("oil").open()
@@ -60,13 +60,13 @@ local function search_and_replace()
   require("grug-far").open()
 end
 
-local function toggle_mark()
-  require("navimark.stack").mark_toggle()
-end
+-- local function toggle_mark()
+--   require("navimark.stack").mark_toggle()
+-- end
 
-local function telescope_marks()
-  require("navimark.tele").open_mark_picker()
-end
+-- local function telescope_marks()
+--   require("navimark.tele").open_mark_picker()
+-- end
 
 local function telescope_grep_string()
   require("telescope.builtin").grep_string()
@@ -100,9 +100,9 @@ vim.keymap.set("n", "<leader>b", telescope_buffers, { desc = "Buffers" })
 vim.keymap.set("n", "<leader>d", open_diagnostics, { desc = "Diagnostics" })
 vim.keymap.set("n", "<leader>h", telescope_help_tags, { desc = "Help" })
 vim.keymap.set("n", "<leader>j", toggle_join, { desc = "Join/split" })
-vim.keymap.set("n", "<leader>m", toggle_mark, { desc = "Toggle mark" })
-vim.keymap.set("n", "<leader>M", telescope_marks, { desc = "Marks" })
-vim.keymap.set("n", "<leader>n", open_notifications, { desc = "Notifications" })
+-- vim.keymap.set("n", "<leader>m", toggle_mark, { desc = "Toggle mark" })
+-- vim.keymap.set("n", "<leader>M", telescope_marks, { desc = "Marks" })
+-- vim.keymap.set("n", "<leader>n", open_notifications, { desc = "Notifications" })
 vim.keymap.set("n", "<leader>q", vim.cmd.xall, { desc = "Quit" })
 vim.keymap.set("n", "<leader>r", search_and_replace, { desc = "Search and replace" })
 vim.keymap.set("n", "<leader>w", vim.cmd.wall, { desc = "Write all" })
@@ -117,7 +117,7 @@ vim.keymap.set({ "n", "x" }, "[g", previous_git_hunk, { desc = "Previous git hun
 vim.keymap.set({ "n", "x" }, "]g", next_git_hunk, { desc = "Next git hunk" })
 
 -- Replace the standard LSP actions with nicer versions.
-require("which-key").add({ "gr", group = "LSP actions" })
+-- require("which-key").add({ "gr", group = "LSP actions" })
 vim.keymap.set("n", "gra", vim.lsp.buf.code_action, { desc = "Code actions" })
 vim.keymap.set("n", "gri", telescope_lsp_implementation, { desc = " Implementation" })
 vim.keymap.set("n", "grn", vim.lsp.buf.rename, { desc = "Rename" })
