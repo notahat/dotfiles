@@ -41,6 +41,8 @@ return {
           enable = true,
           include_surrounding_whitespace = true,
           keymaps = {
+            ["ab"] = { query = "@block.outer", desc = "block" },
+            ["ib"] = { query = "@block.inner", desc = "inner block" },
             ["af"] = { query = "@function.outer", desc = "function" },
             ["if"] = { query = "@function.inner", desc = "inner function" },
             ["ap"] = { query = "@parameter.outer", desc = "parameter" },
