@@ -68,7 +68,7 @@ export LESS=-R     # Make less support ANSI colour sequences.
 # ------------------------------------------------------------------------------------------
 # Set aliases.
 
-alias ls='ls -F'
+alias ls='eza'
 
 alias be='bundle exec'
 alias br='./bin/rails'

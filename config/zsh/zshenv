@@ -63,6 +63,11 @@ if [[ $DOTFILES_ENV == 'work' ]] {
 }
 
 # ------------------------------------------------------------------------------------------
+# Show icons in eza.
+
+export EZA_ICONS_AUTO=1
+
+# ------------------------------------------------------------------------------------------
 # Prevent the MacOS /etc/zprofile running its path helper and adding all sorts
 # of unnecessary nonsense to my path.
 

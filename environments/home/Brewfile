@@ -72,6 +72,7 @@ cask 'font-inconsolata-nerd-font'
 
 brew 'bat'
 brew 'entr'
+brew 'eza'
 brew 'fd'
 brew 'fzf'
 brew 'jq'
