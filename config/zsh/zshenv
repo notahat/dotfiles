@@ -3,8 +3,18 @@
 # ------------------------------------------------------------------------------------------
 # Start with clean paths.
 
-export PATH=/usr/bin:/bin:/usr/sbin:/sbin
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin
 export MANPATH=/usr/share/man
+
+# ------------------------------------------------------------------------------------------
+# Decide whether this is a home or work machine, based on the hostname.
+
+case $(scutil --get LocalHostName) {
+  fer-*)
+    export DOTFILES_ENV=work;;
+  *)
+    export DOTFILES_ENV=home;;
+}
 
 # ------------------------------------------------------------------------------------------
 # Set up homebrew.
@@ -25,7 +35,13 @@ if [[ -x /opt/homebrew/bin/brew ]] {
 #
 # https://mise.jdx.dev
 
-if [[ -x $HOMEBREW_PREFIX/bin/mise ]] {
+if [[ $DOTFILES_ENV == 'work' ]] {
+  export MISE_LOCATION=$HOME/.local/bin/mise
+} else {
+  export MISE_LOCATION=$HOMEBREW_PREFIX/bin/mise
+}
+
+if [[ -x $MISE_LOCATION ]] {
   eval "$(mise activate zsh --shims)"
 }
 
@@ -34,16 +50,6 @@ if [[ -x $HOMEBREW_PREFIX/bin/mise ]] {
 
 if [[ -x $HOMEBREW_PREFIX/bin/nvim ]] {
   export EDITOR=$HOMEBREW_PREFIX/bin/nvim
-}
-
-# ------------------------------------------------------------------------------------------
-# Decide whether this is a home or work machine, based on the hostname.
-
-case $(scutil --get LocalHostName) {
-  Knuth)
-    export DOTFILES_ENV=home;;
-  *)
-    export DOTFILES_ENV=work;;
 }
 
 # ------------------------------------------------------------------------------------------
