@@ -3,11 +3,12 @@
 mkdir -p ~/.config/mise
 link_file "environments/$DOTFILES_ENV/mise.toml" ~/.config/mise/config.toml
 
-if [[ $DOTFILES_ENV == home ]]; then
-  # Make sure we've got homebrew loaded, coz mise is installed with it.
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-
-  eval "$(mise activate bash)"
-
-  mise install
+if [[ $DOTFILES_ENV == work ]]; then
+  if [[ ! -f ~/.local/bin/mise ]]; then
+    curl https://mise.run | MISE_VERSION="v2024.12.7" sh
+  fi
 fi
+
+eval "$(mise activate bash)"
+
+mise install
