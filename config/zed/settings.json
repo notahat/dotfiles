@@ -12,7 +12,7 @@
   "buffer_font_features": {
     "calt": false // Don't use ligatures.
   },
-  "buffer_font_size": 14,
+  "buffer_font_size": null,
   "git": {
     "inline_blame": { "enabled": false }
   },
@@ -21,5 +21,16 @@
   },
   "tab_size": 2,
   "relative_line_numbers": true,
-  "vim_mode": true
+  "vim_mode": true,
+  "languages": {
+    "Ruby": {
+      "language_servers": ["sorbet"],
+      "formatter": {
+        "external": {
+          "command": "stree",
+          "arguments": ["format"]
+        }
+      }
+    }
+  }
 }
