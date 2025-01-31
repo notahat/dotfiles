@@ -31,6 +31,9 @@
           "arguments": ["format"]
         }
       }
+    },
+    "Swift": {
+      "tab_size": 4
     }
   }
 }
