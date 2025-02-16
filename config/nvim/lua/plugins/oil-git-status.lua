@@ -1,7 +1,7 @@
 -- Show git status in oil's gutter.
 return {
   "refractalize/oil-git-status.nvim",
-  enabled = false,
+  enabled = true,
   ft = "oil",
   opts = {},
 }
