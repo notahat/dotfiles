@@ -1,6 +1,7 @@
 -- Fuzzy search over files and all sorts of other things.
 return {
   "nvim-telescope/telescope.nvim",
+  enabled = false,
   lazy = true,
   dependencies = {
     -- "folke/noice.nvim",
