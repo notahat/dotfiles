@@ -26,7 +26,7 @@
     "inline_blame": { "enabled": false }
   },
   "indent_guides": {
-    "enabled": true
+    "enabled": false
   },
   "tab_size": 2,
   "relative_line_numbers": true,
