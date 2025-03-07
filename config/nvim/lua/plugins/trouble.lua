@@ -2,6 +2,8 @@
 return {
   "folke/trouble.nvim",
   lazy = true,
-  opts = {},
+  opts = {
+    auto_close = true,
+  },
   cmd = "Trouble",
 }
