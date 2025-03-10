@@ -62,8 +62,9 @@ prompt pure
 # ------------------------------------------------------------------------------------------
 # Set flags for a couple of tools.
 
-export CLICOLOR=1  # Make ls colour its output.
-export LESS=-R     # Make less support ANSI colour sequences.
+export CLICOLOR=1        # Make ls colour its output.
+export EZA_ICONS_AUTO=1  # Show icons in eza.
+export LESS=-R           # Make less support ANSI colour sequences.
 
 # ------------------------------------------------------------------------------------------
 # Set aliases.
