@@ -29,6 +29,7 @@ return {
 
     -- Set the diagnostic signs shown in the gutter to match lualine's.
     vim.diagnostic.config({
+      virtual_lines = { current_line = true },
       signs = {
         text = {
           [vim.diagnostic.severity.ERROR] = "󰅚 ",
