@@ -117,10 +117,7 @@ vim.keymap.set({ "n", "x" }, "[g", previous_git_hunk, { desc = "Previous git hun
 vim.keymap.set({ "n", "x" }, "]g", next_git_hunk, { desc = "Next git hunk" })
 
 -- Replace the standard LSP actions with nicer versions.
--- require("which-key").add({ "gr", group = "LSP actions" })
-vim.keymap.set("n", "gra", vim.lsp.buf.code_action, { desc = "Code actions" })
 vim.keymap.set("n", "gri", fzf_lsp_implementation, { desc = " Implementation" })
-vim.keymap.set("n", "grn", vim.lsp.buf.rename, { desc = "Rename" })
 vim.keymap.set("n", "grr", fzf_lsp_references, { desc = " References" })
 
 -- Add LSP definition lookup too, in the same style as the above.
