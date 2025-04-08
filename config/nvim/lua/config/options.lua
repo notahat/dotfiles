@@ -30,6 +30,9 @@ vim.opt.fillchars = { eob = " " }
 -- Make the ~ command behave like an operator.
 vim.opt.tildeop = true
 
+-- Put borders on floating windows by default.
+vim.opt.winborder = "rounded"
+
 -- Disable unused language providers, so checkhealth doesn't complain.
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
