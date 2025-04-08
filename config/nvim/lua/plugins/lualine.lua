@@ -14,15 +14,6 @@ local function open_diagnostics()
   require("trouble").open("diagnostics")
 end
 
-local function register_recording()
-  local register = vim.fn.reg_recording()
-  if register == "" then
-    return ""
-  else
-    return "recording @" .. register
-  end
-end
-
 local function show_lsp_info()
   vim.cmd("checkhealth lspconfig")
 end
@@ -39,7 +30,6 @@ return {
         { "filename", on_click = copy_relative_path, path = 1, shorting_target = 20 },
       },
       lualine_x = {
-        { register_recording, color = { fg = "#ff9e64" } },
         { lsp_progress, on_click = show_lsp_info },
       },
       lualine_y = { "searchcount" },
