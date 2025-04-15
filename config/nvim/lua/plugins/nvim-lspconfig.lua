@@ -2,20 +2,15 @@
 return {
   "neovim/nvim-lspconfig",
   config = function()
-    local lspconfig = require("lspconfig")
-    local capabilities = require("blink.cmp").get_lsp_capabilities()
-
-    lspconfig.bashls.setup({ capabilities = capabilities })
-    lspconfig.eslint.setup({ capabilities = capabilities })
-    lspconfig.ts_ls.setup({ capabilities = capabilities })
+    vim.lsp.enable({ "bashls", "ts_ls", "lua_ls" })
+    -- eslint is missing, see https://github.com/neovim/nvim-lspconfig/issues/3705
 
     if os.getenv("DOTFILES_ENV") == "work" then
-      lspconfig.relay_lsp.setup({ capabilities = capabilities })
-      lspconfig.sorbet.setup({ capabilities = capabilities })
+      vim.lsp.enable({ "sorbet" })
+      -- relay_lsp is also missing
     end
 
-    lspconfig.lua_ls.setup({
-      capabilities = capabilities,
+    vim.lsp.config("lua_ls", {
       settings = {
         Lua = {
           runtime = { version = "LuaJIT" },
