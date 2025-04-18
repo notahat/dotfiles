@@ -15,7 +15,7 @@ local function open_diagnostics()
 end
 
 local function show_lsp_info()
-  vim.cmd("checkhealth lspconfig")
+  vim.cmd("checkhealth vim.lsp")
 end
 
 return {
