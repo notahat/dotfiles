@@ -8,10 +8,6 @@ local function open_diagnostics()
   require("trouble").open({ mode = "diagnostics", auto_close = true })
 end
 
--- local function open_notifications()
---   require("noice").cmd("all")
--- end
-
 local function open_oil()
   require("oil").open()
 end
@@ -60,14 +56,6 @@ local function search_and_replace()
   require("grug-far").open()
 end
 
--- local function toggle_mark()
---   require("navimark.stack").mark_toggle()
--- end
-
--- local function fzf_marks()
---   require("navimark.tele").open_mark_picker()
--- end
-
 local function fzf_grep_string()
   require("fzf-lua").grep_cword()
 end
@@ -100,9 +88,6 @@ vim.keymap.set("n", "<leader>b", fzf_buffers, { desc = "Buffers" })
 vim.keymap.set("n", "<leader>d", open_diagnostics, { desc = "Diagnostics" })
 vim.keymap.set("n", "<leader>h", fzf_help_tags, { desc = "Help" })
 vim.keymap.set("n", "<leader>j", toggle_join, { desc = "Join/split" })
--- vim.keymap.set("n", "<leader>m", toggle_mark, { desc = "Toggle mark" })
--- vim.keymap.set("n", "<leader>M", fzf_marks, { desc = "Marks" })
--- vim.keymap.set("n", "<leader>n", open_notifications, { desc = "Notifications" })
 vim.keymap.set("n", "<leader>q", vim.cmd.xall, { desc = "Quit" })
 vim.keymap.set("n", "<leader>r", search_and_replace, { desc = "Search and replace" })
 vim.keymap.set("n", "<leader>w", vim.cmd.wall, { desc = "Write all" })
