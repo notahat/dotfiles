@@ -6,4 +6,4 @@ fi
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-brew bundle --no-lock --file "environments/$DOTFILES_ENV/Brewfile"
+brew bundle --file "environments/$DOTFILES_ENV/Brewfile"
