@@ -3,7 +3,6 @@
 cask_args force: true
 
 tap 'homebrew/autoupdate'
-tap 'homebrew/services'
 
 # If we don't list mas explicitly, brew bundle cleanup will remove it.
 brew 'mas'
