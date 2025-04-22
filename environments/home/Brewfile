@@ -19,7 +19,6 @@ mas 'Things', id: 904280696
 
 # Helpful utilities ===================================================
 
-mas 'Amphetamine', id: 937984704
 cask 'appcleaner'
 cask 'raycast'
 cask 'scroll-reverser'

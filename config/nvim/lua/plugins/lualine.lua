@@ -32,7 +32,7 @@ return {
       lualine_x = {
         { lsp_progress, on_click = show_lsp_info },
       },
-      lualine_y = { "searchcount" },
+      lualine_y = {},
       lualine_z = { "%p%%/%L" },
     },
     inactive_sections = {
