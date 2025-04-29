@@ -25,3 +25,5 @@ git config --global merge.defaultToUpstream true
 
 # Helpful aliases.
 git config --global alias.root '!pwd'
+git config --global alias.merged '!git branch --merged | grep -vF "* "'
+git config --global alias.prune-merged '!git merged | xargs git branch -D'
