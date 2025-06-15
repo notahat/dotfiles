@@ -5,5 +5,8 @@ return {
   "williamboman/mason.nvim",
   opts = {
     PATH = "append",
+    ui = {
+      border = "none",
+    },
   },
 }
