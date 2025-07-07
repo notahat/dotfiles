@@ -8,12 +8,12 @@
 // from the command palette or from `Zed` application menu.
 {
   "features": {
-    "edit_prediction_provider": "zed"
+    "edit_prediction_provider": "copilot"
   },
   "agent": {
     "default_model": {
-      "provider": "zed.dev",
-      "model": "claude-sonnet-4"
+      "provider": "copilot_chat",
+      "model": "gpt-4.1"
     },
     "version": "2"
   },
