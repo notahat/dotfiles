@@ -13,9 +13,8 @@
   "agent": {
     "default_model": {
       "provider": "copilot_chat",
-      "model": "gpt-4.1"
-    },
-    "version": "2"
+      "model": "claude-sonnet-4"
+    }
   },
   "autosave": "on_window_change",
   "buffer_font_family": "BerkeleyMono Nerd Font",
