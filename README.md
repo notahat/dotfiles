@@ -21,10 +21,11 @@ A whole bunch of things, but key components are:
 - [Neovim](https://neovim.io). I've got a [pretty fancy setup](config/nvim).
   It's got lots of IDE features, but is a lot cleaner than an IDE. It's well
   commented. It starts up in less than 100ms.
-- [Zsh](https://zsh.org) config. I like it fast (so none of this [Oh My
+- [Zed](https://zed.dev).
+- [Zsh](https://zsh.org). I like it fast (so none of this [Oh My
   Zsh](https://ohmyz.sh) nonsense), but with a nice prompt and completion. It
   starts up in about 100ms.
-
+- [Ghostty](https://ghostty.org).
 - [Homebrew](https://brew.sh) installs anything where I always want the latest
   version, including apps from the Mac App Store.
 - [Mise-en-place](https://mise.jdx.dev/) manages things like languages, where I
