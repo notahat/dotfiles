@@ -1,13 +1,15 @@
 # shellcheck shell=bash
 
-link_file config/git/gitignore ~/.gitignore
+mkdir -p ~/.config/git
+link_file config/git/ignore ~/.config/git/ignore
+touch ~/.config/git/config
 
 git config --global user.name "Pete Yandell"
 git config --global user.email "pete@notahat.com"
 git config --global github.user notahat
 git config --global difftool.prompt false
 git config --global color.ui true
-git config --global core.excludesfile "$HOME/.gitignore"
+git config --global core.excludesfile "$HOME/.config/git/ignore"
 git config --global init.defaultBranch main
 
 # Use 1Password for commit signing.
