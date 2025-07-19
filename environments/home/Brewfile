@@ -54,7 +54,6 @@ cask 'sysex-librarian'
 
 brew 'gh'
 brew 'git'
-cask 'kitty'
 cask 'ghostty'
 brew 'lazygit'
 brew 'mise'

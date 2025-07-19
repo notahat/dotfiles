@@ -24,8 +24,7 @@ A whole bunch of things, but key components are:
 - [Zsh](https://zsh.org) config. I like it fast (so none of this [Oh My
   Zsh](https://ohmyz.sh) nonsense), but with a nice prompt and completion. It
   starts up in about 100ms.
-- [Kitty](https://sw.kovidgoyal.net/kitty/). It's fast, configurable, and has
-  great documentation.
+
 - [Homebrew](https://brew.sh) installs anything where I always want the latest
   version, including apps from the Mac App Store.
 - [Mise-en-place](https://mise.jdx.dev/) manages things like languages, where I
