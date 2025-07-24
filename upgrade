@@ -9,11 +9,11 @@ function echo_green {
   echo -e "${green}${1}${reset}"
 }
 
-echo_green "Upgrading homebrew..."
+echo_green "Upgrading homebrew packages..."
 brew upgrade
 
 echo
-echo_green "Upgrading mise..."
+echo_green "Upgrading mise tools..."
 mise up
 
 echo
