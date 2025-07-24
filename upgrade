@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -o errexit
+
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
+function echo_green {
+  echo -e "${green}${1}${reset}"
+}
+
+echo_green "Upgrading homebrew..."
+brew upgrade
+
+echo
+echo_green "Upgrading mise..."
+mise up
+
+echo
+echo_green "Upgrading Neovim plugins..."
+nvim --headless "+Lazy! sync" +qa
+
+echo
+echo_green "Done."
