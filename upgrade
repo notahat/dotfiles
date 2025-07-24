@@ -21,4 +21,4 @@ echo_green "Upgrading Neovim plugins..."
 nvim --headless "+Lazy! sync" +qa
 
 echo
-echo_green "Done."
+echo_green "Upgrade complete."
