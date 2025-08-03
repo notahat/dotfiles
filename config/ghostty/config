@@ -1,5 +1,7 @@
 adjust-cell-height = 4
-background = "black"
+background = "#111111"
+background-blur = 50
+background-opacity = 0.9
 font-family = "BerkeleyMono Nerd Font"
 font-family-bold = "BerkeleyMono Nerd Font Bold"
 font-family-bold-italic = "BerkeleyMono Nerd Font Bold Italic"
