@@ -42,6 +42,15 @@
   "languages": {
     "Swift": {
       "tab_size": 4
+    },
+    "Lua": {
+      "formatter": {
+        "external": {
+          "command": "stylua",
+          "arguments": ["-"]
+        }
+      },
+      "format_on_save": "on"
     }
   }
 }
