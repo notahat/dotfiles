@@ -1,5 +1,13 @@
 [
   {
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight"
+    }
+  },
+  {
     // Use ⌘-enter (rather than tab) to accept Copilot's edit predictions.
     "context": "Editor && edit_prediction && !showing_completions",
     "bindings": {
