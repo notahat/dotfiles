@@ -14,8 +14,8 @@ return {
       groups = {
         all = {
           -- Darken the selection to give more contrast with text.
-          CursorLine = { bg = "#22262f" },
-          Visual = { bg = "#22262f" },
+          CursorLine = { bg = "#404859" },
+          Visual = { bg = "#404859" },
         },
       },
       specs = {
