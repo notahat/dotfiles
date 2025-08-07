@@ -36,6 +36,11 @@
   "indent_guides": {
     "enabled": false
   },
+  "diagnostics": {
+    "inline": {
+      "enabled": true
+    }
+  },
   "tab_size": 2,
   "relative_line_numbers": true,
   "vim_mode": true,
