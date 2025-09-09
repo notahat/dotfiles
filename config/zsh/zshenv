@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------------------------------
 # Start with clean paths.
 
-export PATH=/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin:$HOME/.rd/bin
 export MANPATH=/usr/share/man
 
 # ------------------------------------------------------------------------------------------
