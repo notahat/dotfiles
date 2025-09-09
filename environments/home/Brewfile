@@ -33,7 +33,6 @@ cask 'google-chrome'
 
 mas '1Password for Safari', id: 1569813296
 mas 'Ghostery Privacy Ad Blocker', id: 6504861501
-mas 'Save to Pocket', id: 1477385213
 
 # Teh socials =========================================================
 
