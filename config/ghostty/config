@@ -9,6 +9,7 @@ font-family-italic = "BerkeleyMono Nerd Font Italic"
 font-size = 15
 font-thicken = true
 macos-titlebar-style = "native"
+scrollback-limit = 1048576000
 selection-background = "#404859"
 selection-foreground = "white"
 shell-integration-features = no-title
@@ -18,4 +19,4 @@ window-inherit-font-size = true
 window-padding-x = 16
 window-padding-y = 4
 window-width = 120
-keybind = cmd+f=write_screen_file:open
+keybind = cmd+f=write_screen_file:paste
