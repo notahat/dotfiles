@@ -46,10 +46,6 @@
   "relative_line_numbers": true,
   "vim_mode": true,
   "languages": {
-    "Swift": {
-      "tab_size": 4,
-      "format_on_save": "off"
-    },
     "Lua": {
       "formatter": {
         "external": {
@@ -58,6 +54,13 @@
         }
       },
       "format_on_save": "on"
+    },
+    "Ruby": {
+      "language_servers": ["ruby-lsp", "sorbet"]
+    },
+    "Swift": {
+      "tab_size": 4,
+      "format_on_save": "off"
     }
   }
 }
