@@ -6,13 +6,13 @@
       "ctrl-k": "workspace::ActivatePaneUp",
       "ctrl-l": "workspace::ActivatePaneRight"
     }
-  },
-  {
-    // Use ⌘-enter (rather than tab) to accept Copilot's edit predictions.
-    "context": "Editor && edit_prediction && !showing_completions",
-    "bindings": {
-      "tab": "editor::Tab",
-      "cmd-enter": "editor::AcceptEditPrediction"
-    }
   }
+  // {
+  //   // Use ⌘-enter (rather than tab) to accept Copilot's edit predictions.
+  //   "context": "Editor && edit_prediction && !showing_completions",
+  //   "bindings": {
+  //     "tab": "editor::Tab",
+  //     "cmd-enter": "editor::AcceptEditPrediction"
+  //   }
+  // }
 ]
