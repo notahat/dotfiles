@@ -43,7 +43,7 @@
     }
   },
   "tab_size": 2,
-  "relative_line_numbers": true,
+  "relative_line_numbers": "enabled",
   "vim_mode": true,
   "languages": {
     "Lua": {
