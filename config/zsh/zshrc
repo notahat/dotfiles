@@ -99,3 +99,5 @@ function autoruby { echo $1 | entr -c ruby $1 }
 function autorspec { echo $1 | entr -c ./up rspec $1 }
 
 alias sup='./up start up_native'
+
+alias esp='source ~/esp/esp-idf/export.sh'
