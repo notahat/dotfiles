@@ -4,7 +4,7 @@ This does 80% of the work of setting up a Mac the way I like it:
 
 ```sh
 xcode-select --install
-git clone git://github.com/notahat/dotfiles ~/.dotfiles
+git clone https://github.com/notahat/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 export DOTFILES_ENV=home
 ./install
@@ -28,7 +28,7 @@ A whole bunch of things, but key components are:
 - [Ghostty](https://ghostty.org).
 - [Homebrew](https://brew.sh) installs anything where I always want the latest
   version, including apps from the Mac App Store.
-- [Mise-en-place](https://mise.jdx.dev/) manages things like languages, where I
+- [Mise](https://mise.jdx.dev/) manages things like languages, where I
   want particular versions installed.
 
 ## How It Works

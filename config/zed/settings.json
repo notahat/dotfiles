@@ -28,10 +28,10 @@
     "edit_prediction_provider": "copilot"
   },
   "agent": {
-    "default_profile": "write",
+    "default_profile": "ask",
     "default_model": {
       "provider": "copilot_chat",
-      "model": "gpt-5"
+      "model": "gpt-5.2"
     }
   },
   "autosave": "on_focus_change",
