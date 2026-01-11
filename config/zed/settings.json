@@ -7,6 +7,12 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "project_panel": {
+    "sort_mode": "mixed"
+  },
+  "git_panel": {
+    "tree_view": true
+  },
   "tabs": {
     "git_status": true
   },
