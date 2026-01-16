@@ -26,7 +26,6 @@ cask 'rancher'
 cask 'raycast'
 cask 'scroll-reverser'
 cask 'visual-studio-code'
-mas 'Xcode', id: 497799835
 cask 'zed'
 
 cask 'font-inconsolata-nerd-font'

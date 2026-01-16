@@ -7,6 +7,7 @@ if [[ $DOTFILES_ENV == work ]]; then
   if [[ ! -f ~/.local/bin/mise ]]; then
     curl https://mise.run | MISE_VERSION="v2025.8.20" sh
   fi
+  export PATH=$PATH:~/.local/bin
 fi
 
 eval "$(mise activate bash)"
