@@ -24,6 +24,22 @@ local function select_inner_parameter()
   require("nvim-treesitter-textobjects.select").select_textobject("@parameter.inner", "textobjects")
 end
 
+local function next_function()
+  require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
+end
+
+local function previous_function()
+  require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
+end
+
+local function next_parameter()
+  require("nvim-treesitter-textobjects.move").goto_next_start("@parameter.inner", "textobjects")
+end
+
+local function previous_parameter()
+  require("nvim-treesitter-textobjects.move").goto_previous_start("@parameter.inner", "textobjects")
+end
+
 return {
   "nvim-treesitter/nvim-treesitter-textobjects",
   branch = "main",
@@ -47,5 +63,14 @@ return {
     vim.keymap.set({ "x", "o" }, "if", select_inner_function, { desc = "inner function" })
     vim.keymap.set({ "x", "o" }, "ap", select_outer_parameter, { desc = "parameter" })
     vim.keymap.set({ "x", "o" }, "ip", select_inner_parameter, { desc = "inner parameter" })
+
+    vim.keymap.set({ "n", "x", "o" }, "]f", next_function, { desc = "Next function" })
+    vim.keymap.set({ "n", "x", "o" }, "[f", previous_function, { desc = "Previous function" })
+    vim.keymap.set({ "n", "x", "o" }, "]p", next_parameter, { desc = "Next parameter" })
+    vim.keymap.set({ "n", "x", "o" }, "[p", previous_parameter, { desc = "Previous parameter" })
+
+    local repeatable_move = require("nvim-treesitter-textobjects.repeatable_move")
+    vim.keymap.set({ "n", "x", "o" }, ";", repeatable_move.repeat_last_move_next)
+    vim.keymap.set({ "n", "x", "o" }, ",", repeatable_move.repeat_last_move_previous)
   end,
 }
