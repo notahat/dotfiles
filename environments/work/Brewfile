@@ -33,3 +33,6 @@ cask 'font-inconsolata-nerd-font'
 # mason.nvim needs these to build gems:
 brew 'coreutils'
 brew 'libyaml'
+
+# nvim-treesitter needs this:
+brew 'tree-sitter-cli'
