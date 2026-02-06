@@ -7,6 +7,10 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "icon_theme": "Catppuccin Macchiato",
+  "edit_predictions": {
+    "provider": "copilot"
+  },
   "project_panel": {
     "sort_mode": "mixed"
   },
@@ -23,9 +27,6 @@
         "default_minimum_tokens": "10000"
       }
     }
-  },
-  "features": {
-    "edit_prediction_provider": "copilot"
   },
   "agent": {
     "default_profile": "ask",
