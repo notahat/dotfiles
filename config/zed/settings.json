@@ -7,49 +7,52 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "auto_install_extensions": {
+    "basher": true,
+  },
   "icon_theme": "Catppuccin Macchiato",
   "edit_predictions": {
-    "provider": "copilot"
+    "provider": "copilot",
   },
   "project_panel": {
-    "sort_mode": "mixed"
+    "sort_mode": "mixed",
   },
   "git_panel": {
-    "tree_view": true
+    "tree_view": true,
   },
   "tabs": {
-    "git_status": true
+    "git_status": true,
   },
   "context_servers": {
     "mcp-server-context7": {
       "enabled": true,
       "settings": {
-        "default_minimum_tokens": "10000"
-      }
-    }
+        "default_minimum_tokens": "10000",
+      },
+    },
   },
   "agent": {
     "default_profile": "ask",
     "default_model": {
-      "provider": "copilot_chat",
-      "model": "gpt-5.2"
-    }
+      "provider": "zed.dev",
+      "model": "claude-opus-4-6",
+    },
   },
   "autosave": "on_focus_change",
   "buffer_font_family": "BerkeleyMono Nerd Font",
   "buffer_font_features": {
-    "calt": false // Don't use ligatures.
+    "calt": false, // Don't use ligatures.
   },
   "git": {
-    "inline_blame": { "enabled": false }
+    "inline_blame": { "enabled": false },
   },
   "indent_guides": {
-    "enabled": false
+    "enabled": false,
   },
   "diagnostics": {
     "inline": {
-      "enabled": true
-    }
+      "enabled": true,
+    },
   },
   "tab_size": 2,
   "relative_line_numbers": "enabled",
@@ -59,17 +62,17 @@
       "formatter": {
         "external": {
           "command": "stylua",
-          "arguments": ["-"]
-        }
+          "arguments": ["-"],
+        },
       },
-      "format_on_save": "on"
+      "format_on_save": "on",
     },
     "Ruby": {
-      "language_servers": ["ruby-lsp", "sorbet"]
+      "language_servers": ["ruby-lsp", "sorbet"],
     },
     "Swift": {
       "tab_size": 4,
-      "format_on_save": "off"
-    }
-  }
+      "format_on_save": "off",
+    },
+  },
 }

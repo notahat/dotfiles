@@ -12,6 +12,8 @@ export DOTFILES_ENV=home
 
 I re-run `./install` frequently (it's idempotent), which ensures I maintain it.
 
+`./upgrade` upgrades Homebrew packages, Mise tools, and Neovim plugins.
+
 I remove anything I'm not using to keep it simple.
 
 ## What's Installed?
