@@ -58,3 +58,10 @@ Good code is code that is easy to understand. Everything else in these guideline
 - Never silently swallow errors or exceptions. Always handle or propagate them explicitly.
 - Fail early. It's better to surface an error clearly at the point it occurs than to recover and continue in an unknown state.
 - Follow language conventions for error handling style (exceptions, error return values, etc.).
+
+## Project Templates
+
+Templates for common project setups live in ~/.dotfiles/project-templates/, organised
+by project type (e.g. vite/). When asked to install a template (e.g. "install my vite
+config"), copy the template files into the current project directory and follow any
+additional steps in the template's README.md.
