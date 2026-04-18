@@ -1,12 +1,19 @@
 [
   {
+    "label": "test $ZED_RELATIVE_FILE",
+    "command": "bin/rails",
+    "args": ["test", "$ZED_RELATIVE_FILE"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "tags": ["ruby-test-file"],
+  },
+  {
     "label": "test $ZED_RELATIVE_FILE -i /$ZED_CUSTOM_RUBY_TEST_NAME/",
     "command": "bin/rails",
     "args": [
       "test",
       "$ZED_RELATIVE_FILE",
       "-i",
-      "\"$ZED_CUSTOM_RUBY_TEST_NAME\"",
+      "\"/$ZED_CUSTOM_RUBY_TEST_NAME/\"",
     ],
     "cwd": "$ZED_WORKTREE_ROOT",
     "tags": ["ruby-test"],
