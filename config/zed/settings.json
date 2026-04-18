@@ -7,6 +7,23 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "agent": {
+    // At work, use Copilot.
+    "default_model": {
+      "effort": "high",
+      "provider": "copilot_chat",
+      "model": "claude-sonnet-4.6",
+      "enable_thinking": true,
+    },
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "agent_servers": {
+    // At home, use Claude through its agent.
+    "claude-acp": {
+      "type": "registry",
+    },
+  },
   "autosave": "on_focus_change",
   "buffer_font_family": "BerkeleyMono Nerd Font",
   "buffer_font_features": {
