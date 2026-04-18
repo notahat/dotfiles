@@ -7,58 +7,6 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "diff_view_style": "unified",
-  "agent_servers": {
-    "github-copilot": {
-      "type": "registry",
-    },
-    "claude-acp": {
-      "type": "registry",
-    },
-  },
-  "auto_install_extensions": {
-    "basher": true,
-  },
-  "icon_theme": "Catppuccin Macchiato",
-  "edit_predictions": {
-    "provider": "copilot",
-  },
-  "project_panel": {
-    "sort_mode": "mixed",
-  },
-  "git_panel": {
-    "tree_view": true,
-  },
-  "tabs": {
-    "git_status": true,
-  },
-  "context_servers": {
-    "mcp-server-context7": {
-      "enabled": true,
-      "settings": {
-        "default_minimum_tokens": "10000",
-      },
-    },
-  },
-  "agent": {
-    "favorite_models": [
-      {
-        "provider": "copilot_chat",
-        "model": "claude-opus-4.6",
-      },
-      {
-        "provider": "zed.dev",
-        "model": "claude-sonnet-4-5",
-      },
-    ],
-    "default_profile": "write",
-    "default_model": {
-      "effort": "medium",
-      "enable_thinking": true,
-      "provider": "copilot_chat",
-      "model": "claude-sonnet-4.6",
-    },
-  },
   "autosave": "on_focus_change",
   "buffer_font_family": "BerkeleyMono Nerd Font",
   "buffer_font_features": {
@@ -67,33 +15,10 @@
   "git": {
     "inline_blame": { "enabled": false },
   },
-  "indent_guides": {
-    "enabled": false,
+  "git_panel": {
+    "tree_view": true,
   },
-  "diagnostics": {
-    "inline": {
-      "enabled": true,
-    },
-  },
-  "tab_size": 2,
   "relative_line_numbers": "enabled",
+  "tab_size": 2,
   "vim_mode": true,
-  "languages": {
-    "Lua": {
-      "formatter": {
-        "external": {
-          "command": "stylua",
-          "arguments": ["-"],
-        },
-      },
-      "format_on_save": "on",
-    },
-    "Ruby": {
-      "language_servers": ["ruby-lsp", "sorbet"],
-    },
-    "Swift": {
-      "tab_size": 4,
-      "format_on_save": "off",
-    },
-  },
 }
