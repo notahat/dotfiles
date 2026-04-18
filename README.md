@@ -43,3 +43,7 @@ the steps.
 
 The `environments` directory contains separate `Brewfile`s and `mise.toml`
 files for my home and work machines.
+
+The `project-templates` directory contains config files for common project
+types (e.g. Vite, Rails). Each template has a README describing what's
+included and how to install it into a project.
