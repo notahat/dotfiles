@@ -12,3 +12,7 @@
    ```
    npm install --save-dev prettier
    ```
+3. Force-add the Zed settings (it's in the global gitignore):
+   ```
+   git add -f .zed/settings.json
+   ```
