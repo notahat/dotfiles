@@ -1,0 +1,10 @@
+{
+  "banner": "never",
+  "trusted_folders": [
+    "/Users/notahat/src/up"
+  ],
+  "render_markdown": true,
+  "model": "claude-sonnet-4.6",
+  "effortLevel": "medium",
+  "firstLaunchAt": "2026-03-11T00:00:00.000Z"
+}
