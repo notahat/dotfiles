@@ -5,3 +5,8 @@ ruby = "latest"
 usage = "latest"
 yarn = "latest"
 zig = "0.14.0"
+
+[settings]
+
+[settings.ruby]
+compile = false
