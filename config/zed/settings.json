@@ -7,6 +7,9 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "collaboration_panel": {
+    "dock": "right",
+  },
   "agent": {
     // At work, use Copilot.
     "default_model": {
@@ -15,6 +18,7 @@
       "model": "claude-sonnet-4.6",
       "enable_thinking": true,
     },
+    "dock": "left",
     "favorite_models": [],
     "model_parameters": [],
   },
@@ -33,9 +37,17 @@
     "inline_blame": { "enabled": false },
   },
   "git_panel": {
+    "dock": "right",
     "tree_view": true,
   },
+  "outline_panel": {
+    "dock": "right",
+  },
+  "project_panel": {
+    "dock": "right",
+  },
   "relative_line_numbers": "enabled",
+  "soft_wrap": "editor_width",
   "tab_size": 2,
   "vim_mode": true,
 }
