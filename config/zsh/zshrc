@@ -35,6 +35,13 @@ if [[ -d $HOMEBREW_PREFIX/share/zsh-syntax-highlighting ]] {
 }
 
 # ------------------------------------------------------------------------------------------
+# Configure zoxide.
+
+if [[ -x $HOMEBREW_PREFIX/bin/zoxide ]] {
+  eval "$(zoxide init zsh)"
+}
+
+# ------------------------------------------------------------------------------------------
 # Use vim keybindings.
 
 bindkey -v
