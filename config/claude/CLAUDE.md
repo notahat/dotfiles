@@ -65,3 +65,13 @@ Templates for common project setups live in ~/.dotfiles/project-templates/, orga
 by project type (e.g. vite/). When asked to install a template (e.g. "install my vite
 config"), copy the template files into the current project directory and follow any
 additional steps in the template's README.md.
+
+## Testing
+
+When writing tests, TDD. Verify that a test fails before implementing the code that makes it pass.
+
+## Planning
+
+Whenever we're making a plan to change some code, there are rules:
+- The plan should be broken into some incremental steps, with each step including tests where appropriate, and with review and commit happening at the end of each step. The idea is to keep the commits a sensible size.
+- The plan should be written to a markdown file in the project, and committed before we start work. If there's not an obvious place to put it, ask where it should go.
