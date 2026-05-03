@@ -1,8 +1,4 @@
 {
-  "enabledPlugins": {
-    "ruby-lsp@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true
-  },
   "env": {
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1"
   },
@@ -10,5 +6,11 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
-  "voiceEnabled": true
+  "enabledPlugins": {
+    "ruby-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true
+  },
+  "effortLevel": "high",
+  "voiceEnabled": true,
+  "theme": "dark-ansi"
 }
