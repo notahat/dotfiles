@@ -1,6 +1,6 @@
 # Claude Instructions
 
-Good code is code that is easy to understand. Everything else in these guidelines follows from that.
+Good code is code that is easy to understand. Everything else in these guidelines follows from that. When a specific rule below would make a piece of code harder to understand, the principle wins. If a project's CLAUDE.md conflicts with these rules, the project's wins.
 
 ## Structure
 
@@ -10,7 +10,7 @@ Good code is code that is easy to understand. Everything else in these guideline
 ## Function and Method Design
 
 - A function should have a single, clearly defined job. If it's hard to name, it's probably doing too much.
-- Keep functions under 35 lines. If you can't, that's a signal to break it up.
+- Keep functions under 35 lines. If you can't, that's a signal to break it up. This applies to functions you're writing or editing — don't refactor untouched code to chase the limit.
 - Minimise the number of things a reader has to hold in their head at once — avoid deep nesting, complex conditionals, and functions that require understanding a lot of context to follow.
 - Use guard clauses and early returns to reduce nesting.
 - Be clear about whether a function is pure or has side effects. Prefer pure functions where possible.
@@ -32,7 +32,7 @@ Good code is code that is easy to understand. Everything else in these guideline
 - Always write in complete sentences with proper punctuation.
 - Good comments explain *why* the code is the way it is, or capture context that the code itself can't convey.
 - Classes and modules must always have a comment that makes their responsibilities clear — including what is explicitly out of scope, where that might otherwise be assumed.
-- Functions and methods should generally have a header comment. Skip it if the name and signature make the intent completely obvious.
+- Functions and methods should have a header comment, including private helpers. Test cases are the exception — the test name carries the description. Test helpers (factories, fixtures, setup) still get headers.
 - Inline comments are fine, but always prefer making the code clear enough not to need them.
 - Explaining non-obvious or complex code with a comment is fine, but prefer simplifying the code instead.
 - Use language-appropriate doc comment formats.
@@ -41,6 +41,7 @@ Good code is code that is easy to understand. Everything else in these guideline
 
 ## Testing
 
+- For behavior changes, TDD: write a failing test (or a failing reproducer for a bug) before the fix, and verify it fails before implementing. Skip TDD when the change has no testable behavior (config, docs, formatting) or when no test framework exists in the codebase. For exploratory spikes, say so up front and write tests once the shape settles.
 - Tests should give confidence that code behaves correctly, enabling changes to be made with confidence. Don't aim for a coverage target.
 - Test public interfaces only. If you find yourself wanting to test private methods, that's a sign there's complexity that should be extracted.
 - Avoid mocks and stubs except for external services and other infrastructure you don't control. Well-designed code should otherwise be testable without them.
@@ -59,19 +60,8 @@ Good code is code that is easy to understand. Everything else in these guideline
 - Fail early. It's better to surface an error clearly at the point it occurs than to recover and continue in an unknown state.
 - Follow language conventions for error handling style (exceptions, error return values, etc.).
 
-## Project Templates
-
-Templates for common project setups live in ~/.dotfiles/project-templates/, organised
-by project type (e.g. vite/). When asked to install a template (e.g. "install my vite
-config"), copy the template files into the current project directory and follow any
-additional steps in the template's README.md.
-
-## Testing
-
-When writing tests, TDD. Verify that a test fails before implementing the code that makes it pass.
-
 ## Planning
 
-Whenever we're making a plan to change some code, there are rules:
-- The plan should be broken into some incremental steps, with each step including tests where appropriate, and with review and commit happening at the end of each step. The idea is to keep the commits a sensible size.
+When working in plan mode:
+- The plan should be broken into incremental steps, with each step including tests where appropriate, and with review and commit happening at the end of each step. The idea is to keep commits a sensible size.
 - The plan should be written to a markdown file in the project, and committed before we start work. If there's not an obvious place to put it, ask where it should go.
