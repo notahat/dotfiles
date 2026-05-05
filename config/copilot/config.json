@@ -1,10 +1,18 @@
+// User settings belong in settings.json.
+// This file is managed automatically.
 {
-  "banner": "never",
-  "trusted_folders": [
+  "trustedFolders": [
     "/Users/notahat/src/up"
   ],
-  "render_markdown": true,
-  "model": "claude-sonnet-4.6",
-  "effortLevel": "medium",
-  "firstLaunchAt": "2026-03-11T00:00:00.000Z"
+  "firstLaunchAt": "2026-03-11T00:00:00.000Z",
+  "lastLoggedInUser": {
+    "host": "https://github.com",
+    "login": "notahat"
+  },
+  "loggedInUsers": [
+    {
+      "host": "https://github.com",
+      "login": "notahat"
+    }
+  ]
 }
