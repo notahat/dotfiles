@@ -64,4 +64,11 @@ Good code is code that is easy to understand. Everything else in these guideline
 
 When working in plan mode:
 - The plan should be broken into incremental steps, with each step including tests where appropriate, and with review and commit happening at the end of each step. The idea is to keep commits a sensible size.
-- The plan should be written to a markdown file in the project, and committed before we start work. If there's not an obvious place to put it, ask where it should go.
+- The plan should be written to a markdown file in the project, and committed before we start work. Default to putting plans in `docs/plans` unless the project specifies a different location.
+- Plan filenames should start with a two-digit number followed by a hyphen and a descriptive name (e.g. `01-initial-plan.md`). New plans should accumulate rather than replace existing ones.
+- Include preparatory refactoring in the plan.
+
+## Tools
+
+- `rg` is available for searching. Use this for speed.
+- If you can't find `psql`, try `psql-18`. Ditto for other Postgres tools.
