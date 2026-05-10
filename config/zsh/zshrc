@@ -42,6 +42,13 @@ if [[ -x $HOMEBREW_PREFIX/bin/zoxide ]] {
 }
 
 # ------------------------------------------------------------------------------------------
+# Configure opam (OCaml).
+
+if [[ -x '~/.opam/opam-init/init.zsh' ]] {
+  source '~/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
+}
+
+# ------------------------------------------------------------------------------------------
 # Use vim keybindings.
 
 bindkey -v
