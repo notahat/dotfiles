@@ -25,6 +25,9 @@
     "model_parameters": [],
   },
   "agent_servers": {
+    "github-copilot-cli": {
+      "type": "registry"
+    ,
     // At home, use Claude through its agent.
     "claude-acp": {
       "type": "registry",
