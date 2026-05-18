@@ -3,18 +3,6 @@
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
     "DISABLE_AUTOUPDATER": "1"
   },
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh"
-  },
-  "enabledPlugins": {
-    "ruby-lsp@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true
-  },
-  "effortLevel": "high",
-  "theme": "dark-ansi",
-  "voiceEnabled": true,
   "hooks": {
     "Notification": [
       {
@@ -36,5 +24,25 @@
         ]
       }
     ]
-  }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
+  "enabledPlugins": {
+    "ruby-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
+  },
+  "effortLevel": "high",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "theme": "dark-ansi",
+  "preferredNotifChannel": "auto",
+  "autoCompactEnabled": false,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
 }

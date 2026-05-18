@@ -1,0 +1,82 @@
+[
+  {
+    "query": "ok i'm in my ocaml project, can you fix the bug in lib/parser/lexer.ml? the failing test is in test/parser/test_lexer.ml — it's the one about handling quoted identifiers. let me know when the build's green",
+    "should_trigger": true
+  },
+  {
+    "query": "set up the dune watcher for this repo. dune-project is in the root",
+    "should_trigger": true
+  },
+  {
+    "query": "i want to add a new constructor `Coalesce` to the Expression.t type in lib/core/expression.ml — there are tests in test/core/test_expression.ml that need to be updated too",
+    "should_trigger": true
+  },
+  {
+    "query": "weird one: i was running my tests with `dune test` and it just hangs forever. nothing in the output. any idea what's going on? this is an opam project, ocaml 5.2",
+    "should_trigger": true
+  },
+  {
+    "query": "can we tdd a new normalize function? signature should be `val normalize : t -> t` in lib/value/value.mli. failing test first, then make it pass",
+    "should_trigger": true
+  },
+  {
+    "query": "i just renamed Schema.field to Schema.column across the codebase using my editor's rename. plz run the tests and check nothing's broken",
+    "should_trigger": true
+  },
+  {
+    "query": "just cloned this dune-based ocaml project at ~/src/dovetail. how do i get started running the test suite while i poke at it?",
+    "should_trigger": true
+  },
+  {
+    "query": "format lib/parser/parser.ml please — it's been bugging me that the indentation in the new section doesn't match the rest of the file",
+    "should_trigger": true
+  },
+  {
+    "query": "the test for `value_of_string` in test/core/test_value.ml is failing after my edit to lib/core/value.ml. can you look at what broke?",
+    "should_trigger": true
+  },
+  {
+    "query": "i'm working through Real World OCaml chapter 5 in this dune-project setup. wrote my answer to exercise 3 in src/exercises/ex3.ml, can you check it compiles and run the test i wrote in test/ex3_test.ml?",
+    "should_trigger": true
+  },
+  {
+    "query": "set up file watching for my python flask app — i want it to auto-reload templates when i edit them. currently using `flask run` and have to restart manually",
+    "should_trigger": false
+  },
+  {
+    "query": "my dune buggy has been making this weird grinding noise when i turn left at low speed. tried checking the CV joints already. any ideas where else to look?",
+    "should_trigger": false
+  },
+  {
+    "query": "what's the difference between OCaml's signatures and structures? i'm reading through Real World OCaml and want to make sure i've got the concept straight before i try writing any of my own modules",
+    "should_trigger": false
+  },
+  {
+    "query": "using nodemon to watch my express app and re-run on changes. it's restarting twice on every save and i can't figure out why. nodemon.json is at the project root",
+    "should_trigger": false
+  },
+  {
+    "query": "can you read lib/core/value.ml and explain what the `Kind` submodule does? i'm not changing anything yet, just trying to understand the structure before i contribute a PR",
+    "should_trigger": false
+  },
+  {
+    "query": "set up a GitHub Actions CI workflow for my OCaml project. should run `dune build` and `dune test` on every push and PR. .github/workflows/ doesn't exist yet",
+    "should_trigger": false
+  },
+  {
+    "query": "i'm rebuilding my react app and the vite dev server keeps crashing with 'EMFILE: too many open files'. tried raising ulimit but no luck",
+    "should_trigger": false
+  },
+  {
+    "query": "writing a new opam package and need help figuring out what goes in the .opam file. not building anything yet, just trying to figure out the metadata for the publish step",
+    "should_trigger": false
+  },
+  {
+    "query": "translate this OCaml `List.fold_left` example into Haskell. just the function, no project setup needed. (i'll paste it in my next message)",
+    "should_trigger": false
+  },
+  {
+    "query": "what does `dune-project` actually contain? a coworker sent me their project to look at and i want to understand the file format before i touch anything",
+    "should_trigger": false
+  }
+]
