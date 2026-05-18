@@ -74,6 +74,7 @@ brew 'fd'
 brew 'fzf'
 brew 'jq'
 brew 'ripgrep'
+brew 'terminal-notifier'
 brew 'wget'
 
 # Zsh plugins =========================================================

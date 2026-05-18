@@ -14,5 +14,27 @@
   },
   "effortLevel": "high",
   "theme": "dark-ansi",
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-waiting.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-waiting.sh"
+          }
+        ]
+      }
+    ]
+  }
 }
