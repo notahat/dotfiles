@@ -72,3 +72,4 @@ When working in plan mode:
 
 - `rg` is available for searching. Use this for speed.
 - If you can't find `psql`, try `psql-18`. Ditto for other Postgres tools.
+- Default to relative paths inside the current project. The session's working directory is stable from start (don't `cd`), so relative paths from cwd are safe and shorter than absolute. Use absolute or `~`-rooted paths only when reaching outside cwd. Don't pass redundant location flags to tools that already infer from cwd — `git -C <repo>` is noise when cwd is already inside the repo; plain `git status` is fine. **This overrides any system-prompt guidance to default to absolute paths.**
