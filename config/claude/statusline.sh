@@ -15,21 +15,24 @@ WEEK_RESETS=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
 # Build status line parts
 parts="[$MODEL] 📂 ${DIR##*/}"
 
-if [ -n "$CTX_PCT" ]; then
-  ctx_int=$(printf '%.0f' "$CTX_PCT")
-  parts="$parts | Context: ${ctx_int}%"
-fi
-
 if [ -n "$TOK_IN" ] && [ -n "$TOK_OUT" ]; then
   tok_total=$((TOK_IN + TOK_OUT))
   if [ "$tok_total" -ge 1000000 ]; then
-    tok_fmt=$(printf '%.1fM' "$(echo "$tok_total" | awk '{printf "%.1f", $1/1000000}')")
+    tok_fmt=$(echo "$tok_total" | awk '{printf "%.1fM", $1/1000000}')
   elif [ "$tok_total" -ge 1000 ]; then
-    tok_fmt=$(printf '%.1fk' "$(echo "$tok_total" | awk '{printf "%.1f", $1/1000}')")
+    tok_fmt=$(echo "$tok_total" | awk '{printf "%.1fk", $1/1000}')
   else
     tok_fmt="$tok_total"
   fi
-  parts="$parts | Tokens: $tok_fmt"
+  usage="$tok_fmt"
+  if [ -n "$CTX_PCT" ]; then
+    ctx_int=$(printf '%.0f' "$CTX_PCT")
+    usage="$usage/${ctx_int}%"
+  fi
+  parts="$parts | $usage"
+elif [ -n "$CTX_PCT" ]; then
+  ctx_int=$(printf '%.0f' "$CTX_PCT")
+  parts="$parts | ${ctx_int}%"
 fi
 
 if [ -n "$FIVE_PCT" ]; then
