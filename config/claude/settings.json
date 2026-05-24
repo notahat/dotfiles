@@ -4,18 +4,18 @@
     "DISABLE_AUTOUPDATER": "1"
   },
   "hooks": {
-    "Notification": [
+    "Stop": [
       {
-        "matcher": "idle_prompt",
         "hooks": [
           {
             "type": "command",
             "command": "~/.claude/hooks/notify-waiting.sh"
           }
         ]
-      },
+      }
+    ],
+    "StopFailure": [
       {
-        "matcher": "permission_prompt",
         "hooks": [
           {
             "type": "command",
@@ -32,9 +32,11 @@
   "enabledPlugins": {
     "ruby-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": false,
+    "context7@claude-plugins-official": true
   },
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "voice": {
     "enabled": true,
     "mode": "hold"
