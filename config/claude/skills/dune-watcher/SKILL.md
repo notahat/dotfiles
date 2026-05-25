@@ -43,8 +43,9 @@ forwards to the watcher daemon, which only does what it was started to
 do — so the one-shot hangs. The consequence:
 
 - **No `dune test`, `dune build`, `dune build @fmt` while the watcher is
-  up.** Read test results from `$LOG` instead. The watcher is already
-  running tests on every save.
+  up.** The watcher is already running tests on every save; read the
+  results from the wait script's per-invocation output file (see
+  "Reading rebuild results" below).
 - **No `dune exec <name>` and no wrapper script that uses `dune exec`
   internally.** It fails with `Program '<name>' not found!` because the
   lock is held. Run the artifact directly:
@@ -64,21 +65,26 @@ clean state), stop the watcher first.
 
 After every edit to a build-relevant file (`.ml`, `.mli`, `dune`,
 `dune-project`, etc.) you need to wait for the watcher's rebuild to
-finish before reading results. The protocol is **capture baseline →
-edit → run wait script**:
+finish before reading results. The protocol is **mark → edit → wait**,
+and both halves go through the same script so a single whitelist
+entry covers the whole cycle (no shell-side grep on `$LOG`):
 
-    # Capture BEFORE the edit. This is the count of completed rebuilds
-    # so far; the wait script watches for it to increase.
-    before=$(grep -c "waiting for filesystem" "$LOG")
+    SCRIPT=~/.claude/skills/dune-watcher/scripts/wait-for-watcher.sh
+
+    # Mark BEFORE the edit. The script captures the current rebuild
+    # count and stores it in $LOG.baseline.
+    "$SCRIPT" mark "$LOG"
 
     # ... make your edits (Edit / Write tool calls) ...
 
-    # Run in the background. The script prints the new rebuild's output
-    # and exits, which fires a single notification.
-    scripts/wait-for-watcher.sh "$LOG" "$before"
+    # Wait AFTER the edit. Run in the background so a single
+    # notification fires the moment the rebuild settles.
+    "$SCRIPT" wait "$LOG"
 
-Use `run_in_background: true` for the wait script. You'll get notified
-the moment the rebuild settles.
+When the background `wait` task completes, `Read` its per-invocation
+output file. That file holds the rebuild's concise summary (one PASS
+line, or FAIL with diagnostic blocks) — see "Reading rebuild results"
+below.
 
 The script lives in this skill at
 `~/.claude/skills/dune-watcher/scripts/wait-for-watcher.sh`. Either
@@ -86,12 +92,60 @@ reference that path directly, or copy it into the project's `scripts/`
 directory at setup time (the dovetail project, where this protocol
 originated, keeps a project-local copy).
 
+A legacy two-arg form `wait-for-watcher.sh "$LOG" "$baseline_number"`
+is still supported for transcripts written before the `mark`/`wait`
+split. New work should use `mark`/`wait`.
+
+### Reading rebuild results
+
+**The wait script's per-invocation output file is the single source of
+truth for the current build state.** When you launch the wait script
+with `run_in_background: true`, the Bash tool prints the per-invocation
+output path (e.g. `/tmp/.../bm0cdqgl6.output`). When the task completes,
+read that file with the `Read` tool. It contains a **concise summary**
+of the most recent completed rebuild:
+
+- **PASS:** one line, e.g. `PASS: 412 tests across 23 suites`. Done;
+  move on.
+- **FAIL:** a one-line summary (`FAIL: N failing test(s), M compile
+  error(s)`) followed by the diagnostic detail you need to fix it —
+  every `File "path", line N:` compile-error block, every `[FAIL]`
+  test name plus its alcotest detail block (ASSERT / diff / backtrace),
+  and a fallback tail if neither pattern was found but dune still
+  reported errors. No passing-test enumeration; just what failed.
+- **No rebuild (coalesced / no-op edit):** the previous rebuild's
+  summary with a stderr note explaining it's stale.
+
+Either way: the file is a faithful read of "what is the build saying
+right now?" Read it with `Read` — never with shell tools.
+
+**Do NOT touch `$LOG` (the long-running `dune runtest -w` log) for
+anything except the pre-edit baseline capture.** `$LOG` accumulates
+output from every rebuild in the session, so a grep for
+`FAIL` / `Test Successful` / `Error` will return stale failures from
+earlier rebuilds and let you conclude wrongly that a current failure
+is pre-existing. Every shell-side read (`tail`, `grep`, `wc`, `awk`,
+`sed`) is also a per-invocation permission prompt — a real friction
+tax over a long session.
+
+**Same rule applies to the script's per-invocation output file.** It
+is already designed to be short: PASS is one line, FAIL is just the
+diagnostic blocks. Use `Read` directly — do not grep / tail / wc the
+output file either. If the file is so long that `Read` feels awkward,
+or the diagnostic info isn't sufficient to fix the failure, **that is
+a bug in the summarizer** (`scripts/wait-for-watcher.sh`'s
+`print_rebuild_output` function): improve the function so the output
+answers the question. Don't route around it with shell tools.
+
 ### Exit codes
 
-- **0**: the rebuild settled (output printed), **or** dune chose not to
-  rebuild (no-op edit, content-unchanged `touch`, edit to a non-build
-  file, or coalesced into an earlier rebuild). The "no rebuild" case
-  prints a note on stderr — that is normal, not a failure.
+- **0**: the rebuild settled, **or** dune chose not to rebuild (no-op
+  edit, content-unchanged `touch`, edit to a non-build file, or
+  coalesced into an earlier rebuild). In **both** cases the
+  per-invocation output file contains the most recent completed
+  rebuild's output, so reading it always reflects current state. The
+  "no rebuild" case adds a stderr note explaining the printed block is
+  the previous rebuild, not a fresh one — normal, not a failure.
 - **1**: the 120-second ceiling fired. The watcher is likely stuck; the
   last 100 lines of the log get dumped to stderr.
 
@@ -182,12 +236,21 @@ quiet gaps inside a compile) is what generalises.
 ```
 # Once per session:
 dune runtest -w                              # run_in_background, save path as $LOG
+SCRIPT=~/.claude/skills/dune-watcher/scripts/wait-for-watcher.sh
 
 # Per edit cycle:
-before=$(grep -c "waiting for filesystem" "$LOG")
+"$SCRIPT" mark "$LOG"                        # before the edit
 # ... edits ...
-~/.claude/skills/dune-watcher/scripts/wait-for-watcher.sh "$LOG" "$before"
-                                             # run_in_background
+"$SCRIPT" wait "$LOG"                        # run_in_background; note
+                                             # the output path it prints
+
+# When the wait task completes, Read the per-invocation output file.
+# It holds a concise summary: one PASS line, or FAIL with extracted
+# error blocks and failing test detail. Never grep, tail, awk, or sed
+# either $LOG or the output file — every shell-side read is a
+# permission prompt, and the summary is already the answer. If the
+# summary doesn't have what you need, fix the summarizer
+# (scripts/wait-for-watcher.sh's print_rebuild_output function).
 
 # Running the binary while watcher is up:
 _build/default/bin/main.exe [args...]        # NOT `dune exec ...`
