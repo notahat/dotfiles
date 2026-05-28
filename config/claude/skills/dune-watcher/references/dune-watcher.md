@@ -12,7 +12,7 @@ one-shots forward to the watcher daemon and hang.
 The watcher's output is prose for humans, not a protocol. There is no
 machine-readable event stream, so the strategy is to infer state from
 text. This document records what dune actually emits, the strategy
-`scripts/wait-for-watcher.sh` uses to parse it, and the alternatives
+`scripts/wait-for-watcher.py` uses to parse it, and the alternatives
 considered and rejected.
 
 The empirical findings here are from dune 3.23.0; the strings the
@@ -72,7 +72,7 @@ specific reason a single idle-threshold heuristic doesn't work; see
 
 ## Strategy
 
-`scripts/wait-for-watcher.sh` is a two-phase, two-counter script.
+`scripts/wait-for-watcher.py` is a two-phase, two-counter script.
 
 ### Counters
 

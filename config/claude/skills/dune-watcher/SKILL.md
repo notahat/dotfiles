@@ -15,7 +15,48 @@ correctly.
 The watcher's output is prose for humans, not a protocol — there's no
 machine-readable event stream — so the wait protocol below infers state
 from two stable phrases in the watcher's log. The bundled
-`scripts/wait-for-watcher.sh` does the parsing.
+`scripts/wait-for-watcher.py` does the parsing.
+
+## Cardinal rule: trust the wait script's verdict
+
+The wait script's per-invocation output file is the **only** thing you
+read to learn the build state. Once you've read it, you have your
+answer — `PASS` means pass, `FAIL` means fail, `Overall:` means the
+cross-rebuild aggregate. **Stop.** Do not reach behind the script for
+"a second opinion."
+
+That means **never**, under any circumstance:
+
+- `tail` / `cat` / `head` / `grep` / `wc` / `awk` / `sed` on `$LOG`
+  (the long-running `dune runtest -w` log).
+- `cat` / `Read` / `grep` on `$LOG.suite_state` or `$LOG.baseline` —
+  these are the script's internal state files, not user-facing
+  artifacts.
+- `tail` / `grep` on the wait script's per-invocation output file
+  itself. `Read` it once with the `Read` tool; that's the whole
+  interface.
+- Spawning a one-shot `dune build` / `dune test` to "double-check."
+  The watcher holds the lock; it will hang. And if it didn't, the
+  watcher's already running tests on every save.
+
+Common temptations that **are not** justifications for breaking the rule:
+
+- *"The PASS line says 1 suite but I edited 10 files — surely more
+  suites ran."* Incremental rebuilds re-run only suites whose deps
+  changed; the Overall line aggregates across rebuilds. Trust it.
+- *"The summary doesn't have enough detail to fix the failure."* That
+  is a bug in `scripts/wait-for-watcher.py`'s `print_rebuild_output`
+  function. Fix the summarizer; do not route around it.
+- *"I just want to confirm the watcher is alive."* If the wait script
+  returned exit 0, it's alive. If exit 1, it dumped the tail for you.
+- *"I want to see which suites the project has overall."* `ls test/`
+  or `find test -name 'test_*.ml'` answers that without touching the
+  watcher.
+
+If you find yourself reaching for a shell read of `$LOG`,
+`$LOG.suite_state`, `$LOG.baseline`, or the output file — **stop**.
+The answer is already in what `Read` returned. If it isn't, the fix
+is to the summarizer, not to your reading habits.
 
 ## When this applies
 
@@ -69,7 +110,7 @@ finish before reading results. The protocol is **mark → edit → wait**,
 and both halves go through the same script so a single whitelist
 entry covers the whole cycle (no shell-side grep on `$LOG`):
 
-    SCRIPT=~/.claude/skills/dune-watcher/scripts/wait-for-watcher.sh
+    SCRIPT=~/.claude/skills/dune-watcher/scripts/wait-for-watcher.py
 
     # Mark BEFORE the edit. The script captures the current rebuild
     # count and stores it in $LOG.baseline.
@@ -87,14 +128,10 @@ line, or FAIL with diagnostic blocks) — see "Reading rebuild results"
 below.
 
 The script lives in this skill at
-`~/.claude/skills/dune-watcher/scripts/wait-for-watcher.sh`. Either
+`~/.claude/skills/dune-watcher/scripts/wait-for-watcher.py`. Either
 reference that path directly, or copy it into the project's `scripts/`
 directory at setup time (the dovetail project, where this protocol
 originated, keeps a project-local copy).
-
-A legacy two-arg form `wait-for-watcher.sh "$LOG" "$baseline_number"`
-is still supported for transcripts written before the `mark`/`wait`
-split. New work should use `mark`/`wait`.
 
 ### Reading rebuild results
 
@@ -116,26 +153,24 @@ of the most recent completed rebuild:
 - **No rebuild (coalesced / no-op edit):** the previous rebuild's
   summary with a stderr note explaining it's stale.
 
+Each summary is followed by an `Overall:` line that aggregates per-suite
+state across every rebuild this session has seen (e.g. `Overall: 12/12
+known suites green.`, or `Overall: 11/12 suites green; FAIL: pipeline`).
+An incremental rebuild often re-runs only the suites whose dependencies
+changed, so the per-rebuild line covers a subset; the Overall line is
+the cross-rebuild signal that the project as a whole is still green.
+State persists in `$LOG.suite_state` and accumulates across `wait`
+invocations — delete the file to reset.
+
 Either way: the file is a faithful read of "what is the build saying
 right now?" Read it with `Read` — never with shell tools.
 
-**Do NOT touch `$LOG` (the long-running `dune runtest -w` log) for
-anything except the pre-edit baseline capture.** `$LOG` accumulates
-output from every rebuild in the session, so a grep for
-`FAIL` / `Test Successful` / `Error` will return stale failures from
-earlier rebuilds and let you conclude wrongly that a current failure
-is pre-existing. Every shell-side read (`tail`, `grep`, `wc`, `awk`,
-`sed`) is also a per-invocation permission prompt — a real friction
-tax over a long session.
-
-**Same rule applies to the script's per-invocation output file.** It
-is already designed to be short: PASS is one line, FAIL is just the
-diagnostic blocks. Use `Read` directly — do not grep / tail / wc the
-output file either. If the file is so long that `Read` feels awkward,
-or the diagnostic info isn't sufficient to fix the failure, **that is
-a bug in the summarizer** (`scripts/wait-for-watcher.sh`'s
-`print_rebuild_output` function): improve the function so the output
-answers the question. Don't route around it with shell tools.
+See the **Cardinal rule** section at the top of this file: never
+shell-read `$LOG`, `$LOG.suite_state`, `$LOG.baseline`, or the wait
+script's per-invocation output file. The output file is the whole
+interface; if its contents don't answer your question, fix the
+summarizer (`scripts/wait-for-watcher.py`'s `print_rebuild_output`
+function) rather than peeking behind it.
 
 ### Exit codes
 
@@ -236,7 +271,7 @@ quiet gaps inside a compile) is what generalises.
 ```
 # Once per session:
 dune runtest -w                              # run_in_background, save path as $LOG
-SCRIPT=~/.claude/skills/dune-watcher/scripts/wait-for-watcher.sh
+SCRIPT=~/.claude/skills/dune-watcher/scripts/wait-for-watcher.py
 
 # Per edit cycle:
 "$SCRIPT" mark "$LOG"                        # before the edit
@@ -250,7 +285,7 @@ SCRIPT=~/.claude/skills/dune-watcher/scripts/wait-for-watcher.sh
 # either $LOG or the output file — every shell-side read is a
 # permission prompt, and the summary is already the answer. If the
 # summary doesn't have what you need, fix the summarizer
-# (scripts/wait-for-watcher.sh's print_rebuild_output function).
+# (scripts/wait-for-watcher.py's print_rebuild_output function).
 
 # Running the binary while watcher is up:
 _build/default/bin/main.exe [args...]        # NOT `dune exec ...`
