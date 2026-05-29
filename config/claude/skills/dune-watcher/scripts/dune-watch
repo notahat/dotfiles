@@ -1,0 +1,46 @@
+#!/bin/bash
+# Start `dune runtest -w` with output redirected to a deterministic
+# per-project log file, so `dune-check` can find it without arguments.
+#
+# Run this from the project root (where `dune-project` lives). Launch
+# it with the Bash tool's `run_in_background: true` so it lives for
+# the rest of the session.
+#
+# The log path is `_build/.dune-watcher.log` inside the project root.
+# It is truncated on each start so `dune-check` only sees output from
+# the current watcher run.
+
+set -e
+
+if [ ! -f dune-project ]; then
+    echo "dune-watch: must run from the project root (no dune-project here)" >&2
+    exit 1
+fi
+
+if [ -f _build/.lock ]; then
+    # Another watcher (or a stuck one-shot) holds the lock, or it is
+    # a stale lock from a previously killed process.  Distinguish the
+    # two so the diagnosis is actionable.
+    if pgrep -f 'dune.*-w' >/dev/null 2>&1; then
+        echo "dune-watch: _build/.lock exists; another dune watcher is running" >&2
+        echo "dune-watch: stop it before launching a fresh watcher" >&2
+    else
+        echo "dune-watch: _build/.lock exists but no dune process is running" >&2
+        echo "dune-watch: remove the stale lock and re-run: rm _build/.lock" >&2
+    fi
+    exit 1
+fi
+
+mkdir -p _build
+: > _build/.dune-watcher.log
+rm -f _build/.dune-watcher.state
+
+# Record the PID of this shell.  `exec` replaces the shell with dune
+# in place, keeping the same PID, so this is the live watcher's PID
+# from `dune-check`'s point of view.  `dune-check` reads it and
+# refuses to report a verdict from a log whose owner has died -- the
+# orphaned-log-after-killed-watcher case used to surface as a
+# misleadingly-stale "PASS" verdict.
+echo $$ > _build/.dune-watcher.pid
+
+exec dune runtest -w >> _build/.dune-watcher.log 2>&1

@@ -1,295 +1,173 @@
 ---
 name: dune-watcher
-description: Drive the `dune runtest -w` watcher as the default test/build loop in OCaml/opam/dune projects, including the wait-for-rebuild protocol after each edit and the rules for what NOT to run while the watcher is up. Use this skill whenever you are working in an OCaml project that uses dune — whether the user says "set up the dune watcher", "start the watcher", or simply begins TDD-style work, runs tests, or asks you to build the project. If the user is editing `.ml` / `.mli` files or invoking `dune test` / `dune build`, this skill applies — don't wait to be asked.
+description: Drive the `dune runtest -w` watcher as the default test/build loop in OCaml/opam/dune projects. Apply whenever the user is editing `.ml` / `.mli` files, running tests, building, or starting TDD-style work — don't wait to be asked.
 ---
 
 # Dune watcher workflow
 
-`dune runtest -w` (watch mode) is a long-lived daemon that rebuilds and
-re-runs the test suite on every file save. Using it as the default test
-loop is much faster than one-shot `dune build` / `dune test` invocations,
-and it keeps `_build/` artifacts fresh so merlin / ocaml-lsp gets live
-diagnostics. This skill is the protocol for driving that watcher
-correctly.
+`dune runtest -w` (watch mode) is a long-lived daemon that rebuilds
+and re-runs tests on every save. Using it as the default test loop is
+much faster than one-shot `dune build` / `dune test` invocations, and
+it keeps `_build/` artifacts fresh for merlin / ocaml-lsp.
 
-The watcher's output is prose for humans, not a protocol — there's no
-machine-readable event stream — so the wait protocol below infers state
-from two stable phrases in the watcher's log. The bundled
-`scripts/wait-for-watcher.py` does the parsing.
+The skill applies to any project where `dune-project` exists at the
+root, with the local opam switch's `bin/` on `PATH` so `dune` resolves
+directly (no `opam exec --` prefix).
 
-## Cardinal rule: trust the wait script's verdict
+Two scripts drive it, both taking no arguments and runnable from
+anywhere inside the project:
 
-The wait script's per-invocation output file is the **only** thing you
-read to learn the build state. Once you've read it, you have your
-answer — `PASS` means pass, `FAIL` means fail, `Overall:` means the
-cross-rebuild aggregate. **Stop.** Do not reach behind the script for
-"a second opinion."
+- `~/.claude/skills/dune-watcher/scripts/dune-watch` — starts the
+  watcher, writing its output to a deterministic per-project log file.
+- `~/.claude/skills/dune-watcher/scripts/dune-check` — reports the
+  current build verdict on stdout. Run after every edit.
 
-That means **never**, under any circumstance:
+## The workflow
 
-- `tail` / `cat` / `head` / `grep` / `wc` / `awk` / `sed` on `$LOG`
-  (the long-running `dune runtest -w` log).
-- `cat` / `Read` / `grep` on `$LOG.suite_state` or `$LOG.baseline` —
-  these are the script's internal state files, not user-facing
-  artifacts.
-- `tail` / `grep` on the wait script's per-invocation output file
-  itself. `Read` it once with the `Read` tool; that's the whole
-  interface.
-- Spawning a one-shot `dune build` / `dune test` to "double-check."
-  The watcher holds the lock; it will hang. And if it didn't, the
-  watcher's already running tests on every save.
+### Start the watcher (once per session)
 
-Common temptations that **are not** justifications for breaking the rule:
+Launch with the Bash tool's `run_in_background: true`:
 
-- *"The PASS line says 1 suite but I edited 10 files — surely more
-  suites ran."* Incremental rebuilds re-run only suites whose deps
-  changed; the Overall line aggregates across rebuilds. Trust it.
-- *"The summary doesn't have enough detail to fix the failure."* That
-  is a bug in `scripts/wait-for-watcher.py`'s `print_rebuild_output`
-  function. Fix the summarizer; do not route around it.
-- *"I just want to confirm the watcher is alive."* If the wait script
-  returned exit 0, it's alive. If exit 1, it dumped the tail for you.
-- *"I want to see which suites the project has overall."* `ls test/`
-  or `find test -name 'test_*.ml'` answers that without touching the
-  watcher.
+    ~/.claude/skills/dune-watcher/scripts/dune-watch
 
-If you find yourself reaching for a shell read of `$LOG`,
-`$LOG.suite_state`, `$LOG.baseline`, or the output file — **stop**.
-The answer is already in what `Read` returned. If it isn't, the fix
-is to the summarizer, not to your reading habits.
+It truncates `_build/.dune-watcher.log` and execs `dune runtest -w`
+with output redirected to it. The process lives for the rest of the
+session.
 
-## When this applies
+If `_build/.lock` exists, the launcher diagnoses whether another
+dune process is running (stop it first) or whether the lock is stale
+from a killed daemon (`rm _build/.lock` and re-run).
 
-Any project where `dune-project` exists at the root. The whole skill
-assumes the local opam switch's `bin/` is on `PATH`, so `dune` resolves
-directly (no `opam exec --` prefix). If your shell needs the prefix,
-add it to every command below.
+### After each edit, run `dune-check`
 
-## Starting the watcher
+Foreground (no `run_in_background`):
 
-Start once per session as a long-lived background task. The `Bash` tool's
-`run_in_background: true` is the right mechanism — it returns a log path
-you keep for the rest of the session as `$LOG`:
+    ~/.claude/skills/dune-watcher/scripts/dune-check
 
-    dune runtest -w
+The output is one of:
 
-You do not need to start a second watcher later. If `_build/.lock` is
-already held when you start, another watcher (or a stuck one-shot) is
-running — sort that out before launching a second daemon.
+    PASS (fresh): 412 tests across 23 suites
+    Overall: 23/23 known suites green.
 
-## What NOT to run while the watcher is up
+    FAIL (fresh): 1 failing test(s), 0 compile error(s)
 
-The watcher holds dune's instance lock. Any one-shot dune command
-forwards to the watcher daemon, which only does what it was started to
-do — so the one-shot hangs. The consequence:
+    <extracted [FAIL] block or File:/Error: block>
 
-- **No `dune test`, `dune build`, `dune build @fmt` while the watcher is
-  up.** The watcher is already running tests on every save; read the
-  results from the wait script's per-invocation output file (see
-  "Reading rebuild results" below).
-- **No `dune exec <name>` and no wrapper script that uses `dune exec`
-  internally.** It fails with `Program '<name>' not found!` because the
-  lock is held. Run the artifact directly:
+    Overall: 22/23 suites green; FAIL: pipeline
+
+The freshness tag in the verdict tells you whether the result is new
+since your last call:
+
+- `fresh`     — a rebuild completed during or since the previous
+                `dune-check` call.
+- `no change` — no rebuild has happened since the previous call;
+                this is the latest verdict the watcher emitted.
+- `initial`   — first call this session.
+
+Some rebuilds produce no test output (dune's incremental tracker
+decides no test executable needs to re-run). `dune-check` reports
+that honestly rather than as a misleading "0 tests" PASS.
+
+`Overall:` is the cross-rebuild aggregate of every suite the watcher
+has run this session. An incremental rebuild often re-runs only the
+suites whose dependencies changed, so the per-rebuild count usually
+covers a subset; `Overall:` tells you whether the project as a whole
+is still green.
+
+## Don't go around the script
+
+`dune-check`'s stdout is the answer. **Read it once.** If the verdict
+isn't enough to act on, that's a bug in the script's output — fix it
+there, don't route around it. (Example: "the summary doesn't have
+enough detail to fix the failure" is `extract_failure_blocks`
+under-extracting, not a licence to grep the log.)
+
+**Don't read these files:**
+
+- `_build/.dune-watcher.log` — the watcher's long-running log
+  accumulates output from every rebuild, so a `grep FAIL` returns
+  stale failures and invites wrongly concluding "these are
+  pre-existing".
+- `_build/.dune-watcher.state` — the script's internal counters.
+
+**Don't run these commands:**
+
+- `dune test`, `dune build`, `dune build @fmt`. The watcher holds
+  dune's lock, so one-shots hang. The watcher already runs tests on
+  every save; `dune-check` is how you read the results.
+- `dune exec <name>`, or any wrapper that uses `dune exec`
+  internally. Fails with `Program '<name>' not found!` because of
+  the lock. Run the artifact directly:
 
       _build/default/bin/main.exe [args...]
 
   The watcher keeps it fresh, so no separate build step is needed.
-- **Format with `ocamlformat --inplace <file>` directly**, not via
-  `dune build @fmt --auto-promote`. The project's PostToolUse hook may
-  already do this on `.ml` / `.mli` edits — check before adding manual
-  formatting steps.
+- `touch`, dummy edits, or other tricks to provoke a "current"
+  verdict. `dune-check` already reports the current verdict —
+  that's what the `no change` / `initial` tags mean.
 
-If you genuinely need a one-shot (e.g. CI scripts, a fresh build from
+Format `.ml` / `.mli` with `ocamlformat --inplace <file>` directly,
+not via `dune build @fmt --auto-promote`. The project's PostToolUse
+hook may already do this on edits — check before adding a manual
+format step.
+
+If you genuinely need a one-shot (CI scripts, fresh build from
 clean state), stop the watcher first.
-
-## The wait-for-rebuild protocol
-
-After every edit to a build-relevant file (`.ml`, `.mli`, `dune`,
-`dune-project`, etc.) you need to wait for the watcher's rebuild to
-finish before reading results. The protocol is **mark → edit → wait**,
-and both halves go through the same script so a single whitelist
-entry covers the whole cycle (no shell-side grep on `$LOG`):
-
-    SCRIPT=~/.claude/skills/dune-watcher/scripts/wait-for-watcher.py
-
-    # Mark BEFORE the edit. The script captures the current rebuild
-    # count and stores it in $LOG.baseline.
-    "$SCRIPT" mark "$LOG"
-
-    # ... make your edits (Edit / Write tool calls) ...
-
-    # Wait AFTER the edit. Run in the background so a single
-    # notification fires the moment the rebuild settles.
-    "$SCRIPT" wait "$LOG"
-
-When the background `wait` task completes, `Read` its per-invocation
-output file. That file holds the rebuild's concise summary (one PASS
-line, or FAIL with diagnostic blocks) — see "Reading rebuild results"
-below.
-
-The script lives in this skill at
-`~/.claude/skills/dune-watcher/scripts/wait-for-watcher.py`. Either
-reference that path directly, or copy it into the project's `scripts/`
-directory at setup time (the dovetail project, where this protocol
-originated, keeps a project-local copy).
-
-### Reading rebuild results
-
-**The wait script's per-invocation output file is the single source of
-truth for the current build state.** When you launch the wait script
-with `run_in_background: true`, the Bash tool prints the per-invocation
-output path (e.g. `/tmp/.../bm0cdqgl6.output`). When the task completes,
-read that file with the `Read` tool. It contains a **concise summary**
-of the most recent completed rebuild:
-
-- **PASS:** one line, e.g. `PASS: 412 tests across 23 suites`. Done;
-  move on.
-- **FAIL:** a one-line summary (`FAIL: N failing test(s), M compile
-  error(s)`) followed by the diagnostic detail you need to fix it —
-  every `File "path", line N:` compile-error block, every `[FAIL]`
-  test name plus its alcotest detail block (ASSERT / diff / backtrace),
-  and a fallback tail if neither pattern was found but dune still
-  reported errors. No passing-test enumeration; just what failed.
-- **No rebuild (coalesced / no-op edit):** the previous rebuild's
-  summary with a stderr note explaining it's stale.
-
-Each summary is followed by an `Overall:` line that aggregates per-suite
-state across every rebuild this session has seen (e.g. `Overall: 12/12
-known suites green.`, or `Overall: 11/12 suites green; FAIL: pipeline`).
-An incremental rebuild often re-runs only the suites whose dependencies
-changed, so the per-rebuild line covers a subset; the Overall line is
-the cross-rebuild signal that the project as a whole is still green.
-State persists in `$LOG.suite_state` and accumulates across `wait`
-invocations — delete the file to reset.
-
-Either way: the file is a faithful read of "what is the build saying
-right now?" Read it with `Read` — never with shell tools.
-
-See the **Cardinal rule** section at the top of this file: never
-shell-read `$LOG`, `$LOG.suite_state`, `$LOG.baseline`, or the wait
-script's per-invocation output file. The output file is the whole
-interface; if its contents don't answer your question, fix the
-summarizer (`scripts/wait-for-watcher.py`'s `print_rebuild_output`
-function) rather than peeking behind it.
-
-### Exit codes
-
-- **0**: the rebuild settled, **or** dune chose not to rebuild (no-op
-  edit, content-unchanged `touch`, edit to a non-build file, or
-  coalesced into an earlier rebuild). In **both** cases the
-  per-invocation output file contains the most recent completed
-  rebuild's output, so reading it always reflects current state. The
-  "no rebuild" case adds a stderr note explaining the printed block is
-  the previous rebuild, not a fresh one — normal, not a failure.
-- **1**: the 120-second ceiling fired. The watcher is likely stuck; the
-  last 100 lines of the log get dumped to stderr.
-
-### Why the baseline goes *before* the edit
-
-The watcher reacts to filesystem events in 17–47 ms. If you capture the
-baseline after the edit, you can race the watcher and miss its log
-update. Capturing before the edit means the script can detect even a
-rebuild that finished before it started polling — see "Phase 1" in
-`references/dune-watcher.md` for the full reasoning.
-
-### Why not other approaches
-
-The script's two-phase design exists because none of the obvious
-alternatives work:
-
-- **Fixed `sleep`**: either too short (false claim of "done" mid-compile)
-  or too long (every edit pays the worst case).
-- **Single idle-threshold heuristic**: real rebuilds have multi-second
-  quiet gaps inside them (compile phase before any test output), so any
-  idle window long enough to be safe is too long to detect a no-op
-  edit quickly. Two phases let each gate use the signal that actually
-  diagnoses its question.
-- **`Monitor` tool**: designed for "one notification per occurrence,
-  indefinitely"; its own schema recommends `Bash` + `run_in_background`
-  for one-shot "wait until X" cases.
-- **`tail -F | grep -m 1 ...`**: `tail -F` doesn't notice the pipeline
-  is gone until it next tries to write, so it hangs if the log goes
-  quiet after the match.
-- **`dune rpc`**: dune exposes a JSON-RPC socket but it's an unstable
-  internal API and the "wait for next build" surface is unclear.
-
-If you find yourself reaching for any of these, use the script instead.
 
 ## Restarting the watcher
 
-If the watcher dies or was never started, restart it the same way: one
-backgrounded `dune runtest -w`. Don't start a second watcher alongside
-an existing one, and don't fall back to ad-hoc `dune test` runs — those
-will hang against the existing daemon and waste the cycle.
+Restart the same way: one backgrounded `dune-watch`. Don't start a
+second watcher alongside an existing one, and don't fall back to
+ad-hoc `dune test` runs — those will hang against the existing
+daemon.
 
 Signs the watcher needs a restart:
 
-- `$LOG` stopped growing on edits that should have triggered a rebuild,
-  and the wait script is hitting its Phase 1 timeout.
-- `_build/.lock` is held but no watcher process exists (stale lock
+- `dune-check` reports exit 1 with "watcher process (PID N) is no
+  longer running" — the watcher died, leaving its log behind. Just
+  re-run `dune-watch`; it writes a fresh PID file and truncates the
+  log.
+- `dune-check` reports exit 1 with "no PID file ... cannot verify
+  the watcher is alive" — the watcher predates the current
+  `dune-watch` script (no PID file was written). Re-run `dune-watch`.
+- `dune-check` reports exit 1 with "no watcher log" or "is the
+  watcher running?".
+- `_build/.lock` exists but no dune process is running (stale lock
   from a killed daemon — remove the lock file, then restart).
 
-## Failure modes to be aware of
+## How `dune-check` works
 
-These are documented limitations of the wait protocol, not bugs:
+`dune-check` reads the watcher log, waits for any in-flight rebuild
+to settle (≤ 120 s ceiling), and reports the verdict of the most
+recent rebuild. The mechanism — counters, the marker-order idle
+signal, the two-phase wait, the empirical findings about dune's
+output format, and the alternatives that were tried and rejected —
+is in `references/dune-watcher.md`.
 
-- **Concurrent fs events from other tooling.** If an editor
-  auto-formatter, an MCP hook, or `git checkout` writes to a build
-  file during Phase 2, the watcher starts a second rebuild whose
-  sentinel will satisfy our wait — the caller gets the *wrong*
-  rebuild's results. Mitigation: don't fire unrelated tools mid-wait.
-- **Dune output format changing.** The script hard-codes two phrases:
-  `********** NEW BUILD` and `waiting for filesystem`. Both have been
-  stable across recent dune releases but aren't part of any documented
-  interface. If a future dune reworks watcher output, the failure mode
-  is loud (Phase 1 or Phase 2 timeout), not silent.
+## Failure modes
 
-## Deeper reference
-
-`references/dune-watcher.md` (bundled with this skill) captures the
-empirical findings the wait protocol is built on: what dune actually
-emits per rebuild, measured timings, the rationale for the two-phase
-strategy, and the alternatives that were tried and rejected. Read it
-when:
-
-- The wait script starts misbehaving (e.g. Phase 1 timing out on
-  edits that clearly should rebuild, or Phase 2 settling on the wrong
-  rebuild) and you need to understand the assumptions to diagnose.
-- You're tempted to "fix" the script with a simpler approach
-  (`tail -F | grep`, fixed sleep, dune rpc, etc.) — the doc covers
-  why each of those was rejected.
-- Dune's watcher output format appears to have changed; the doc
-  names the two hard-coded phrases the script depends on.
-
-The empirical numbers in that doc were measured against dune 3.23.0 in
-one specific project, so the absolute timings are illustrative; the
-*shape* of the findings (no-op vs. real-rebuild signal, multi-second
-quiet gaps inside a compile) is what generalises.
+- **Concurrent fs events from other tooling.** If an editor's
+  auto-formatter or a hook writes to a build file mid-rebuild, the
+  watcher starts a second rebuild and `dune-check` may report the
+  second one's results when you were expecting the first.
+  Mitigation: don't fire unrelated tools mid-rebuild.
+- **Dune output format changing.** `dune-check` hard-codes two
+  phrases: `********** NEW BUILD` and `waiting for filesystem`.
+  Both have been stable across recent dune releases but aren't part
+  of any documented interface. If a future dune reworks watcher
+  output, the failure mode is loud (exit 1, "watcher may be stuck"),
+  not silent.
 
 ## Quick reference
 
-```
-# Once per session:
-dune runtest -w                              # run_in_background, save path as $LOG
-SCRIPT=~/.claude/skills/dune-watcher/scripts/wait-for-watcher.py
+    # Once per session, in the project root:
+    ~/.claude/skills/dune-watcher/scripts/dune-watch      # background
 
-# Per edit cycle:
-"$SCRIPT" mark "$LOG"                        # before the edit
-# ... edits ...
-"$SCRIPT" wait "$LOG"                        # run_in_background; note
-                                             # the output path it prints
+    # After every edit (or whenever you want the current verdict):
+    ~/.claude/skills/dune-watcher/scripts/dune-check      # foreground
 
-# When the wait task completes, Read the per-invocation output file.
-# It holds a concise summary: one PASS line, or FAIL with extracted
-# error blocks and failing test detail. Never grep, tail, awk, or sed
-# either $LOG or the output file — every shell-side read is a
-# permission prompt, and the summary is already the answer. If the
-# summary doesn't have what you need, fix the summarizer
-# (scripts/wait-for-watcher.py's print_rebuild_output function).
+    # Run the binary while the watcher is up:
+    _build/default/bin/main.exe [args...]                 # NOT dune exec
 
-# Running the binary while watcher is up:
-_build/default/bin/main.exe [args...]        # NOT `dune exec ...`
-
-# Formatting while watcher is up:
-ocamlformat --inplace path/to/file.ml        # NOT `dune build @fmt`
-```
+    # Format a file while the watcher is up:
+    ocamlformat --inplace path/to/file.ml                 # NOT dune build @fmt

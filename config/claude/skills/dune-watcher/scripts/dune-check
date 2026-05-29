@@ -1,0 +1,558 @@
+#!/usr/bin/env python3
+"""Report the current state of the `dune runtest -w` watcher.
+
+Run this script (with no arguments) from anywhere inside a project
+that has been launched with `dune-watch`. It finds the watcher log at
+<project-root>/_build/.dune-watcher.log, waits for any in-flight
+rebuilds to finish, and prints a concise verdict inline.
+
+Output is a single block written to stdout:
+
+    PASS (fresh): 412 tests across 23 suites
+    Overall: 23/23 known suites green.
+
+or:
+
+    FAIL (fresh): 1 failing test, 0 compile errors
+    <extracted failure detail blocks>
+    Overall: 22/23 suites green; FAIL: pipeline
+
+The freshness tag is one of:
+
+    (fresh)     a new rebuild completed during or since the previous
+                call to this script.
+    (no change) no new rebuild since the previous call; this is the
+                latest verdict the watcher has produced.
+    (initial)   first call this session; the verdict reflects the
+                watcher's initial full build.
+
+State (the counters at the end of the last call) lives in
+<project-root>/_build/.dune-watcher.state.  Delete that file to reset.
+
+Exit codes:
+    0   verdict printed (PASS or FAIL).  The build state itself does
+        not affect the exit code -- this script reports state, it
+        does not treat a failing build as a script error.
+    1   no watcher log found (run `dune-watch` first), or watcher
+        appears stuck (a rebuild did not settle within the 120 s
+        ceiling).
+    2   usage error.
+"""
+
+from __future__ import annotations
+
+import os
+import re
+import sys
+import time
+from pathlib import Path
+
+# Phrases dune watch emits verbatim.  Both have been stable across
+# recent dune releases but are not part of any documented interface;
+# a future dune that reworks watcher output will need these updated.
+SENTINEL_PATTERN = "waiting for filesystem"
+START_MARKER_PATTERN = "********** NEW BUILD"
+
+# Phase 1 (no-rebuild detection): dune's measured reaction to a
+# filesystem event is 17-47 ms, so 2 s is generous headroom.
+PHASE_1_MAX_WAIT = 2.0
+PHASE_1_POLL = 0.1
+
+# Phase 2 (rebuild-completion wait): real test work needs minutes of
+# headroom because compile phases produce no output for seconds at a
+# time.  No idle-bail -- once a NEW BUILD marker is in the log we
+# know dune is working.
+PHASE_2_MAX_WAIT = 120.0
+PHASE_2_POLL = 0.5
+
+PROG = "dune-check"
+
+LOG_RELATIVE_PATH = "_build/.dune-watcher.log"
+STATE_RELATIVE_PATH = "_build/.dune-watcher.state"
+PID_RELATIVE_PATH = "_build/.dune-watcher.pid"
+
+
+def log_stderr(message: str) -> None:
+    """Write a prefixed informational line to stderr."""
+    sys.stderr.write(f"{PROG}: {message}\n")
+
+
+def find_project_root() -> Path | None:
+    """Walk up from the current working directory looking for a
+    `dune-project` file.  Returns the directory that contains it, or
+    None if no such ancestor exists."""
+    candidate = Path.cwd().resolve()
+    while True:
+        if (candidate / "dune-project").is_file():
+            return candidate
+        if candidate.parent == candidate:
+            return None
+        candidate = candidate.parent
+
+
+def scan_log(log_path: Path) -> tuple[int, int, str | None]:
+    """Read the watcher log in a single pass and return
+    (sentinel_count, new_build_count, last_marker).  [last_marker]
+    is 'sentinel', 'new_build', or None for an empty log.
+
+    Reading both counts and the most recent marker from one file
+    pass means we cannot observe a state where the values came from
+    different moments in the log's growth.
+
+    [last_marker] is what determines whether the watcher is idle.
+    Counting markers alone is not enough: dune coalesces rapid
+    sequential filesystem events into a single rebuild, so a NEW
+    BUILD marker may be followed by another NEW BUILD with no
+    intervening sentinel.  The two counts then stay permanently
+    unequal even after the watcher is idle.  The reliable signal
+    is which kind of marker is most recent in the log."""
+    sentinel = 0
+    new_build = 0
+    last_marker: str | None = None
+    try:
+        with log_path.open("r", errors="replace") as handle:
+            for line in handle:
+                if line.startswith(START_MARKER_PATTERN):
+                    new_build += 1
+                    last_marker = "new_build"
+                elif SENTINEL_PATTERN in line:
+                    sentinel += 1
+                    last_marker = "sentinel"
+    except FileNotFoundError:
+        pass
+    return (sentinel, new_build, last_marker)
+
+
+def watcher_is_idle(last_marker: str | None) -> bool:
+    """True when the watcher is not currently processing a rebuild.
+    The watcher signals idle by emitting a 'waiting for filesystem'
+    sentinel after a build finishes, so idle is equivalent to "the
+    most recent marker in the log is a sentinel".  An empty log
+    (no markers at all) is not idle in the reportable sense -- the
+    watcher has not yet produced output we can report on."""
+    return last_marker == "sentinel"
+
+
+def read_log_lines(log_path: Path) -> list[str]:
+    """Return the watcher log as a list of newline-stripped lines."""
+    with log_path.open("r", errors="replace") as handle:
+        return [line.rstrip("\n") for line in handle]
+
+
+def split_into_rebuilds(log_lines: list[str]) -> list[list[str]]:
+    """Split the log into a list of rebuild blocks.  The watcher's
+    very first build emits no `NEW BUILD` marker, so the lines
+    before the first marker form the initial block; every subsequent
+    marker opens a new block.  An empty log returns an empty list."""
+    blocks: list[list[str]] = []
+    current: list[str] | None = None
+    for line in log_lines:
+        if line.startswith(START_MARKER_PATTERN):
+            if current is not None:
+                blocks.append(current)
+            current = []
+            continue
+        if current is None:
+            current = []
+        current.append(line)
+    if current is not None and current:
+        blocks.append(current)
+    return blocks
+
+
+def extract_per_suite_state(rebuild_blocks: list[list[str]]) -> dict[str, str]:
+    """Walk every rebuild block in order and return the latest
+    PASS/FAIL state for every suite that has run this session.  Later
+    rebuilds overwrite earlier ones for the same suite name."""
+    state: dict[str, str] = {}
+    for block in rebuild_blocks:
+        current_suite: str | None = None
+        for line in block:
+            if line.startswith("Testing `"):
+                end_quote = line.find("'", 9)
+                if end_quote > 0:
+                    current_suite = line[9:end_quote]
+                    state[current_suite] = "PASS"
+            elif current_suite is not None and "[FAIL]" in line:
+                state[current_suite] = "FAIL"
+    return state
+
+
+FILE_LINE_RE = re.compile(r'^File ".*", line')
+HAD_ERRORS_RE = re.compile(r"^Had (\d+) error")
+
+
+def summarize_counts(rebuild_lines: list[str]) -> dict[str, int]:
+    """Tally markers used to decide PASS vs FAIL and to count test
+    suites for the summary line."""
+    counts = {
+        "ok": 0,
+        "fail": 0,
+        "suites": 0,
+        "errors": 0,
+        "had_errors": -1,
+    }
+    for line in rebuild_lines:
+        if "[OK]" in line:
+            counts["ok"] += 1
+        if "[FAIL]" in line:
+            counts["fail"] += 1
+        if line.startswith("Testing "):
+            counts["suites"] += 1
+        if line.startswith("Error: ") or line.startswith("Error ("):
+            counts["errors"] += 1
+        match = HAD_ERRORS_RE.match(line)
+        if match:
+            counts["had_errors"] = int(match.group(1))
+    return counts
+
+
+def extract_failure_blocks(rebuild_lines: list[str]) -> list[str]:
+    """Return the failure-detail lines from a rebuild as a single
+    list, suitable for printing under a FAIL summary line.  Three
+    kinds of block appear: compile/type errors (`File "...", line N:`
+    followed by indented detail), alcotest `[FAIL]` blocks (the FAIL
+    line plus its indented ASSERT/diff/backtrace), and dune-level
+    errors that arrive before any `File:` line (caught via the
+    `Had N errors` terminal line, with a tail-of-rebuild fallback)."""
+    output: list[str] = []
+    in_compile_block = False
+    in_fail_block = False
+    for line in rebuild_lines:
+        if FILE_LINE_RE.match(line):
+            if in_compile_block or in_fail_block:
+                output.append("")
+            in_compile_block, in_fail_block = True, False
+            output.append(line)
+            continue
+        if in_compile_block:
+            output.append(line)
+            if line == "":
+                in_compile_block = False
+            continue
+        if "[FAIL]" in line:
+            if in_fail_block:
+                output.append("")
+            in_fail_block = True
+            output.append(line)
+            continue
+        if in_fail_block:
+            if (
+                line == ""
+                or "[OK]" in line
+                or line.startswith("Testing ")
+                or line.startswith("Full ")
+            ):
+                in_fail_block = False
+            else:
+                output.append(line)
+    return output
+
+
+def render_verdict(rebuild_blocks: list[list[str]], freshness: str) -> None:
+    """Print the verdict line, any failure detail, and the cross-
+    rebuild Overall: line, given the parsed rebuild blocks and a
+    freshness tag (`fresh`, `no change`, or `initial`)."""
+    if not rebuild_blocks:
+        print("(watcher log is empty; no build output yet)")
+        return
+
+    latest = rebuild_blocks[-1]
+    counts = summarize_counts(latest)
+    had_errors = counts["had_errors"]
+    bad = had_errors if had_errors > 0 else counts["fail"] + counts["errors"]
+
+    if (
+        bad == 0
+        and counts["ok"] == 0
+        and counts["suites"] == 0
+    ):
+        # The latest rebuild block has no test output -- dune's
+        # incremental tracker decided no test executable needed to
+        # re-run, or the watcher has not run a build since startup.
+        # Report honestly rather than emitting a misleading "0
+        # tests" PASS.
+        if freshness == "fresh":
+            print(
+                "PASS (fresh): build succeeded; no tests re-run "
+                "(dune cache hit on retest)"
+            )
+        elif freshness == "initial":
+            print(
+                "PASS (initial): no rebuild needed at startup "
+                "(cache is fresh)"
+            )
+            print("(edit a file to trigger a rebuild and see test output)")
+        else:
+            print("PASS (no change): no rebuild since previous call")
+        print_overall_line(rebuild_blocks)
+        return
+
+    if bad == 0:
+        suites_word = "suite" if counts["suites"] == 1 else "suites"
+        tests_word = "test" if counts["ok"] == 1 else "tests"
+        print(
+            f"PASS ({freshness}): {counts['ok']} {tests_word} "
+            f"across {counts['suites']} {suites_word}"
+        )
+    else:
+        suffix = (
+            f" (dune reports {had_errors} total)"
+            if had_errors >= 0
+            else ""
+        )
+        print(
+            f"FAIL ({freshness}): {counts['fail']} failing test(s), "
+            f"{counts['errors']} compile error(s){suffix}"
+        )
+        print("")
+        failure_lines = extract_failure_blocks(latest)
+        if not failure_lines and had_errors > 0:
+            # Hook failure, linker error, or other dune-level error
+            # that arrived before any per-test or per-file marker.
+            # Fall back to a short tail so the caller has something
+            # to diagnose from.
+            print("(no File: or [FAIL] markers found; tail of rebuild:)")
+            failure_lines = latest[-30:]
+        for line in failure_lines:
+            print(line)
+        if failure_lines:
+            print("")
+
+    print_overall_line(rebuild_blocks)
+
+
+def print_overall_line(rebuild_blocks: list[list[str]]) -> None:
+    """Print the cross-rebuild summary line: how many suites the
+    watcher has run this session and which (if any) ended in FAIL.
+    Walking every block means a suite that ran in an earlier rebuild
+    but not the latest is still represented.  Prints nothing if no
+    suite has run yet."""
+    suite_state = extract_per_suite_state(rebuild_blocks)
+    if not suite_state:
+        return
+    failing = sorted(
+        name for name, status in suite_state.items() if status == "FAIL"
+    )
+    green = len(suite_state) - len(failing)
+    total = len(suite_state)
+    if not failing:
+        print(f"Overall: {green}/{total} known suites green.")
+    else:
+        print(
+            f"Overall: {green}/{total} suites green; "
+            f"FAIL: {', '.join(failing)}"
+        )
+
+
+def read_state(state_path: Path) -> tuple[int, int] | None:
+    """Return the (sentinel_count, new_build_count) pair saved by the
+    previous `dune-check` call, or None if there is no saved state
+    yet.  Both counters are needed: if only sentinel were tracked, a
+    rebuild that started after the previous call but had not yet
+    finished would look identical to "no rebuild happened.\""""
+    if not state_path.is_file():
+        return None
+    try:
+        parts = state_path.read_text().split()
+        return (int(parts[0]), int(parts[1]))
+    except (ValueError, IndexError):
+        return None
+
+
+def write_state(
+    state_path: Path, sentinel_count: int, new_build_count: int
+) -> None:
+    """Persist the counters seen at the end of this call so the next
+    call can detect rebuilds that happen between calls."""
+    state_path.write_text(f"{sentinel_count} {new_build_count}\n")
+
+
+def wait_for_activity(
+    log_path: Path,
+    sentinel_baseline: int,
+    new_build_baseline: int,
+) -> bool:
+    """Wait briefly for evidence that the watcher is reacting to
+    something -- either counter advancing past its baseline is
+    enough.  Returns True if activity appeared within PHASE_1_MAX_WAIT
+    seconds, False otherwise.
+
+    Used when a caller has likely just edited a file and we want to
+    catch the rebuild that the edit will trigger before reporting
+    "no change"."""
+    deadline = time.monotonic() + PHASE_1_MAX_WAIT
+    while True:
+        sentinel, new_build, _ = scan_log(log_path)
+        if sentinel > sentinel_baseline or new_build > new_build_baseline:
+            return True
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(PHASE_1_POLL)
+
+
+def wait_until_idle(log_path: Path) -> tuple[int, int] | None:
+    """Wait until the watcher's most recent log marker is a
+    sentinel.  Re-reads the log on every poll, so a rebuild that
+    finishes only to expose another already-in-flight behind it
+    does not prematurely terminate the wait.  Returns the
+    (sentinel_count, new_build_count) at idle, or None on timeout."""
+    deadline = time.monotonic() + PHASE_2_MAX_WAIT
+    while True:
+        sentinel, new_build, last_marker = scan_log(log_path)
+        if watcher_is_idle(last_marker):
+            return (sentinel, new_build)
+        if time.monotonic() >= deadline:
+            return None
+        time.sleep(PHASE_2_POLL)
+
+
+def watcher_status(project_root: Path) -> tuple[str, int | None]:
+    """Decide whether the watcher process is alive, dead, or
+    unrecorded.  Returns one of:
+
+    - ("alive", pid)    -- PID file exists and the process responds
+                           to signal 0.
+    - ("dead", pid)     -- PID file exists but the process is gone.
+                           The log is stale.
+    - ("no_pid", None)  -- No PID file.  Either the watcher was never
+                           started, or it was started by an older
+                           dune-watch that did not record the PID.
+                           Either way we cannot vouch for the log.
+
+    The PID file is written by dune-watch just before `exec`, so its
+    contents match the watcher's PID.  Signal 0 is the canonical
+    "is the process alive?" probe -- it sends nothing but reports
+    whether the kernel still has a process with that PID."""
+    pid_path = project_root / PID_RELATIVE_PATH
+    if not pid_path.is_file():
+        return ("no_pid", None)
+    try:
+        pid = int(pid_path.read_text().strip())
+    except ValueError:
+        return ("no_pid", None)
+    try:
+        os.kill(pid, 0)
+        return ("alive", pid)
+    except (ProcessLookupError, PermissionError):
+        return ("dead", pid)
+    except OSError:
+        return ("dead", pid)
+
+
+def check(project_root: Path) -> int:
+    """Report the watcher's current state.  The freshness tag is
+    chosen by comparing the post-settle counters against the values
+    saved by the previous call."""
+    log_path = project_root / LOG_RELATIVE_PATH
+    state_path = project_root / STATE_RELATIVE_PATH
+
+    # Liveness check first.  A log from a dead watcher would otherwise
+    # parse fine and yield a verdict that has no relationship to the
+    # current state of the source tree -- exactly the trap we are
+    # closing.
+    status, pid = watcher_status(project_root)
+    if status == "dead":
+        log_stderr(
+            f"watcher process (PID {pid}) is no longer running; "
+            f"the log at {log_path} is stale"
+        )
+        log_stderr("restart the watcher: dune-watch")
+        return 1
+    if status == "no_pid" and log_path.is_file():
+        log_stderr(
+            f"watcher log at {log_path} exists but no PID file at "
+            f"{project_root / PID_RELATIVE_PATH} -- cannot verify the "
+            f"watcher is alive"
+        )
+        log_stderr("(re)start the watcher: dune-watch")
+        return 1
+
+    if not log_path.is_file():
+        log_stderr(f"no watcher log at {log_path}")
+        log_stderr("start the watcher first: dune-watch")
+        return 1
+
+    prior_state = read_state(state_path)
+    sentinel_now, new_build_now, last_marker = scan_log(log_path)
+
+    if prior_state is None:
+        # First call this session.  If the watcher hasn't produced
+        # anything yet, give it a 2 s window before deciding it's
+        # dead.  Otherwise (or after activity appears) wait until
+        # the watcher is idle.
+        if last_marker is None:
+            if not wait_for_activity(log_path, 0, 0):
+                log_stderr(
+                    "watcher log has produced nothing yet; "
+                    "is the watcher running?"
+                )
+                return 1
+            sentinel_now, new_build_now, last_marker = scan_log(log_path)
+        if not watcher_is_idle(last_marker):
+            settled = wait_until_idle(log_path)
+            if settled is None:
+                log_stderr(
+                    f"initial build did not finish within "
+                    f"{int(PHASE_2_MAX_WAIT)} s.  Watcher may be stuck."
+                )
+                return 1
+            sentinel_now, new_build_now = settled
+        freshness = "initial"
+    else:
+        prior_sentinel, prior_new_build = prior_state
+        nothing_changed_yet = (
+            sentinel_now == prior_sentinel
+            and new_build_now == prior_new_build
+        )
+        if nothing_changed_yet:
+            # The caller might have just edited a file and the
+            # watcher hasn't reacted yet.  Wait briefly for either
+            # counter to advance; if nothing happens, we report
+            # "no change" below.
+            wait_for_activity(log_path, prior_sentinel, prior_new_build)
+            sentinel_now, new_build_now, last_marker = scan_log(log_path)
+
+        # Wait until the watcher is idle (most recent marker is a
+        # sentinel).  This catches the case where one rebuild
+        # finished but another was queued behind it -- previous
+        # versions of this script reported the first one's verdict
+        # while later ones were still running.
+        if not watcher_is_idle(last_marker):
+            settled = wait_until_idle(log_path)
+            if settled is None:
+                log_stderr(
+                    f"rebuild did not settle within "
+                    f"{int(PHASE_2_MAX_WAIT)} s.  Watcher may be stuck."
+                )
+                return 1
+            sentinel_now, new_build_now = settled
+
+        if (
+            sentinel_now > prior_sentinel
+            or new_build_now > prior_new_build
+        ):
+            freshness = "fresh"
+        else:
+            freshness = "no change"
+
+    log_lines = read_log_lines(log_path)
+    rebuild_blocks = split_into_rebuilds(log_lines)
+    render_verdict(rebuild_blocks, freshness)
+    write_state(state_path, sentinel_now, new_build_now)
+    return 0
+
+
+def main(argv: list[str]) -> int:
+    if len(argv) != 1:
+        sys.stderr.write(f"usage: {PROG}\n")
+        return 2
+    project_root = find_project_root()
+    if project_root is None:
+        log_stderr("no dune-project found in any parent directory")
+        return 2
+    return check(project_root)
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
