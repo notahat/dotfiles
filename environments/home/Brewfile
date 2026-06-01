@@ -12,14 +12,15 @@ brew 'mas'
 cask '1password'
 mas 'Bear', id: 1091189122
 mas 'MindNode', id: 1289197285
-mas 'Numbers', id: 409203825
+mas 'Numbers', id: 361304891
+cask 'obsidian'
 mas 'OmniGraffle', id: 1142578753
 mas 'Pages', id: 409201541
-mas 'Things', id: 904280696
 
 # Helpful utilities ===================================================
 
 cask 'appcleaner'
+cask 'hstracker'
 cask 'raycast'
 cask 'scroll-reverser'
 cask 'notahat/tap/shunt'
@@ -51,7 +52,7 @@ cask 'sysex-librarian'
 
 # Coding ==============================================================
 
-cask 'claude-code@latest'
+brew 'docker'
 brew 'gh'
 brew 'git'
 brew 'gpg' # mise uses this to verify packages
@@ -59,13 +60,24 @@ cask 'ghostty'
 brew 'lazygit'
 brew 'mise'
 brew 'neovim'
+brew 'opam'
+brew 'python@3.14'
+cask 'rancher'
+brew 'shellcheck'
 brew 'stylua'
+brew 'swiftformat'
 cask 'swiftformat-for-xcode'
+brew 'swiftlint'
 cask 'visual-studio-code'
 mas 'Xcode', id: 497799835
 cask 'zed'
 
 cask 'font-inconsolata-nerd-font'
+
+# AI tools ============================================================
+
+cask 'claude-code@latest'
+brew 'notahat/tap/cal-read'
 
 # Helpful command line tools ==========================================
 
@@ -75,9 +87,11 @@ brew 'eza'
 brew 'fd'
 brew 'fzf'
 brew 'jq'
+brew 'pstree'
 brew 'ripgrep'
 brew 'terminal-notifier'
 brew 'wget'
+brew 'zoxide'
 
 # Zsh plugins =========================================================
 
