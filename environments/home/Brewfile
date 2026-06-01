@@ -22,6 +22,7 @@ mas 'Things', id: 904280696
 cask 'appcleaner'
 cask 'raycast'
 cask 'scroll-reverser'
+cask 'notahat/tap/shunt'
 cask 'the-unarchiver'
 
 # Browsers ============================================================
@@ -50,6 +51,7 @@ cask 'sysex-librarian'
 
 # Coding ==============================================================
 
+cask 'claude-code@latest'
 brew 'gh'
 brew 'git'
 brew 'gpg' # mise uses this to verify packages
