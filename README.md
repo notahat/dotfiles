@@ -17,7 +17,7 @@ actually run every day.
 ## Highlights worth stealing
 
 - **A tiny install you can actually read.** `./install` runs plain-bash steps
-  from [`steps/`](steps) — no framework, no DSL, no magic. It symlinks config
+  from [`steps/`](steps). No framework, no DSL, no magic. It symlinks config
   into place and is fully idempotent, so I re-run it constantly and it never
   rots. If a config file already exists, it warns and skips rather than
   clobbering it.
@@ -26,7 +26,7 @@ actually run every day.
   Store apps). [Mise](https://mise.jdx.dev) manages anything I need pinned to a
   particular version, like language runtimes. Two tools, one easy mental model.
 - **Zsh that starts in ~100ms.** None of the [Oh My Zsh](https://ohmyz.sh)
-  bloat — just a [Pure](https://github.com/sindresorhus/pure) prompt, fzf-tab
+  bloat: just a [Pure](https://github.com/sindresorhus/pure) prompt, fzf-tab
   completion, and syntax highlighting, wired up by hand in
   [`config/zsh`](config/zsh).
 - **Neovim that starts in under 100ms.** Modern IDE features (LSP, Treesitter,
@@ -51,19 +51,19 @@ installs a tool and symlinks its config. Run them all, or just one:
 
 The pieces:
 
-- [`config/`](config) — every config file, symlinked into `~` and `~/.config`
+- [`config/`](config): every config file, symlinked into `~` and `~/.config`
   by the steps. Edit it in place here.
-- [`environments/`](environments) — separate `Brewfile`s and `mise.toml`s for
+- [`environments/`](environments): separate `Brewfile`s and `mise.toml`s for
   my home and work machines, selected by `DOTFILES_ENV`.
-- [`project-templates/`](project-templates) — drop-in editor and tooling config
+- [`project-templates/`](project-templates): drop-in editor and tooling config
   for new Rails and Vite projects.
 
 ## Borrow freely
 
-Take whatever's useful — a whole config, a single alias, or just an idea. That's
-what it's here for. Everything here is [MIT licensed](LICENSE).
+Take whatever's useful, whether a whole config, a single alias, or just an
+idea. Everything here is [MIT licensed](LICENSE).
 
-A couple of the Claude skills aren't mine — the install fetches them from their
+A couple of the Claude skills aren't mine. The install fetches them from their
 sources rather than bundling them:
 [doc-coauthoring](https://github.com/anthropics/skills) by Anthropic, and
 [grill-me](https://github.com/mattpocock/skills) by Matt Pocock.
