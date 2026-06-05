@@ -61,4 +61,9 @@ The pieces:
 ## Borrow freely
 
 Take whatever's useful — a whole config, a single alias, or just an idea. That's
-what it's here for. Everything is [MIT licensed](LICENSE).
+what it's here for. Everything here is [MIT licensed](LICENSE).
+
+A couple of the Claude skills aren't mine — the install fetches them from their
+sources rather than bundling them:
+[doc-coauthoring](https://github.com/anthropics/skills) by Anthropic, and
+[grill-me](https://github.com/mattpocock/skills) by Matt Pocock.

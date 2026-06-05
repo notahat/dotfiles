@@ -1,3 +1,7 @@
 /Session.vim
 /config/nvim/lazy-lock.json
 /.claude
+
+# Borrowed Claude skills, fetched from upstream by steps/claude.bash.
+/config/claude/skills/doc-coauthoring
+/config/claude/skills/grill-me
