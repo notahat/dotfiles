@@ -1,49 +1,64 @@
 # Pete's dotfiles
 
-This does 80% of the work of setting up a Mac the way I like it:
+I've been continually refining these dotfiles since 2008. They do 80% of the
+work of setting up a Mac the way I like it:
 
 ```sh
 xcode-select --install
 git clone https://github.com/notahat/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-export DOTFILES_ENV=home
+export DOTFILES_ENV=home # or "work"
 ./install
 ```
 
-I re-run `./install` frequently (it's idempotent), which ensures I maintain it.
+I keep them lean. Anything I stop using, I delete. What's here is what I
+actually run every day.
 
-`./upgrade` upgrades Homebrew packages, Mise tools, and Neovim plugins.
+## Highlights worth stealing
 
-I remove anything I'm not using to keep it simple.
+- **A tiny install you can actually read.** `./install` runs plain-bash steps
+  from [`steps/`](steps) — no framework, no DSL, no magic. It symlinks config
+  into place and is fully idempotent, so I re-run it constantly and it never
+  rots. If a config file already exists, it warns and skips rather than
+  clobbering it.
+- **A clear rule for Homebrew vs. Mise.** [Homebrew](https://brew.sh) installs
+  anything I always want at the latest version (apps, CLI tools, even Mac App
+  Store apps). [Mise](https://mise.jdx.dev) manages anything I need pinned to a
+  particular version, like language runtimes. Two tools, one easy mental model.
+- **Zsh that starts in ~100ms.** None of the [Oh My Zsh](https://ohmyz.sh)
+  bloat — just a [Pure](https://github.com/sindresorhus/pure) prompt, fzf-tab
+  completion, and syntax highlighting, wired up by hand in
+  [`config/zsh`](config/zsh).
+- **Neovim that starts in under 100ms.** Modern IDE features (LSP, Treesitter,
+  fuzzy finding) with a deliberately minimal UI, so the code stays
+  front-and-centre. It's heavily commented and has [its own
+  README](config/nvim).
+- **One command to update everything.** `./upgrade` bumps Homebrew packages,
+  Mise tools, and Neovim plugins in a single run.
+- **A version-controlled Claude Code setup.** Custom skills, hooks, and a
+  statusline live in [`config/claude`](config/claude).
 
-## What's Installed?
+## How it works
 
-A whole bunch of things, but key components are:
+`./install` runs the steps in [`steps/`](steps), each a small bash script that
+installs a tool and symlinks its config. Run them all, or just one:
 
-- [Neovim](https://neovim.io). I've got a [pretty fancy setup](config/nvim).
-  It's got lots of IDE features, but is a lot cleaner than an IDE. It's well
-  commented. It starts up in less than 100ms.
-- [Zed](https://zed.dev).
-- [Zsh](https://zsh.org). I like it fast (so none of this [Oh My
-  Zsh](https://ohmyz.sh) nonsense), but with a nice prompt and completion. It
-  starts up in about 100ms.
-- [Ghostty](https://ghostty.org).
-- [Homebrew](https://brew.sh) installs anything where I always want the latest
-  version, including apps from the Mac App Store.
-- [Mise](https://mise.jdx.dev/) manages things like languages, where I
-  want particular versions installed.
+```sh
+./install         # everything
+./install zsh     # just the zsh step
+./install -h      # usage, and the list of steps
+```
 
-## How It Works
+The pieces:
 
-`./install` runs steps from the `steps` directory. You can run individual
-steps, or the whole set. See `./install -h` for usage.
+- [`config/`](config) — every config file, symlinked into `~` and `~/.config`
+  by the steps. Edit it in place here.
+- [`environments/`](environments) — separate `Brewfile`s and `mise.toml`s for
+  my home and work machines, selected by `DOTFILES_ENV`.
+- [`project-templates/`](project-templates) — drop-in editor and tooling config
+  for new Rails and Vite projects.
 
-All my config files live under `config`. These get soft-linked into place by
-the steps.
+## Borrow freely
 
-The `environments` directory contains separate `Brewfile`s and `mise.toml`
-files for my home and work machines.
-
-The `project-templates` directory contains config files for common project
-types (e.g. Vite, Rails). Each template has a README describing what's
-included and how to install it into a project.
+Take whatever's useful — a whole config, a single alias, or just an idea. That's
+what it's here for. Everything is [MIT licensed](LICENSE).
