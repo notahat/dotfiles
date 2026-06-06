@@ -1,6 +1,6 @@
 # Pete's dotfiles
 
-I've been continually refining these dotfiles since 2008. They do 80% of the
+I've been continually refining these dotfiles since 2010. They do 80% of the
 work of setting up a Mac the way I like it:
 
 ```sh
