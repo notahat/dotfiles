@@ -55,7 +55,7 @@ cask 'sysex-librarian'
 brew 'docker'
 brew 'gh'
 brew 'git'
-brew 'gpg' # mise uses this to verify packages
+brew 'gpg' # Mise uses this to verify packages.
 cask 'ghostty'
 brew 'lazygit'
 brew 'mise'
@@ -68,6 +68,7 @@ brew 'stylua'
 brew 'swiftformat'
 cask 'swiftformat-for-xcode'
 brew 'swiftlint'
+brew 'tree-sitter-cli' # For nvim-treesitter.
 cask 'visual-studio-code'
 mas 'Xcode', id: 497799835
 cask 'zed'
