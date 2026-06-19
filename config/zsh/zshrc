@@ -60,6 +60,7 @@ KEYTIMEOUT=1
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=2000
 SAVEHIST=1000
+setopt SHARE_HISTORY # Share history between active sessions.
 
 # ------------------------------------------------------------------------------------------
 # Use Pure to set up the prompt.
