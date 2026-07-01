@@ -10,7 +10,7 @@ function echo_green {
 }
 
 echo_green "Upgrading homebrew packages..."
-brew upgrade
+brew upgrade --yes
 
 echo
 echo_green "Upgrading mise tools..."
