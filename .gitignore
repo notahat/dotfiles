@@ -5,3 +5,4 @@
 # Borrowed Claude skills, fetched from upstream by steps/claude.bash.
 /config/claude/skills/doc-coauthoring
 /config/claude/skills/grill-me
+/config/claude/skills/supacode-cli
