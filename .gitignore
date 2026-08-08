@@ -1,11 +1,3 @@
 /Session.vim
 /config/nvim/lazy-lock.json
 /.claude
-
-# Claude hook installed by herdr.
-/config/claude/hooks/herdr-agent-state.sh
-
-# Borrowed Claude skills, fetched from upstream by steps/claude.bash.
-/config/claude/skills/doc-coauthoring
-/config/claude/skills/grill-me
-/config/claude/skills/supacode-cli
