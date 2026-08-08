@@ -33,8 +33,3 @@ function fetch_skill {
 # https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring
 fetch_skill doc-coauthoring \
   https://raw.githubusercontent.com/anthropics/skills/main/skills/doc-coauthoring/SKILL.md
-
-# grill-me, by Matt Pocock (MIT).
-# https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me
-fetch_skill grill-me \
-  https://raw.githubusercontent.com/mattpocock/skills/main/skills/productivity/grill-me/SKILL.md

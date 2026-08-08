@@ -1,51 +1,12 @@
 {
-  "env": {
-    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
-    "DISABLE_AUTOUPDATER": "1"
-  },
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/notify-waiting.sh"
-          }
-        ]
-      }
-    ],
-    "StopFailure": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/notify-waiting.sh"
-          }
-        ]
-      }
-    ]
-  },
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
   "enabledPlugins": {
-    "ruby-lsp@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": false,
+    "mattpocock-skills@claude-plugins-official": true,
     "context7@claude-plugins-official": true
   },
-  "effortLevel": "high",
-  "voice": {
-    "enabled": true,
-    "mode": "hold"
-  },
-  "theme": "dark-ansi",
-  "preferredNotifChannel": "auto",
-  "autoCompactEnabled": false,
-  "inputNeededNotifEnabled": true,
-  "agentPushNotifEnabled": true,
-  "voiceEnabled": true,
+  "skipWorkflowUsageWarning": true,
   "disableTips": true
 }
