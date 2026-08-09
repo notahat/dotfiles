@@ -9,9 +9,10 @@ link_file config/claude/statusline.sh ~/.claude/statusline.sh
 # they live in, so that skills and hooks installed by Claude and by other tools
 # land in ~/.claude instead of in this repo.
 mkdir -p ~/.claude/skills ~/.claude/hooks
+link_file config/claude/skills/diataxis ~/.claude/skills/diataxis
 link_file config/claude/skills/dune-watcher ~/.claude/skills/dune-watcher
 link_file config/claude/skills/install-project-template ~/.claude/skills/install-project-template
-link_file config/claude/hooks/notify-waiting.sh ~/.claude/hooks/notify-waiting.sh
+
 
 # Fetch a borrowed skill's SKILL.md from a public GitHub repo into our skills
 # directory. We pull these from upstream rather than committing copies, so we're
