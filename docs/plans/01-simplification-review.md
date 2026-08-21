@@ -12,8 +12,8 @@ doing; the rest are smaller.
 - [x] 1. Collapse `statusline.sh` to a single `jq` pass
 - [x] 2. Let `link_file` create the parent directory
 - [x] 3. Pull the shared shell helpers into one file
-- [ ] 4. Make `install` work from any directory
-- [ ] 5. Validate the step name
+- [x] 4. Make `install` work from any directory
+- [x] 5. Validate the step name
 - [ ] 6. Replace the `git config` calls with an included gitconfig
 - [ ] 7. Small stuff
 
@@ -122,6 +122,20 @@ dotfiles_dir="$(cd "$(dirname "$0")" && pwd)"
 
 Then `ln -s "$dotfiles_dir/$1"` and `--file "$dotfiles_dir/environments/..."`.
 
+**Done.** Two cwd-dependent spots turned up beyond the ones listed above.
+`steps/zsh.bash` ran `git submodule update` against whatever directory you
+happened to be in, so it now passes `-C "$dotfiles_dir"`. And `steps/mise.bash`
+still runs a bare `mise install`, which picks up a `mise.toml` in the current
+directory if there is one; the global config it needs is symlinked, so that is
+left alone.
+
+Verified by running `install bat` and `install zed` from `/` into a throwaway
+`HOME`. The symlinks point at `/Users/notahat/.dotfiles/config/...` and all
+resolve. Before this change they would have pointed at `/config/...`.
+
+The two steps reading `$dotfiles_dir` need a `# shellcheck disable=SC2154`,
+since the linter cannot see that `install` sets it before sourcing them.
+
 ## 5. Validate the step name
 
 `./install nosuchstep` prints:
@@ -143,6 +157,9 @@ function run_step {
 
 While in there: `usage` prints `install [step name]` twice, once at the top and
 again under "Run a single step". Drop the first one.
+
+**Done.** `./install nosuchstep` now names the step, prints the usage, and
+exits 1.
 
 ## 6. Replace the `git config` calls with an included gitconfig
 

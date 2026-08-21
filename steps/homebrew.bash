@@ -6,4 +6,6 @@ fi
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-brew bundle --file "environments/$DOTFILES_ENV/Brewfile"
+# install sets dotfiles_dir before it sources this step.
+# shellcheck disable=SC2154
+brew bundle --file "$dotfiles_dir/environments/$DOTFILES_ENV/Brewfile"

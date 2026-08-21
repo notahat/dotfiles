@@ -2,15 +2,20 @@
 
 set -o errexit
 
-script_dir="$(dirname "$0")"
-steps_dir="$script_dir/steps"
+# Where this repo lives, resolved to an absolute path so the steps work no
+# matter which directory you run install from.
+dotfiles_dir="$(cd "$(dirname "$0")" && pwd)"
+
+steps_dir="$dotfiles_dir/steps"
 steps=(macos homebrew mise zsh ssh git ghostty neovim rancher-desktop zed bat claude copilot)
 
 # shellcheck source=lib/output.bash
-source "$script_dir/lib/output.bash"
+source "$dotfiles_dir/lib/output.bash"
 
 # Symlinks a file or directory from this repo into place, creating the parent
 # directory if it needs to. Refuses to clobber anything already there.
+#
+# The source is given relative to the root of this repo.
 function link_file {
   mkdir -p "$(dirname "$2")"
 
@@ -19,12 +24,18 @@ function link_file {
   elif [[ -e "$2" ]]; then
     echo_red "$2 already exists, skipping. (You might not want this, so check the file.)"
   else
-    ln -s "$PWD/$1" "$2"
+    ln -s "$dotfiles_dir/$1" "$2"
     echo "Linked $2"
   fi
 }
 
 function run_step {
+  if [[ ! -f "$steps_dir/$1.bash" ]]; then
+    echo_red "There's no step called \"$1\"."
+    echo
+    usage
+  fi
+
   echo
   echo_green "Configuring $1..."
   # shellcheck disable=SC1090
@@ -40,7 +51,6 @@ function run_all_steps {
 function usage {
   echo "Usage:"
   echo "  export DOTFILES_ENV=home|work"
-  echo "  install [step name]"
   echo
   echo "Run all steps:"
   echo "  install"
