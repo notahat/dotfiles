@@ -1,16 +1,24 @@
-# echo ".zshrc $$"
-
 # See also .zshenv, which gets run before .zshrc to set environment variables.
-# That sets up things like homebrew and mise.
+# That sets up the path, including homebrew and mise.
 
 # ------------------------------------------------------------------------------------------
 # Configure completion.
+#
+# compinit's security audit of every directory in fpath costs ~25ms, so skip it
+# with -C and do one full run a day to pick up newly installed completions.
+#
+# The glob qualifiers match .zcompdump only if it exists (N), is a regular file
+# (.), and was last modified less than 24 hours ago (mh-24). A non-empty match
+# means the dump is fresh enough to trust.
 
-[[ -d $UP_HOME_PATH ]] && fpath=($fpath $UP_HOME_PATH/.zsh-up-completion)
-
-autoload -Uz compinit && compinit
-
-[[ -d $UP_HOME_PATH ]] && source $UP_HOME_PATH/.zsh-up-completion/_up
+autoload -Uz compinit
+fresh_zcompdump=($HOME/.zcompdump(N.mh-24))
+if (( $#fresh_zcompdump )) {
+  compinit -C
+} else {
+  compinit
+}
+unset fresh_zcompdump
 
 if [[ -x $HOMEBREW_PREFIX/bin/fzf ]] {
   source <(fzf --zsh)
@@ -22,8 +30,6 @@ if [[ -x $HOMEBREW_PREFIX/bin/fzf ]] {
     source $HOME/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
   }
 }
-
-unsetopt beep
 
 # ------------------------------------------------------------------------------------------
 # Configure syntax highlighting.
@@ -49,18 +55,21 @@ if [[ -f ~/.opam/opam-init/init.zsh ]] {
 }
 
 # ------------------------------------------------------------------------------------------
-# Use vim keybindings.
+# Set shell options.
 
-bindkey -v
-KEYTIMEOUT=1
+unsetopt beep # Don't beep on errors.
+bindkey -v    # Use vim keybindings.
+KEYTIMEOUT=1  # Allow key sequences to be recognized faster.
 
 # ------------------------------------------------------------------------------------------
 # Configure history.
 
 HISTFILE=$HOME/.zsh_history
-HISTSIZE=2000
-SAVEHIST=1000
-setopt SHARE_HISTORY # Share history between active sessions.
+HISTSIZE=50000
+SAVEHIST=50000
+setopt SHARE_HISTORY        # Share history between active sessions.
+setopt HIST_IGNORE_ALL_DUPS # Keep only the most recent copy of a command.
+setopt HIST_REDUCE_BLANKS   # Remove leading/trailing whitespace from commands.
 
 # ------------------------------------------------------------------------------------------
 # Use Pure to set up the prompt.
