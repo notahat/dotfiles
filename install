@@ -2,20 +2,12 @@
 
 set -o errexit
 
-steps_dir="$(dirname "$0")/steps"
+script_dir="$(dirname "$0")"
+steps_dir="$script_dir/steps"
 steps=(macos homebrew mise zsh ssh git ghostty neovim rancher-desktop zed bat claude copilot)
 
-red="\033[31m"
-green="\033[32m"
-reset="\033[0;39m"
-
-function echo_red {
-  echo -e "${red}${1}${reset}"
-}
-
-function echo_green {
-  echo -e "${green}${1}${reset}"
-}
+# shellcheck source=lib/output.bash
+source "$script_dir/lib/output.bash"
 
 # Symlinks a file or directory from this repo into place, creating the parent
 # directory if it needs to. Refuses to clobber anything already there.

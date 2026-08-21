@@ -2,12 +2,8 @@
 
 set -o errexit
 
-green="\033[32m"
-reset="\033[0;39m"
-
-function echo_green {
-  echo -e "${green}${1}${reset}"
-}
+# shellcheck source=lib/output.bash
+source "$(dirname "$0")/lib/output.bash"
 
 echo_green "Upgrading homebrew packages..."
 brew upgrade --yes
