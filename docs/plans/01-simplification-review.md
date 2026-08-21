@@ -10,8 +10,8 @@ doing; the rest are smaller.
 ## Status
 
 - [x] 1. Collapse `statusline.sh` to a single `jq` pass
-- [ ] 2. Let `link_file` create the parent directory
-- [ ] 3. Pull the shared shell helpers into one file
+- [x] 2. Let `link_file` create the parent directory
+- [x] 3. Pull the shared shell helpers into one file
 - [ ] 4. Make `install` work from any directory
 - [ ] 5. Validate the step name
 - [ ] 6. Replace the `git config` calls with an included gitconfig
@@ -79,9 +79,15 @@ function link_file {
 ```
 
 That removes 11 of the 13 lines. `steps/bat.bash` becomes one line, and so do
-`steps/ghostty.bash` and `steps/neovim.bash`. `steps/ssh.bash` keeps its
-`chmod 700`, which is the one case where the `mkdir` did more than ensure the
-directory existed.
+`steps/ghostty.bash` and `steps/rancher-desktop.bash`.
+
+**Done.** The two `mkdir` calls that stayed both do more than ensure a link
+parent exists: `fetch_skill` creates a directory it curls a file into, and
+`claude.bash` creates `~/.claude/hooks`, which nothing links into yet (see item
+7). `steps/ssh.bash` now runs its `chmod 700` after the link rather than
+before, since `link_file` is what creates `~/.ssh`; checked the result is still
+`drwx------` against a throwaway `HOME`. Every link-only step re-run clean and
+idempotent, and `shellcheck` passes on `install`, `upgrade` and all the steps.
 
 ## 3. Pull the shared shell helpers into one file
 
@@ -92,6 +98,10 @@ from inside the step.
 
 A `lib/output.bash` holding the colour helpers, sourced by both `install` and
 `upgrade`, removes the duplication and makes the dependency explicit.
+
+**Done.** Both scripts source it via `$(dirname "$0")`, so they resolve it from
+any working directory. A comment in the lib records how the steps get at the
+helpers.
 
 ## 4. Make `install` work from any directory
 
