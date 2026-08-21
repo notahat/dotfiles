@@ -8,5 +8,19 @@
     "context7@claude-plugins-official": true
   },
   "skipWorkflowUsageWarning": true,
-  "disableTips": true
+  "disableTips": true,
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/notahat/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
 }
