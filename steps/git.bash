@@ -1,6 +1,5 @@
 # shellcheck shell=bash
 
-mkdir -p ~/.config/git
 link_file config/git/ignore ~/.config/git/ignore
 touch ~/.config/git/config
 

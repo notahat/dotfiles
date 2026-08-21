@@ -1,6 +1,5 @@
 # shellcheck shell=bash
 
-mkdir -p ~/.config/mise
 link_file "environments/$DOTFILES_ENV/mise.toml" ~/.config/mise/config.toml
 
 if [[ $DOTFILES_ENV == work ]]; then

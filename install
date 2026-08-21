@@ -17,7 +17,11 @@ function echo_green {
   echo -e "${green}${1}${reset}"
 }
 
+# Symlinks a file or directory from this repo into place, creating the parent
+# directory if it needs to. Refuses to clobber anything already there.
 function link_file {
+  mkdir -p "$(dirname "$2")"
+
   if [[ -L "$2" ]]; then
     echo "$2 is already linked, skipping."
   elif [[ -e "$2" ]]; then
