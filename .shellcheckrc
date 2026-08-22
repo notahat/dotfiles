@@ -1,0 +1,8 @@
+# Follow `source` statements into lib/, so the shared helpers get checked
+# along with the scripts that use them, and the functions and variables they
+# define are recognised as defined.
+external-sources=true
+
+# Resolve the paths in `# shellcheck source=` directives relative to the
+# script doing the sourcing, rather than to wherever shellcheck was run from.
+source-path=SCRIPTDIR

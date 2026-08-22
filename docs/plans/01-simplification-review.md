@@ -16,6 +16,7 @@ doing; the rest are smaller.
 - [x] 5. Validate the step name
 - [ ] 6. Replace the `git config` calls with an included gitconfig
 - [ ] 7. Small stuff
+- [x] 8. Run the steps as programs instead of sourcing them
 
 ## 1. Collapse `statusline.sh` to a single `jq` pass
 
@@ -99,9 +100,10 @@ from inside the step.
 A `lib/output.bash` holding the colour helpers, sourced by both `install` and
 `upgrade`, removes the duplication and makes the dependency explicit.
 
-**Done.** Both scripts source it via `$(dirname "$0")`, so they resolve it from
-any working directory. A comment in the lib records how the steps get at the
-helpers.
+**Done**, and later reworked by item 8. The first pass put the helpers in
+`lib/output.bash` and left the steps inheriting them, which needed two
+`# shellcheck disable=SC2154` comments once the steps started reading
+`$dotfiles_dir`.
 
 ## 4. Make `install` work from any directory
 
@@ -210,3 +212,50 @@ The step drops to three lines and the git settings become reviewable in a diff.
   This one is a real trade-off. The current wrappers are greppable and the
   indirection costs the reader something. Worth taking only if the list keeps
   growing.
+
+## 8. Run the steps as programs instead of sourcing them
+
+`install` used to `source` each step, so a step silently inherited
+`link_file`, `echo_red` and `dotfiles_dir`. Nothing in a step said where any of
+that came from, and shellcheck could not see the variables, which is what the
+two `disable=SC2154` comments were papering over.
+
+The first alternative considered was a `dotfiles_path` helper, on the grounds
+that shellcheck trips on bare variables but not on function calls. That would
+have silenced the linter while leaving the inheritance in place.
+
+Each step is now an executable that sources `lib/dotfiles.bash` itself:
+
+```bash
+#!/bin/bash
+
+set -o errexit
+
+# shellcheck source=../lib/dotfiles.bash
+source "$(dirname "$0")/../lib/dotfiles.bash"
+```
+
+The lib works out `dotfiles_dir` from `${BASH_SOURCE[0]}`, so it holds whether
+`install` or a step does the sourcing, and nothing needs passing in.
+
+What it cost: sourcing was load-bearing for the `PATH`. `homebrew.bash` ran
+`eval "$(brew shellenv)"`, which was what put `mise` on the `PATH` for the step
+after it. `install` now exports a `PATH` once, up front, mirroring what
+`config/zsh/zshenv` sets up for an interactive shell. That let `mise.bash` drop
+its own `export PATH` and flatten a nested `if`. The per-step cost is three
+lines of preamble, about 39 lines across the 13 steps.
+
+`.shellcheckrc` turns on `external-sources` and `source-path=SCRIPTDIR`, so
+plain `shellcheck` follows the `source` from any working directory, and the
+editor's bashls reads the same file. Both `disable=SC2154` comments are gone,
+and the checking is stronger rather than suppressed: verified by adding a bogus
+variable to a step and confirming SC2154 still fires on it.
+
+Also verified: steps run standalone with no `install` involved, so
+`steps/bat.bash` on its own works; a failing step still aborts `install` with a
+non-zero exit; links created from `/` point into the repo and resolve; and
+every link-only step is still idempotent against the real `HOME`.
+
+Left alone: `mise.bash` runs `eval "$(mise activate bash)"`, which affects only
+its own process. It looks removable, but `mise install` is not something I could
+test safely, so it stays.

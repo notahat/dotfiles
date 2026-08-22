@@ -1,4 +1,9 @@
-# shellcheck shell=bash
+#!/bin/bash
+
+set -o errexit
+
+# shellcheck source=../lib/dotfiles.bash
+source "$(dirname "$0")/../lib/dotfiles.bash"
 
 link_file config/claude/CLAUDE.md ~/.claude/CLAUDE.md
 link_file config/claude/settings.json ~/.claude/settings.json

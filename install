@@ -2,33 +2,19 @@
 
 set -o errexit
 
-# Where this repo lives, resolved to an absolute path so the steps work no
-# matter which directory you run install from.
-dotfiles_dir="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=lib/dotfiles.bash
+source "$(dirname "$0")/lib/dotfiles.bash"
 
 steps_dir="$dotfiles_dir/steps"
 steps=(macos homebrew mise zsh ssh git ghostty neovim rancher-desktop zed bat claude copilot)
 
-# shellcheck source=lib/output.bash
-source "$dotfiles_dir/lib/output.bash"
+# The PATH every step runs with. Each step is its own program, so this is the
+# single place that puts the Homebrew and Mise binaries where the steps can
+# find them. It mirrors what config/zsh/zshenv sets up for an interactive
+# shell. Entries that don't exist yet on a fresh machine do no harm.
+export PATH="$HOME/.local/share/mise/shims:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH:$HOME/.local/bin"
 
-# Symlinks a file or directory from this repo into place, creating the parent
-# directory if it needs to. Refuses to clobber anything already there.
-#
-# The source is given relative to the root of this repo.
-function link_file {
-  mkdir -p "$(dirname "$2")"
-
-  if [[ -L "$2" ]]; then
-    echo "$2 is already linked, skipping."
-  elif [[ -e "$2" ]]; then
-    echo_red "$2 already exists, skipping. (You might not want this, so check the file.)"
-  else
-    ln -s "$dotfiles_dir/$1" "$2"
-    echo "Linked $2"
-  fi
-}
-
+# Runs a single step, complaining if there's no such thing.
 function run_step {
   if [[ ! -f "$steps_dir/$1.bash" ]]; then
     echo_red "There's no step called \"$1\"."
@@ -38,8 +24,7 @@ function run_step {
 
   echo
   echo_green "Configuring $1..."
-  # shellcheck disable=SC1090
-  source "$steps_dir/$1.bash"
+  "$steps_dir/$1.bash"
 }
 
 function run_all_steps {
