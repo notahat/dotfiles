@@ -28,10 +28,10 @@ if [[ -x $HOMEBREW_PREFIX/bin/fzf ]] {
   source <(fzf --zsh)
   export FZF_DEFAULT_COMMAND='fd --type f'
 
-  if [[ -d $HOME/.config/zsh/plugins/fzf-tab ]] {
+  if [[ -d $HOMEBREW_PREFIX/share/fzf-tab ]] {
     # Use fzf as a completion menu for everything. This needs to load after
     # compinit, but before other plugins.
-    source $HOME/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
+    source $HOMEBREW_PREFIX/share/fzf-tab/fzf-tab.zsh
   }
 }
 

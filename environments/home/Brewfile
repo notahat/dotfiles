@@ -96,6 +96,7 @@ brew 'zoxide'
 
 # Zsh plugins =========================================================
 
+brew 'fzf-tab'
 brew 'pure'
 brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'

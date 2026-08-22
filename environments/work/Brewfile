@@ -8,6 +8,7 @@ brew 'entr'
 brew 'eza'
 brew 'fd'
 brew 'fzf'
+brew 'fzf-tab'
 brew 'gh'
 brew 'git'
 brew 'gpg' # mise uses this to verify packages
