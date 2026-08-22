@@ -31,6 +31,7 @@ Good code is code that is easy to understand. Everything else in these guideline
 
 - Always write in complete sentences with proper punctuation.
 - Good comments explain *why* the code is the way it is, or capture context that the code itself can't convey.
+- Comments describe the code as it is now, never how it used to be. Don't mention what was removed, renamed, or changed — that's what the git history is for.
 - Classes and modules must always have a comment that makes their responsibilities clear — including what is explicitly out of scope, where that might otherwise be assumed.
 - Functions and methods should have a header comment, including private helpers. Test cases are the exception — the test name carries the description. Test helpers (factories, fixtures, setup) still get headers.
 - Inline comments are fine, but always prefer making the code clear enough not to need them.
