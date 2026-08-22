@@ -64,11 +64,24 @@ Three plugins gone with no loss of function. Verified afterwards: the status
 line still renders, `<leader>d` and `<leader>x` still work, deleting a buffer
 leaves the window alive showing the previous buffer, and startup is 45-48ms.
 
-One deliberate omission. Lualine polls once a second, so LSP progress can lag
-by up to that long. The old `lsp-progress.nvim` setup had exactly the same lag,
-because the config never hooked up its `LspProgressStatusUpdated` event, so
-this is no worse than before. If it ever grates, 0.12 added a `Progress`
-autocmd event that can drive `require("lualine").refresh()` directly.
+A correction to an earlier mistake here. The first attempt swapped
+`lsp-progress.nvim` for `vim.ui.progress_status()`, which does **not** work:
+that function only tracks `Progress` events, which come from progress messages
+created with `nvim_echo`. The language server client does not use those — it
+fires its own `LspProgress` autocmd (`lsp/handlers.lua:81`) and nothing in the
+runtime bridges the two. Measured against a running `lua_ls`: 27 `LspProgress`
+events, 0 `Progress` events, and `vim.ui.progress_status()` empty throughout.
+
+The status line now formats the built-in `LspProgress` event itself, which is
+about fifteen lines in `lualine.lua` and needs no plugin. The same autocmd
+calls `require("lualine").refresh()`, so progress updates at lualine's 16ms
+tick rather than waiting for its once-a-second timer. Verified: 15 distinct
+percentages rendered during one `lua_ls` workspace load, e.g.
+`Loading workspace 34%`.
+
+`vim.ui.progress_status()` is still worth knowing about — it covers progress
+from `nvim_echo`, which is what `vim.pack` and similar use — but it is not a
+replacement for language server progress.
 
 ### `lsp-progress.nvim` → `vim.ui.progress_status()`
 
@@ -178,8 +191,9 @@ The cost is blink's cross-source ranking and ghost text. See
 0.12's default statusline is now a plain statusline expression, and already
 shows `vim.diagnostic.status()`, `vim.ui.progress_status()`, `'busy'`, and
 terminal exit codes. The lualine config adds mode, a shortened path, and
-position — all cheap to express directly. Dropping it also drops
-`nvim-web-devicons`, if oil and fzf-lua are its only other users.
+position — all cheap to express directly. It would not drop
+`nvim-web-devicons`, though: oil and fzf-lua both list it as a dependency of
+their own.
 
 This suits the README's "minimal UI, fast startup" stance, but it is the one
 item here that costs something visual.
