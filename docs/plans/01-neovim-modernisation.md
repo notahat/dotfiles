@@ -58,9 +58,17 @@ install list. The `lua`, `markdown`, `markdown_inline`, `query`, `vim`, and
 
 ## 2. Plugins 0.12 can now replace outright
 
-**Status: not done.**
+**Status: done.**
 
-Three plugins can go with no loss of function.
+Three plugins gone with no loss of function. Verified afterwards: the status
+line still renders, `<leader>d` and `<leader>x` still work, deleting a buffer
+leaves the window alive showing the previous buffer, and startup is 45-48ms.
+
+One deliberate omission. Lualine polls once a second, so LSP progress can lag
+by up to that long. The old `lsp-progress.nvim` setup had exactly the same lag,
+because the config never hooked up its `LspProgressStatusUpdated` event, so
+this is no worse than before. If it ever grates, 0.12 added a `Progress`
+autocmd event that can drive `require("lualine").refresh()` directly.
 
 ### `lsp-progress.nvim` → `vim.ui.progress_status()`
 

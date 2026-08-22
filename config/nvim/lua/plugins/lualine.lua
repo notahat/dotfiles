@@ -6,12 +6,8 @@ local function copy_relative_path()
   vim.notify("Path copied: " .. path)
 end
 
-local function lsp_progress()
-  return require("lsp-progress").progress()
-end
-
 local function open_diagnostics()
-  require("trouble").open("diagnostics")
+  require("fzf-lua").diagnostics_workspace()
 end
 
 local function show_lsp_info()
@@ -30,7 +26,7 @@ return {
         { "filename", on_click = copy_relative_path, path = 1, shorting_target = 20 },
       },
       lualine_x = {
-        { lsp_progress, on_click = show_lsp_info },
+        { vim.ui.progress_status, on_click = show_lsp_info },
       },
       lualine_y = {},
       lualine_z = { "%p%%/%L" },

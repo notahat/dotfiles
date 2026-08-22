@@ -1,11 +1,11 @@
 -- Tip: Make sure to require plugins inside of functions, to help with lazy loading.
 
+-- Step off the buffer before deleting it, so the window keeps showing
+-- something rather than closing.
 local function delete_buffer()
-  require("bufdelete").bufdelete()
-end
-
-local function open_diagnostics()
-  require("trouble").open({ mode = "diagnostics", auto_close = true })
+  local buffer = vim.api.nvim_get_current_buf()
+  vim.cmd.bprevious()
+  vim.api.nvim_buf_delete(buffer, {})
 end
 
 local function open_oil()
@@ -14,6 +14,10 @@ end
 
 local function fzf_buffers()
   require("fzf-lua").buffers()
+end
+
+local function fzf_diagnostics()
+  require("fzf-lua").diagnostics_workspace()
 end
 
 local function fzf_find_files()
@@ -85,7 +89,7 @@ end
 
 vim.keymap.set("n", "<leader><leader>", fzf_find_files, { desc = "Find files" })
 vim.keymap.set("n", "<leader>b", fzf_buffers, { desc = "Buffers" })
-vim.keymap.set("n", "<leader>d", open_diagnostics, { desc = "Diagnostics" })
+vim.keymap.set("n", "<leader>d", fzf_diagnostics, { desc = "Diagnostics" })
 vim.keymap.set("n", "<leader>h", fzf_help_tags, { desc = "Help" })
 vim.keymap.set("n", "<leader>j", toggle_join, { desc = "Join/split" })
 vim.keymap.set("n", "<leader>q", vim.cmd.xall, { desc = "Quit" })
