@@ -163,8 +163,8 @@ resolved border is now nil against a rounded `winborder`, and startup is 44ms.
 `williamboman/mason.nvim` was transferred to `mason-org/mason.nvim` (Mason v2).
 Confirmed: `git ls-remote` on both URLs returns the same commit, so the old
 path is a redirect. The spec now names the canonical repo rather than relying
-on that redirect. Lazy updated the remote in place — no re-clone, and all eight
-installed tools survived.
+on that redirect. Lazy updated the remote in place — no re-clone — and all
+eight installed tools survived.
 
 ### Dropping Mason entirely — declined
 
