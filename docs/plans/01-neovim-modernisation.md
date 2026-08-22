@@ -191,20 +191,77 @@ picker. It now uses `require("fzf-lua").lsp_typedefs()`.
 
 ## 5. Bolder moves
 
-**Status: not done.**
+**Status: all three declined, for now.** Each was investigated; none was
+worth the trade.
 
-### `blink.cmp` → built-in autocompletion
+### `blink.cmp` → built-in autocompletion — declined
 
-The big one. 0.12 shipped `'autocomplete'`, `'autocompletedelay'`, and
-`'autocompletetimeout'`; `'complete'` gained `o` (omnifunc) and `F` (function)
-sources; `'completeopt'` gained `popup` and `nearest`; and `'pumborder'` exists.
-Combined with `vim.lsp.completion.enable({ autotrigger = true })` and built-in
-`vim.snippet`, that is `blink.cmp` and `friendly-snippets` both gone.
+The original claim here was that 0.12's completion machinery made `blink.cmp`
+and `friendly-snippets` "both gone". That overstated it. Driven against a real
+`lua_ls` — headless Neovim over an RPC socket, so keystrokes go through the
+normal input queue and `complete_info()` can be read while insert mode is
+waiting — it is closer to "at parity for LSP completion, minus snippets, minus
+path, minus cross-source ranking".
 
-The cost is blink's cross-source ranking and ghost text. See
-`:help ins-autocompletion` — there is a worked example at `insert.txt:1135`.
+**It does work.** Typing `vim.ap` in a Lua buffer against a warmed server
+returned `append` (buffer) and `api` (`kind=Field`, from the server) on 6 of 6
+runs. Both wiring styles are equally reliable: `vim.lsp.completion.enable(…
+{ autotrigger = true })`, letting the server's `triggerCharacters` drive the
+popup, and plain `'autocomplete'` with `o` in `'complete'` pulling
+`vim.lsp.omnifunc` in as one source among several. `completeopt+=popup` fills a
+float from `completionItem/resolve`, and `<C-y>` applies snippets,
+`additionalTextEdits` (so auto-imports work), and item commands
+(`lsp/completion.lua:164-198`, `:856-928`).
 
-### `lualine` → the default statusline
+**Ranking is why it was declined.** The order of `'complete'` does not
+determine the order of results:
+
+| `'complete'` | order shown          |
+| ------------ | -------------------- |
+| `.,o`        | `append`, `api[LSP]` |
+| `o,.`        | `append`, `api[LSP]` |
+
+A buffer word outranks the server either way, with no way to promote the
+server. Adding `fuzzy` makes it worse — the one LSP item fell to 8th behind
+`append`, `wrap`, `wrapped`, `mapleader`, and three `loaded_*_provider`
+matches, all fuzzy-matched on `ap`. Setting `complete=o` does give clean
+LSP-only results (3 of 3 runs, `api` alone), but then autocompletion goes dead
+in any buffer with no server attached, so it would have to be set per buffer on
+`LspAttach`.
+
+**Sources are the other gap.** blink defaults to `{ lsp, path, snippets,
+buffer }`. `'complete'` offers buffers, windows, tags, dictionary, thesaurus,
+included files, buffer *names*, and functions — no path source and no snippet
+source. `friendly-snippets` would have nothing to plug into; `vim.snippet` only
+expands snippets the server itself sends. Path completion would drop back to
+`<C-x><C-f>`. Either could be rebuilt as an `F{func}` source, which is more
+config than the plugin it replaced.
+
+**Startup is not an argument either way.** blink is `lazy = false`, but it is
+30 modules and 2.67ms of a 46ms startup. Its only real weight is the 1.9MB
+prebuilt Rust matcher it downloads from GitHub releases.
+
+The config itself is not the obstacle — this is the whole of it:
+
+```lua
+vim.o.autocomplete = true
+vim.o.completeopt = "menuone,noselect,popup"
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(event)
+    vim.bo[event.buf].complete = "o"
+    vim.lsp.completion.enable(true, event.data.client_id, event.buf, { autotrigger = true })
+  end,
+})
+```
+
+The obstacle is trading a matcher that ranks four sources against each other
+for one that either shows the server alone or lets buffer words sit on top of
+it. Worth revisiting if `'complete'` gains source priorities.
+
+See `:help ins-autocompletion` (worked example at `insert.txt:1135`) and
+`:help lsp-completion`.
+
+### `lualine` → the default statusline — declined
 
 0.12's default statusline is now a plain statusline expression, and already
 shows `vim.diagnostic.status()`, `vim.ui.progress_status()`, `'busy'`, and
@@ -213,14 +270,17 @@ position — all cheap to express directly. It would not drop
 `nvim-web-devicons`, though: oil and fzf-lua both list it as a dependency of
 their own.
 
-This suits the README's "minimal UI, fast startup" stance, but it is the one
-item here that costs something visual.
+The blocker is the same finding as section 2: `vim.ui.progress_status()` only
+covers progress from `nvim_echo`, so the default statusline shows nothing at
+all for LSP progress. Keeping the `lsp-progress.nvim` output means keeping
+something that can call `progress()` — which means keeping lualine, or
+hand-rolling a `'statusline'` expression that does the same job.
 
-### `lazy.nvim` → `vim.pack`
+### `lazy.nvim` → `vim.pack` — declined
 
-Real, and built in. **Recommendation: stay on lazy for now.** There are 22
-plugins, a lockfile the config relies on, and a sub-100ms startup target that
-lazy-loading protects. `vim.pack` has no lockfile equivalent yet.
+Real, and built in, but declined for now. There are 20 plugins, a lockfile the
+config relies on, and a sub-100ms startup target that lazy-loading protects.
+`vim.pack` has no lockfile equivalent yet.
 
 ## Also new, unrelated to plugins
 
