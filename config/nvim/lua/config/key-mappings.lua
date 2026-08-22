@@ -44,6 +44,10 @@ local function fzf_lsp_references()
   require("fzf-lua").lsp_references()
 end
 
+local function fzf_lsp_type_definitions()
+  require("fzf-lua").lsp_typedefs()
+end
+
 local function toggle_join()
   require("treesj").toggle()
 end
@@ -108,6 +112,7 @@ vim.keymap.set({ "n", "x" }, "]g", next_git_hunk, { desc = "Next git hunk" })
 -- Replace the standard LSP actions with nicer versions.
 vim.keymap.set("n", "gri", fzf_lsp_implementation, { desc = " Implementation" })
 vim.keymap.set("n", "grr", fzf_lsp_references, { desc = " References" })
+vim.keymap.set("n", "grt", fzf_lsp_type_definitions, { desc = " Type definitions" })
 
 -- Add LSP definition lookup too, in the same style as the above.
 vim.keymap.set("n", "grd", fzf_lsp_definitions, { desc = " Definitions" })

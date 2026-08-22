@@ -2,7 +2,7 @@
 --
 -- Mason puts them in ~/.local/share/NVIM_APPNAME/mason
 return {
-  "williamboman/mason.nvim",
+  "mason-org/mason.nvim",
   opts = {
     PATH = "append",
   },

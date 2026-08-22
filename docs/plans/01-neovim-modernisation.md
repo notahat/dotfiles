@@ -156,35 +156,38 @@ resolved border is now nil against a rounded `winborder`, and startup is 44ms.
 
 ## 4. Newer alternatives and API drift
 
-**Status: not done.**
+**Status: done.**
 
 ### Mason moved
 
 `williamboman/mason.nvim` was transferred to `mason-org/mason.nvim` (Mason v2).
-The old path still redirects but is unmaintained. Worth confirming and updating
-the spec — or see below.
+Confirmed: `git ls-remote` on both URLs returns the same commit, so the old
+path is a redirect. The spec now names the canonical repo rather than relying
+on that redirect. Lazy updated the remote in place — no re-clone, and all eight
+installed tools survived.
 
-### Consider dropping Mason entirely
+### Dropping Mason entirely — declined
 
-The dotfiles already have a Brewfile with a Coding section and a per-environment
-mise config. `lua-language-server`, `stylua`, `shellcheck`, and
-`typescript-language-server` are all in Homebrew. `prettierd`,
-`bash-language-server`, and `eslint-lsp` are npm packages and `stree` is a gem,
-but mise handles both backends (`mise use -g npm:prettierd`,
-`gem:syntax_tree`).
+Considered and rejected: keeping Mason. The alternative was splitting the eight
+tools across Homebrew (`lua-language-server`, `stylua`, `shellcheck`,
+`typescript-language-server`) and mise (`npm:prettierd`,
+`npm:bash-language-server`, `npm:eslint-lsp`, `gem:syntax_tree`), which trades
+one list for three.
 
-That removes two plugins and puts tool versions under the same lockfiles as
-everything else in the dotfiles.
+### `grt` now matches its siblings
 
-The counter-argument: it becomes four packages split across three managers
-instead of one list. It fits the dotfiles better than it fits the nvim config.
+0.12 added two default mappings: `grt` for `vim.lsp.buf.type_definition()` and
+`grx` for `vim.lsp.codelens.run()`.
 
-### Default LSP mappings not yet used
+`grt` arrived after the "replace the standard LSP actions with nicer versions"
+block was written, so it was still using the built-in handler while `gri`,
+`grr`, and `grd` used fzf-lua pickers. That is a visible inconsistency, not
+just an aesthetic one: `get_locations` (`lsp/buf.lua:216`) jumps straight to a
+single result but falls through to the quickfix list when there are several
+(`buf.lua:262-290`). So `grt` opened quickfix where its siblings opened a
+picker. It now uses `require("fzf-lua").lsp_typedefs()`.
 
-0.12 added `grt` (`vim.lsp.buf.type_definition()`) and `grx`
-(`vim.lsp.codelens.run()`) alongside the `gri` and `grr` already overridden in
-`key-mappings.lua`. There is also a new `:lsp` command for managing clients
-interactively.
+`grx` is left alone — it is a useful new default with nothing to override.
 
 ## 5. Bolder moves
 
