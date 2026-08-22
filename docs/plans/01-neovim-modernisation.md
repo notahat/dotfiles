@@ -105,16 +105,26 @@ open in several windows — but almost certainly equivalent in practice here.
 
 ## 3. Redundant config to delete
 
-**Status: not done.**
+**Status: done.**
 
-- **The `texthl` block in `diagnostics.lua`.** Those four mappings are
-  character-for-character the defaults (`default_signs_hl` in
-  `runtime/lua/vim/diagnostic.lua`). Keep only `signs.text`.
+- **The `texthl` block in `diagnostics.lua`.** `vim.diagnostic.Opts.Signs`
+  accepts `severity`, `priority`, `text`, `numhl`, and `linehl` — there is no
+  `texthl` field, and the string does not appear anywhere in
+  `runtime/lua/vim/diagnostic.lua`. Sign highlights come from an internal
+  `sign_highlight_map` (`diagnostic.lua:1791`), so the block was inert rather
+  than merely redundant. Deleting it changes nothing visually.
 - **`gitsigns.next_hunk` / `prev_hunk` are deprecated.** Confirmed in the
-  installed copy at `actions.lua:562` and `:584`. Use `nav_hunk("next")` and
-  `nav_hunk("prev")`.
-- **`mason.nvim`'s `ui.border = "none"`** now fights the global
-  `vim.opt.winborder = "rounded"` set in `options.lua`.
+  installed copy at `actions.lua:562` and `:584`. Now using `nav_hunk("next")`
+  and `nav_hunk("prev")`.
+- **`mason.nvim`'s `ui.border = "none"`** fought the global
+  `vim.opt.winborder = "rounded"` set in `options.lua`. Mason's own default is
+  `border = nil`, documented as "Defaults to `:h 'winborder'` if nil"
+  (`settings.lua:120`), so dropping the override lets Mason match every other
+  float.
+
+Verified afterwards: the error sign still renders with `DiagnosticSignError`,
+`]g` jumps to the first hunk in a test repo and reports "Hunk 1 of 2", Mason's
+resolved border is now nil against a rounded `winborder`, and startup is 44ms.
 
 ## 4. Newer alternatives and API drift
 

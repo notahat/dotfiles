@@ -49,11 +49,11 @@ local function toggle_join()
 end
 
 local function next_git_hunk()
-  require("gitsigns").next_hunk()
+  require("gitsigns").nav_hunk("next")
 end
 
 local function previous_git_hunk()
-  require("gitsigns").prev_hunk()
+  require("gitsigns").nav_hunk("prev")
 end
 
 local function search_and_replace()
