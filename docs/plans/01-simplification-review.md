@@ -15,8 +15,9 @@ doing; the rest are smaller.
 - [x] 4. Make `install` work from any directory
 - [x] 5. Validate the step name
 - [x] 6. Replace the `git config` calls with an included gitconfig
-- [ ] 7. Small stuff
+- [x] 7. Small stuff
 - [x] 8. Run the steps as programs instead of sourcing them
+- [ ] 9. `settings.json` points at a hook the install does not provide
 
 ## 1. Collapse `statusline.sh` to a single `jq` pass
 
@@ -82,10 +83,10 @@ function link_file {
 That removes 11 of the 13 lines. `steps/bat.bash` becomes one line, and so do
 `steps/ghostty.bash` and `steps/rancher-desktop.bash`.
 
-**Done.** The two `mkdir` calls that stayed both do more than ensure a link
-parent exists: `fetch_skill` creates a directory it curls a file into, and
-`claude.bash` creates `~/.claude/hooks`, which nothing links into yet (see item
-7). `steps/ssh.bash` now runs its `chmod 700` after the link rather than
+**Done.** One `mkdir` stayed, in `fetch_skill`, because it creates a directory
+that a `curl` writes into rather than one a link needs as a parent. A second one
+created `~/.claude/hooks`, and item 7 removed it. `steps/ssh.bash` runs its
+`chmod 700` after the link rather than
 before, since `link_file` is what creates `~/.ssh`; checked the result is still
 `drwx------` against a throwaway `HOME`. Every link-only step re-run clean and
 idempotent, and `shellcheck` passes on `install`, `upgrade` and all the steps.
@@ -135,8 +136,9 @@ Verified by running `install bat` and `install zed` from `/` into a throwaway
 `HOME`. The symlinks point at `/Users/notahat/.dotfiles/config/...` and all
 resolve. Before this change they would have pointed at `/config/...`.
 
-The two steps reading `$dotfiles_dir` need a `# shellcheck disable=SC2154`,
-since the linter cannot see that `install` sets it before sourcing them.
+This first pass left the two steps reading `$dotfiles_dir` needing a
+`# shellcheck disable=SC2154`, since the linter could not see that `install`
+set it before sourcing them. Item 8 removed both.
 
 ## 5. Validate the step name
 
@@ -231,6 +233,35 @@ both places.
   indirection costs the reader something. Worth taking only if the list keeps
   growing.
 
+**Done**, except the `lazy` helper.
+
+`docs/agents/` is gone. It held no files, so git was not tracking it and there
+is nothing to see in the diff.
+
+The README claimed the install fetches `grill-me` by Matt Pocock. There is no
+skill by that name; the closest is `grill-with-docs`, and it arrives through the
+`mattpocock-skills` plugin enabled in `config/claude/settings.json` rather than
+through `steps/claude.bash`, which fetches `doc-coauthoring` alone. The README
+now says that. Its claim about hooks in `config/claude` is gone too, and so is
+the `mkdir -p ~/.claude/hooks` in `steps/claude.bash`, which created a directory
+the repo puts nothing into.
+
+The commented-out `log_level` is gone from `config/nvim/lua/plugins/conform.lua`.
+
+The `lazy` helper is not worth taking, and the count above is wrong: there are
+15 wrappers, not 17. Two things argue against collapsing them. One of the 15
+passes arguments:
+
+```lua
+require("trouble").open({ mode = "diagnostics", auto_close = true })
+```
+
+so `lazy(module, method)` would not cover it without varargs. More importantly,
+`vim.keymap.set("n", "<leader>/", fzf_live_grep, ...)` names what the mapping
+does, and goto-definition works on it. `lazy("fzf-lua", "live_grep_native")`
+replaces that with a pair of strings that nothing checks until the key is
+pressed.
+
 ## 8. Run the steps as programs instead of sourcing them
 
 `install` used to `source` each step, so a step silently inherited
@@ -277,3 +308,25 @@ every link-only step is still idempotent against the real `HOME`.
 Left alone: `mise.bash` runs `eval "$(mise activate bash)"`, which affects only
 its own process. It looks removable, but `mise install` is not something I could
 test safely, so it stays.
+
+## 9. `settings.json` points at a hook the install does not provide
+
+Found while checking the README's claim about hooks. `config/claude/settings.json`
+is symlinked into `~/.claude`, and its `SessionStart` hook runs:
+
+```
+bash '/Users/notahat/.claude/hooks/herdr-agent-state.sh' session
+```
+
+Two problems. The path is absolute and hardcoded to this machine's home
+directory, so it is wrong anywhere else. And `herdr-agent-state.sh` is installed
+by herdr, not by this repo, so a fresh machine gets a `SessionStart` hook
+pointing at a file that isn't there.
+
+Options: make the path `~/.claude/hooks/...` so at least it is portable, drop
+the hook from the checked-in settings and let herdr add it locally, or have
+`steps/claude.bash` install herdr.
+
+Related: `~/.claude/hooks/notify-waiting.sh` on this machine is a symlink to
+`config/claude/hooks/notify-waiting.sh`, which was deleted. It dangles and can
+go.

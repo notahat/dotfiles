@@ -35,7 +35,7 @@ actually run every day.
   README](config/nvim).
 - **One command to update everything.** `./upgrade` bumps Homebrew packages,
   Mise tools, and Neovim plugins in a single run.
-- **A version-controlled Claude Code setup.** Custom skills, hooks, and a
+- **A version-controlled Claude Code setup.** Custom skills, settings, and a
   statusline live in [`config/claude`](config/claude).
 
 ## How it works
@@ -63,7 +63,8 @@ The pieces:
 Take whatever's useful, whether a whole config, a single alias, or just an
 idea. Everything here is [MIT licensed](LICENSE).
 
-A couple of the Claude skills aren't mine. The install fetches them from their
-sources rather than bundling them:
-[doc-coauthoring](https://github.com/anthropics/skills) by Anthropic, and
-[grill-me](https://github.com/mattpocock/skills) by Matt Pocock.
+Some of the Claude skills aren't mine, and I don't bundle copies of them.
+[doc-coauthoring](https://github.com/anthropics/skills) by Anthropic is fetched
+from source by the install. [Matt Pocock's
+skills](https://github.com/mattpocock/skills) come from his plugin, enabled in
+[`config/claude/settings.json`](config/claude/settings.json).

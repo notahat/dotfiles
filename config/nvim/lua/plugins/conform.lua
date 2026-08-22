@@ -4,7 +4,6 @@ return {
   event = { "BufWritePre" },
   cmd = { "ConformInfo" },
   opts = {
-    -- log_level = vim.log.levels.DEBUG,
     formatters_by_ft = {
       css = { "prettierd" },
       html = { "prettierd" },

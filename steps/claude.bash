@@ -9,14 +9,12 @@ link_file config/claude/CLAUDE.md ~/.claude/CLAUDE.md
 link_file config/claude/settings.json ~/.claude/settings.json
 link_file config/claude/statusline.sh ~/.claude/statusline.sh
 
-# Link our skills and hooks individually, rather than linking the directories
-# they live in, so that skills and hooks installed by Claude and by other tools
-# land in ~/.claude instead of in this repo.
-mkdir -p ~/.claude/hooks
+# Link our skills individually, rather than linking the directory they live in,
+# so that skills installed by Claude and by other tools land in ~/.claude
+# instead of in this repo.
 link_file config/claude/skills/diataxis ~/.claude/skills/diataxis
 link_file config/claude/skills/dune-watcher ~/.claude/skills/dune-watcher
 link_file config/claude/skills/install-project-template ~/.claude/skills/install-project-template
-
 
 # Fetch a borrowed skill's SKILL.md from a public GitHub repo into our skills
 # directory. We pull these from upstream rather than committing copies, so we're
