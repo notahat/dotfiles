@@ -1,0 +1,47 @@
+# Global git settings, pulled in from ~/.config/git/config by an include that
+# steps/git.bash sets up.
+#
+# Anything machine-specific belongs in ~/.config/git/config itself, not here.
+
+[user]
+	name = Pete Yandell
+	email = pete@notahat.com
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2BA/e0q3tXws2U27FUJYj0x+Td0muwZMdJtpJu5lAi
+
+[github]
+	user = notahat
+
+[color]
+	ui = true
+
+[core]
+	excludesfile = ~/.config/git/ignore
+
+[difftool]
+	prompt = false
+
+[init]
+	defaultBranch = main
+
+# Sign commits with the SSH key above, through 1Password.
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+	gpgsign = true
+
+# Push only the current branch.
+[push]
+	default = current
+
+# New branches rebase on git pull.
+[branch]
+	autosetuprebase = always
+[merge]
+	defaultToUpstream = true
+
+[alias]
+	root = !pwd
+	merged = !git branch --merged | grep -vF \"* \"
+	prune-merged = !git merged | xargs git branch -D

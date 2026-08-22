@@ -14,7 +14,7 @@ doing; the rest are smaller.
 - [x] 3. Pull the shared shell helpers into one file
 - [x] 4. Make `install` work from any directory
 - [x] 5. Validate the step name
-- [ ] 6. Replace the `git config` calls with an included gitconfig
+- [x] 6. Replace the `git config` calls with an included gitconfig
 - [ ] 7. Small stuff
 - [x] 8. Run the steps as programs instead of sourcing them
 
@@ -189,6 +189,24 @@ git config --global include.path "$dotfiles_dir/config/git/gitconfig"
 ```
 
 The step drops to three lines and the git settings become reviewable in a diff.
+
+**Done.** The step went from 26 lines of `git config` to the two lines above,
+and `config/git/gitconfig` holds the settings.
+
+Equivalence was checked by running the old step into a throwaway `HOME`,
+recording `git config --global --list --includes`, then running the new step
+into a fresh `HOME` and diffing. The only difference is `core.excludesfile`,
+which reads as `~/.config/git/ignore` instead of a pre-expanded absolute path.
+`git config --get --type=path` resolves it to the same file, and a global
+ignore entry was confirmed to still take effect.
+
+Note that `--list` only follows includes when passed `--includes`, or when no
+`--global`/`--file` scope is given. Ordinary lookups always follow them.
+
+`~/.config/git/config` on this machine already held the same values written out
+by the old step, so it was backed up to `config.backup-before-include` and
+replaced with the include alone. Without that, the settings would be defined in
+both places.
 
 ## 7. Small stuff
 
