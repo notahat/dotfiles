@@ -58,43 +58,58 @@ install list. The `lua`, `markdown`, `markdown_inline`, `query`, `vim`, and
 
 ## 2. Plugins 0.12 can now replace outright
 
-**Status: done.**
+**Status: done — two of the three.**
 
-Three plugins gone with no loss of function. Verified afterwards: the status
-line still renders, `<leader>d` and `<leader>x` still work, deleting a buffer
-leaves the window alive showing the previous buffer, and startup is 45-48ms.
+`trouble.nvim` and `bufdelete.nvim` are gone with no loss of function.
+`lsp-progress.nvim` stays: it turned out not to be replaceable, see below.
+Verified: the status line renders, `<leader>d` and `<leader>x` work, deleting a
+buffer leaves the window alive showing the previous buffer, startup is 45-48ms.
 
-A correction to an earlier mistake here. The first attempt swapped
-`lsp-progress.nvim` for `vim.ui.progress_status()`, which does **not** work:
-that function only tracks `Progress` events, which come from progress messages
-created with `nvim_echo`. The language server client does not use those — it
-fires its own `LspProgress` autocmd (`lsp/handlers.lua:81`) and nothing in the
-runtime bridges the two. Measured against a running `lua_ls`: 27 `LspProgress`
-events, 0 `Progress` events, and `vim.ui.progress_status()` empty throughout.
+### `lsp-progress.nvim` — keep it
 
-The status line now formats the built-in `LspProgress` event itself, which is
-about fifteen lines in `lualine.lua` and needs no plugin. The same autocmd
-calls `require("lualine").refresh()`, so progress updates at lualine's 16ms
-tick rather than waiting for its once-a-second timer. Verified: 15 distinct
-percentages rendered during one `lua_ls` workspace load, e.g.
-`Loading workspace 34%`.
+This entry was simply wrong, and it took two attempts to find out.
+
+The first attempt swapped it for `vim.ui.progress_status()`. That function only
+tracks `Progress` events, which come from progress messages created with
+`nvim_echo`. The language server client does not use those — it fires its own
+`LspProgress` autocmd (`lsp/handlers.lua:81`) and nothing in the runtime
+bridges the two. Measured against a running `lua_ls`: 27 `LspProgress` events,
+0 `Progress` events, `vim.ui.progress_status()` empty throughout. The indicator
+silently showed nothing.
+
+The obvious next candidate, `vim.lsp.status()` (`lsp.lua:797`), is worse for
+this job. Its docs say it "consumes" the latest messages, and that word is
+doing a lot of work: it iterates `client.progress`, a ringbuf whose `__call` is
+`self:pop()` (`_core/shared.lua:1447`). Calling it destroys what it read.
+Measured: 28 non-empty first calls, 0 non-empty second calls. In a status line
+— evaluated per window, per redraw — the first window drains the buffer and
+every other window renders empty. Poll it slowly and you get every buffered
+message concatenated instead of the latest one (226 and 546 character strings
+in one workspace load).
+
+`lsp-progress.nvim` avoids all of this by never using either. It hooks the same
+`LspProgress` autocmd and keeps its own state, keyed by client and token, so
+its `progress()` is a pure idempotent read of a formatted cache. On top of that
+it provides four things no built-in does: a 700ms `decay` so messages too fast
+to see still register, a 200ms spinner, a 50ms rate limit on its refresh event,
+and suppression of that event in insert mode (user events interrupt insert mode
+and break which-key style plugins).
+
+One genuine improvement while restoring it: the config now hooks
+`LspProgressStatusUpdated` to call `require("lualine").refresh()`, which it
+never did before. Progress used to be up to a second stale. Verified: 51 events
+and 18 distinct rendered strings during one workspace load, e.g.
+
+```
+ LSP [lua_ls] ⣻ Loading workspace 226/232 (97%), Loading workspace 210/210 (100%) - done
+```
 
 `vim.ui.progress_status()` is still worth knowing about — it covers progress
-from `nvim_echo`, which is what `vim.pack` and similar use — but it is not a
-replacement for language server progress.
-
-### `lsp-progress.nvim` → `vim.ui.progress_status()`
-
-New in 0.12, built in. Drop the plugin and the `lsp_progress` helper in
-`lualine.lua`:
-
-```lua
-lualine_x = { { vim.ui.progress_status, on_click = show_lsp_info } },
-```
+from `nvim_echo`, which `vim.pack` and similar use — just not this.
 
 ### `trouble.nvim` → fzf-lua
 
-Trouble is only used for `mode = "diagnostics"`, in two places. fzf-lua is
+Trouble was only used for `mode = "diagnostics"`, in two places. fzf-lua is
 already loaded, so `require("fzf-lua").diagnostics_workspace()` covers it with a
 picker UI consistent with the rest of the bindings.
 
