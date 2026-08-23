@@ -11,18 +11,25 @@
 # compinit's security audit of every directory in fpath costs ~25ms, so skip it
 # with -C and do one full run a day to pick up newly installed completions.
 #
-# The glob qualifiers match .zcompdump only if it exists (N), is a regular file
+# The daily cadence needs its own stamp file, because compinit only rewrites
+# .zcompdump when the set of completions changes. On a stable system the dump's
+# own timestamp keeps receding into the past, so it can't tell us when the last
+# full run happened.
+#
+# The glob qualifiers match the stamp only if it exists (N), is a regular file
 # (.), and was last modified less than 24 hours ago (mh-24). A non-empty match
-# means the dump is fresh enough to trust.
+# means the last full run was recent enough for the dump to be trusted.
 
 autoload -Uz compinit
-fresh_zcompdump=($HOME/.zcompdump(N.mh-24))
-if (( $#fresh_zcompdump )) {
+zcompdump_stamp=$HOME/.zcompdump.stamp
+recent_full_run=($zcompdump_stamp(N.mh-24))
+if (( $#recent_full_run )) {
   compinit -C
 } else {
   compinit
+  touch $zcompdump_stamp
 }
-unset fresh_zcompdump
+unset zcompdump_stamp recent_full_run
 
 if [[ -x $HOMEBREW_PREFIX/bin/fzf ]] {
   source <(fzf --zsh)
