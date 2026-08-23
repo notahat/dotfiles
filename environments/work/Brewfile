@@ -12,6 +12,7 @@ brew 'fzf-tab'
 brew 'gh'
 brew 'git'
 brew 'gpg' # mise uses this to verify packages
+brew 'herdr'
 brew 'jq'
 brew 'lazygit'
 brew 'neovim'
