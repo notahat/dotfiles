@@ -7,16 +7,11 @@
 
 # ------------------------------------------------------------------------------------------
 # Configure completion.
-#
+
 # compinit's security audit of every directory in fpath costs ~25ms, so skip it
 # with -C and do one full run a day to pick up newly installed completions.
 #
-# The daily cadence needs its own stamp file, because compinit only rewrites
-# .zcompdump when the set of completions changes. On a stable system the dump's
-# own timestamp keeps receding into the past, so it can't tell us when the last
-# full run happened.
-#
-# The glob qualifiers match the stamp only if it exists (N), is a regular file
+# The glob qualifiers match the stamp only if it exists (N), is a regular fle
 # (.), and was last modified less than 24 hours ago (mh-24). A non-empty match
 # means the last full run was recent enough for the dump to be trusted.
 
@@ -31,13 +26,14 @@ if (( $#recent_full_run )) {
 }
 unset zcompdump_stamp recent_full_run
 
+# Use fzf as a completion menu for everything. This needs to load after
+# compinit, but before other plugins.
+
 if [[ -x $HOMEBREW_PREFIX/bin/fzf ]] {
   source <(fzf --zsh)
   export FZF_DEFAULT_COMMAND='fd --type f'
 
   if [[ -d $HOMEBREW_PREFIX/share/fzf-tab ]] {
-    # Use fzf as a completion menu for everything. This needs to load after
-    # compinit, but before other plugins.
     source $HOMEBREW_PREFIX/share/fzf-tab/fzf-tab.zsh
   }
 }
