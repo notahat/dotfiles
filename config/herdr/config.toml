@@ -1,0 +1,17 @@
+onboarding = false
+
+[theme]
+name = "terminal"
+auto_switch = false
+
+[keys]
+# ^A, out of tmux muscle memory. This shadows the shell's beginning-of-line,
+# but ^A^A sends a literal ^A through, the way tmux's send-prefix does.
+prefix = "ctrl+a"
+
+[ui]
+agent_panel_sort = "spaces"
+show_agent_labels_on_pane_borders = false
+
+[ui.toast]
+delivery = "off"

@@ -79,6 +79,7 @@ cask 'font-inconsolata-nerd-font'
 
 cask 'claude-code@latest'
 brew 'notahat/tap/cal-read'
+brew 'herdr'
 
 # Helpful command line tools ==========================================
 
