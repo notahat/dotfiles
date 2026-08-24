@@ -40,3 +40,6 @@ brew 'libyaml'
 
 # nvim-treesitter needs this:
 brew 'tree-sitter-cli'
+
+# AI tools:
+cask 'copilot-cli'
