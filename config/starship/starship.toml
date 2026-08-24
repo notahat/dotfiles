@@ -1,0 +1,183 @@
+# Starship prompt configuration.
+#
+# https://starship.rs/config/
+#
+# The prompt is two lines. The top line is a row of capsules: where you are and
+# what git thinks on the left, and the tool versions and the outcome of the last
+# command pushed out to the right edge. The bottom line is just the prompt
+# character, so commands always start in the same column.
+#
+# The colours are Nord, to match the Ghostty theme in config/ghostty/config. The
+# capsule ends and the symbols need a Nerd Font, which that config also sets up.
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$git_state\
+$fill\
+$nodejs\
+$ruby\
+$ocaml\
+$zig\
+$cmd_duration\
+$status\
+$line_break\
+$character"""
+
+palette = 'nord'
+
+# https://www.nordtheme.com/docs/colors-and-palettes
+[palettes.nord]
+night = '#2E3440'   # Text sitting on top of a capsule.
+gray = '#4C566A'
+frost = '#88C0D0'
+blue = '#81A1C1'
+red = '#BF616A'
+orange = '#D08770'
+yellow = '#EBCB8B'
+green = '#A3BE8C'
+purple = '#B48EAD'
+
+# Pushes everything after it out to the right-hand edge of the terminal.
+[fill]
+symbol = ' '
+
+[directory]
+style = 'bg:frost fg:night'
+truncation_length = 3
+truncation_symbol = '…/'
+truncate_to_repo = true
+read_only = ' '
+read_only_style = 'bg:frost fg:red'
+format = '[](frost)[ $path]($style)[$read_only]($read_only_style)[ ]($style)[](frost) '
+
+[git_branch]
+symbol = ' '
+style = 'bg:purple fg:night'
+format = '[](purple)[ $symbol$branch]($style)'
+
+# Git gets a single capsule: the branch opens it and the status closes it, so a
+# clean repo still gets a closed capsule rather than a dangling end. The only
+# part of the status worth showing is whether something is stashed, since that's
+# easy to stash and then forget about.
+[git_status]
+style = 'bg:purple fg:night'
+format = '([ $stashed]($style))[ ]($style)[](purple) '
+stashed = '≡'
+
+# Shown while a rebase, merge, or bisect is in progress, so an interrupted
+# operation is hard to walk away from.
+[git_state]
+style = 'bg:red fg:night'
+format = '[](red)[ $state( $progress_current/$progress_total) ]($style)[](red) '
+
+[nodejs]
+symbol = ''
+style = 'bg:green fg:night'
+format = '[](green)[ $symbol $version ]($style)[](green) '
+
+[ruby]
+symbol = ''
+style = 'bg:red fg:night'
+format = '[](red)[ $symbol $version ]($style)[](red) '
+
+[ocaml]
+symbol = ''
+style = 'bg:orange fg:night'
+format = '[](orange)[ $symbol $version ]($style)[](orange) '
+
+[zig]
+symbol = ''
+style = 'bg:yellow fg:night'
+format = '[](yellow)[ $symbol $version ]($style)[](yellow) '
+
+# Only worth mentioning when a command took long enough that you'd have looked
+# away from the terminal.
+[cmd_duration]
+min_time = 2000
+style = 'bg:gray fg:frost'
+format = '[](gray)[  $duration ]($style)[](gray) '
+
+[status]
+disabled = false
+style = 'bg:red fg:night'
+format = '[](red)[  $status ]($style)[](red) '
+
+# The prompt character doubles as the vi mode indicator, since the shell is in
+# vi mode. It points right for insert and left for normal.
+[character]
+success_symbol = '[❯](bold green)'
+error_symbol = '[❯](bold red)'
+vimcmd_symbol = '[❮](bold yellow)'
+
+# ------------------------------------------------------------------------------
+# Claude Code status line.
+#
+# Rendered by `starship statusline claude-code`, wired up in
+# config/claude/settings.json. Module settings are shared with the prompt above,
+# so the capsules and colours match; only the format differs.
+#
+# The threshold colours below live in the text rather than the capsule, because
+# a capsule end is drawn by the format string and so can't change colour with
+# the value.
+
+[profiles]
+claude-code = '$directory$git_branch$git_status$claude_model${env_var.CLAUDE_TOKENS}$claude_context${env_var.CLAUDE_LIMIT_5H}${env_var.CLAUDE_LIMIT_7D}'
+
+[claude_model]
+symbol = '󰚩 '
+style = 'bg:blue fg:night'
+format = '[](blue)[ $symbol$model ]($style)[](blue) '
+
+[claude_context]
+symbol = ' '
+gauge_width = 8
+format = '[](gray)[ $symbol$gauge $percentage ]($style)[](gray) '
+
+[[claude_context.display]]
+threshold = 0.0
+style = 'bg:gray fg:green'
+
+[[claude_context.display]]
+threshold = 30.0
+style = 'bg:gray fg:green'
+
+[[claude_context.display]]
+threshold = 60.0
+style = 'bg:gray fg:yellow'
+
+[[claude_context.display]]
+threshold = 80.0
+style = 'bg:gray fg:red'
+
+# The tokens used so far, which config/claude/statusline.sh totals up and hands
+# over. Starship reports the input and output counts separately and the size of
+# the window, but has no variable for the two counts added together.
+
+[env_var.CLAUDE_TOKENS]
+variable = 'CLAUDE_TOKENS'
+style = 'bg:gray fg:white'
+format = '[](gray)[ $env_value ]($style)[](gray) '
+
+# The rate limits Claude reports. Starship's claude-code provider doesn't read
+# them out of the status blob, so config/claude/statusline.sh pulls them out and
+# hands them over in these variables. Each capsule disappears when its variable
+# isn't set, which is what happens when Claude didn't send that limit.
+
+[env_var.CLAUDE_LIMIT_5H]
+variable = 'CLAUDE_LIMIT_5H'
+style = 'bg:gray fg:frost'
+format = '[](gray)[ 5h $env_value ]($style)[](gray) '
+
+[env_var.CLAUDE_LIMIT_7D]
+variable = 'CLAUDE_LIMIT_7D'
+style = 'bg:gray fg:blue'
+format = '[](gray)[ 7d $env_value ]($style)[](gray) '
+
+# The version of whatever package the current directory happens to be is noise,
+# and it's slow to work out.
+[package]
+disabled = true
