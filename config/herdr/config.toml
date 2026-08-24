@@ -9,6 +9,14 @@ auto_switch = false
 # but ^A^A sends a literal ^A through, the way tmux's send-prefix does.
 prefix = "ctrl+a"
 
+# Open the current directory in Zed. A shell command runs detached, from the
+# focused pane's working directory, which is what a GUI editor wants.
+[[keys.command]]
+key = "prefix+e"
+type = "shell"
+command = "zed ."
+description = "open in zed"
+
 [ui]
 agent_panel_sort = "spaces"
 show_agent_labels_on_pane_borders = false
