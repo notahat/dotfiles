@@ -1,8 +1,0 @@
-[tools]
-
-node = "latest"
-ruby = "latest"
-yarn = "latest"
-
-[settings]
-idiomatic_version_file_enable_tools = ["ruby"]

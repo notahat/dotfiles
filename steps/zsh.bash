@@ -11,7 +11,7 @@ link_file config/zsh ~/.config/zsh
 
 # Work-specific environment stuff lives in the private Ferocia overlay repo,
 # and config/zsh/zshenv sources it from here if it exists.
-link_ferocia_file zshenv-work ~/.zshenv-work
+link_ferocia_file zshenv ~/.zshenv-ferocia
 
 # The prompt lives with the shell, rather than in a step of its own, because
 # it's only ever used from zsh.

@@ -10,4 +10,4 @@ Config files live in `config/` and are symlinked into `~/` and `~/.config/` by t
 
 ## Environments
 
-`DOTFILES_ENV` controls home vs work configuration and is auto-detected from hostname in `config/zsh/zshenv`. Environment-specific Homebrew and Mise configs live in `environments/home/` and `environments/work/`.
+`DOTFILES_ENV` controls home vs Ferocia configuration and is auto-detected from hostname in `config/zsh/zshenv`. The home Brewfile and Mise config live in `environments/home/`; Ferocia's equivalents live in the private `dotfiles-ferocia` repo, pulled down to `~/.dotfiles-ferocia` by `steps/ferocia.bash` and linked out with `link_ferocia_file`.

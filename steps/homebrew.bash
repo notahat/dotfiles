@@ -11,4 +11,12 @@ fi
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-brew bundle --file "$dotfiles_dir/environments/$DOTFILES_ENV/Brewfile"
+# The home Brewfile is public, but Ferocia's lives in the private overlay
+# repo instead.
+if [[ $DOTFILES_ENV == home ]]; then
+  brewfile="$dotfiles_dir/environments/home/Brewfile"
+else
+  brewfile="$ferocia_dir/Brewfile"
+fi
+
+brew bundle --file "$brewfile"

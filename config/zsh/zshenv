@@ -9,10 +9,10 @@
 unsetopt global_rcs
 
 # ------------------------------------------------------------------------------------------
-# Decide whether this is a home or work machine, based on the hostname.
+# Decide whether this is a home or Ferocia machine, based on the hostname.
 
 if [[ ${HOST%%.*} == fer-* ]] {
-  export DOTFILES_ENV=work
+  export DOTFILES_ENV=ferocia
 } else {
   export DOTFILES_ENV=home
 }
@@ -54,8 +54,8 @@ if [[ -x $HOMEBREW_PREFIX/bin/nvim ]] {
 }
 
 # ------------------------------------------------------------------------------------------
-# Set various helpful things for work.
+# Set various helpful things for Ferocia.
 
-if [[ -a $HOME/.zshenv-work ]] {
-  source $HOME/.zshenv-work
+if [[ -a $HOME/.zshenv-ferocia ]] {
+  source $HOME/.zshenv-ferocia
 }

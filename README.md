@@ -7,7 +7,7 @@ setting up a Mac the way I like it:
 xcode-select --install
 git clone https://github.com/notahat/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-export DOTFILES_ENV=home # or "work"
+export DOTFILES_ENV=home # or "ferocia"
 ./install
 ```
 
@@ -51,10 +51,16 @@ The pieces:
 
 - [`config/`](config): every config file, symlinked into `~` and `~/.config`
   by the steps. Edit it in place here.
-- [`environments/`](environments): separate `Brewfile`s and `mise.toml`s for
-  my home and work machines, selected by `DOTFILES_ENV`.
+- [`environments/`](environments): a `Brewfile` and `mise.toml` for my home
+  machine. Ferocia's equivalents live in a private overlay repo instead,
+  selected by `DOTFILES_ENV`.
 - [`project-templates/`](project-templates): drop-in editor and tooling config
   for new Rails and Vite projects.
+
+`steps/ferocia.bash` pulls that private overlay repo down to
+`~/.dotfiles-ferocia` when `DOTFILES_ENV=ferocia`, and other steps symlink
+work-specific config out of it with `link_ferocia_file`. It's a no-op
+everywhere else, so this repo installs cleanly without it.
 
 ## Borrow freely
 

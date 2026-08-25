@@ -11,10 +11,10 @@
 # than whoever sourced it, which is what makes the lookup reliable.
 dotfiles_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# Where the private, work-only overlay repo lives, if it's present at all. It
-# only exists on Ferocia machines, cloned by steps/ferocia.bash, so anything
-# that uses it has to cope with it being absent (e.g. on a home machine, or
-# before that step has run).
+# Where the private, Ferocia-only overlay repo lives, if it's present at all.
+# It only exists on Ferocia machines, cloned by steps/ferocia.bash, so
+# anything that uses it has to cope with it being absent (e.g. on a home
+# machine, or before that step has run).
 ferocia_dir="$HOME/.dotfiles-ferocia"
 
 red="\033[31m"
@@ -48,7 +48,7 @@ function link_file {
   fi
 }
 
-# Same as link_file, but for the private, work-only overlay repo. Silently
+# Same as link_file, but for the private, Ferocia-only overlay repo. Silently
 # does nothing if that repo hasn't been cloned (e.g. on a home machine), so
 # steps can call this unconditionally without checking DOTFILES_ENV
 # themselves.
