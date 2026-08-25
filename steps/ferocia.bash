@@ -25,10 +25,10 @@ else
   git clone git@github.com:notahat/dotfiles-ferocia.git "$ferocia_dir"
 fi
 
-# The overlay repo can bring its own script to install work-specific skills,
-# using fetch_agent_skill/clone_agent_skill (defined in lib/dotfiles.bash) to
-# install them for both Copilot and Gemini. It's optional, so this copes with
-# it being absent.
+# The overlay repo can bring its own script to install work-specific skills
+# for both Copilot and Gemini (it defines its own fetch_agent_skill/
+# clone_agent_skill helpers). It's optional, so this copes with it being
+# absent.
 if [[ -f "$ferocia_dir/skills.bash" ]]; then
   # shellcheck source=/dev/null
   source "$ferocia_dir/skills.bash"
