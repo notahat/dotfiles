@@ -99,6 +99,7 @@ brew 'zoxide'
 
 brew 'fzf-tab'
 brew 'pure'
+brew 'starship'
 brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
 
