@@ -9,6 +9,10 @@ link_file config/zsh/zshrc ~/.zshrc
 link_file config/zsh/zshenv ~/.zshenv
 link_file config/zsh ~/.config/zsh
 
+# Work-specific environment stuff lives in the private Ferocia overlay repo,
+# and config/zsh/zshenv sources it from here if it exists.
+link_ferocia_file zshenv-work ~/.zshenv-work
+
 # The prompt lives with the shell, rather than in a step of its own, because
 # it's only ever used from zsh.
 link_file config/starship/starship.toml ~/.config/starship.toml
