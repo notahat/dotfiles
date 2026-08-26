@@ -16,6 +16,28 @@
 
 [core]
 	excludesfile = ~/.config/git/ignore
+	pager = delta
+
+# Delta is the pager set above. It gives diffs syntax highlighting, and
+# highlights changes within a line word by word, rather than showing the whole
+# line as changed.
+#
+# https://dandavison.github.io/delta/
+[interactive]
+	diffFilter = delta --color-only # Use delta for `git add -p` as well.
+[delta]
+	navigate = true      # Jump between files in the pager with n and N.
+	line-numbers = true
+	syntax-theme = Nord  # Matches the bat theme in config/bat/config.
+
+	# Side-by-side wants around 160 columns before each side has enough room
+	# for real code, which is more than a laptop terminal usually has. Reach
+	# for the sdiff alias below on the occasions there's space for it.
+	side-by-side = false
+
+[diff]
+	# Show a block that moved as moved, rather than as a delete plus an add.
+	colorMoved = default
 
 [difftool]
 	prompt = false
@@ -45,3 +67,14 @@
 	root = !pwd
 	merged = !git branch --merged | grep -vF \"* \"
 	prune-merged = !git merged | xargs git branch -D
+
+	# Diff side-by-side, for a terminal with the width to take it. This has to
+	# override side-by-side with -c: delta gives the [delta] section priority
+	# over anything a feature sets, so DELTA_FEATURES=+side-by-side is ignored
+	# while side-by-side is set to false there.
+	sdiff = "!git -c delta.side-by-side=true diff"
+
+	# Diff by syntax tree rather than by line, so that reformatting and
+	# reindentation don't drown out the changes that matter. Difftastic
+	# colours its own output, so this goes to less rather than through delta.
+	dft = "!GIT_EXTERNAL_DIFF=difft git -c core.pager='less -R' diff"

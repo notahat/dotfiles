@@ -52,9 +52,11 @@ cask 'sysex-librarian'
 
 # Coding ==============================================================
 
+brew 'difftastic' # Syntax-aware diffs, wired up as `git dft`.
 brew 'docker'
 brew 'gh'
 brew 'git'
+brew 'git-delta' # Git's diff pager. Configured in config/git/gitconfig.
 brew 'gpg' # Mise uses this to verify packages.
 cask 'ghostty'
 brew 'lazygit'
