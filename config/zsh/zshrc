@@ -119,13 +119,16 @@ alias gs='git status'
 
 alias zed='/usr/local/bin/zed'
 
-alias mvim='NVIM_APPNAME=nvim-up-starter nvim'
 alias tvim='NVIM_APPNAME=nvim-test nvim'
 
 function autonode { echo $1 | entr -c node $1 }
 function autoruby { echo $1 | entr -c ruby $1 }
-function autorspec { echo $1 | entr -c ./up rspec $1 }
-
-alias sup='./up start up_native'
 
 alias esp='source ~/esp/esp-idf/export.sh'
+
+# ------------------------------------------------------------------------------------------
+# Set various helpful things for Ferocia.
+
+if [[ -a $HOME/.zshrc-ferocia ]] {
+  source $HOME/.zshrc-ferocia
+}

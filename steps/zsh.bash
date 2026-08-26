@@ -9,9 +9,11 @@ link_file config/zsh/zshrc ~/.zshrc
 link_file config/zsh/zshenv ~/.zshenv
 link_file config/zsh ~/.config/zsh
 
-# Work-specific environment stuff lives in the private Ferocia overlay repo,
-# and config/zsh/zshenv sources it from here if it exists.
+# Work-specific environment and shell config lives in the private Ferocia
+# overlay repo, and config/zsh/zshenv and config/zsh/zshrc source these from
+# here if they exist.
 link_ferocia_file zshenv ~/.zshenv-ferocia
+link_ferocia_file zshrc ~/.zshrc-ferocia
 
 # The prompt lives with the shell, rather than in a step of its own, because
 # it's only ever used from zsh.
