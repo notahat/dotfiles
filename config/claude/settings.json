@@ -1,14 +1,4 @@
 {
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh"
-  },
-  "enabledPlugins": {
-    "mattpocock-skills@claude-plugins-official": true,
-    "context7@claude-plugins-official": true
-  },
-  "skipWorkflowUsageWarning": true,
-  "disableTips": true,
   "hooks": {
     "SessionStart": [
       {
@@ -22,5 +12,16 @@
         ]
       }
     ]
-  }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
+  "enabledPlugins": {
+    "mattpocock-skills@claude-plugins-official": true,
+    "context7@claude-plugins-official": true
+  },
+  "skipWorkflowUsageWarning": true,
+  "editorMode": "vim",
+  "disableTips": true
 }
