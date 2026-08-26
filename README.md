@@ -7,8 +7,7 @@ setting up a Mac the way I like it:
 xcode-select --install
 git clone https://github.com/notahat/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-export DOTFILES_ENV=home # or "ferocia"
-./install
+DOTFILES_ENV=home ./install
 ```
 
 I keep them lean. Anything I stop using I delete, so what's left is what I run
@@ -24,8 +23,8 @@ every day.
   anything I always want at the latest version (apps, CLI tools, even Mac App
   Store apps). [Mise](https://mise.jdx.dev) manages anything I need pinned to a
   particular version, like language runtimes.
-- **Zsh that starts in ~100ms.** A [Pure](https://github.com/sindresorhus/pure)
-  prompt, fzf-tab completion, and syntax highlighting, wired up by hand in
+- **Zsh that starts in <100ms.** A [Starship](https://starship.rs) prompt,
+  fzf-tab completion, and syntax highlighting, wired up by hand in
   [`config/zsh`](config/zsh), with none of the [Oh My Zsh](https://ohmyz.sh)
   bloat.
 - **Neovim, under 100ms too.** Modern IDE features (LSP, Treesitter, fuzzy
@@ -51,16 +50,19 @@ The pieces:
 
 - [`config/`](config): every config file, symlinked into `~` and `~/.config`
   by the steps. Edit it in place here.
-- [`environments/`](environments): a `Brewfile` and `mise.toml` for my home
-  machine. Ferocia's equivalents live in a private overlay repo instead,
-  selected by `DOTFILES_ENV`.
+- [`environments/`](environments): the `Brewfile` and `mise.toml` for my home
+  machine. Work machines use a different pair. See below.
 - [`project-templates/`](project-templates): drop-in editor and tooling config
   for new Rails and Vite projects.
 
-`steps/ferocia.bash` pulls that private overlay repo down to
-`~/.dotfiles-ferocia` when `DOTFILES_ENV=ferocia`, and other steps symlink
-work-specific config out of it with `link_ferocia_file`. It's a no-op
-everywhere else, so this repo installs cleanly without it.
+### Work machines
+
+I use these dotfiles at work too, where I need a few extra tools and some config
+I'd rather not publish. Rather than fork, I keep the work-only bits in a second,
+private repo and set `DOTFILES_ENV=ferocia` (my employer) on those machines.
+`steps/ferocia.bash` clones that repo to `~/.dotfiles-ferocia`, and the other
+steps pull config out of it with `link_ferocia_file`. So I run the same dotfiles
+on both machines, and no work config lands in a public repo.
 
 ## Borrow freely
 
