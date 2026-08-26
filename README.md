@@ -15,25 +15,28 @@ every day.
 
 ## Highlights worth stealing
 
-- **A tiny install you can actually read.** `./install` runs plain-bash steps
-  from [`steps/`](steps). It symlinks config into place and is idempotent, so I
-  re-run it and it never rots. If a config file already exists, it warns and
-  skips rather than clobbering it.
+- **A tiny install you can read.** `./install` runs plain-bash steps
+  from [`steps/`](steps). It symlinks config into place, and it's idempotent,
+  so I re-run it any time I add a step. If a config file already exists, it
+  warns and skips rather than clobbering it.
 - **A clear rule for Homebrew vs. Mise.** [Homebrew](https://brew.sh) installs
   anything I always want at the latest version (apps, CLI tools, even Mac App
   Store apps). [Mise](https://mise.jdx.dev) manages anything I need pinned to a
   particular version, like language runtimes.
-- **Zsh that starts in <100ms.** A [Starship](https://starship.rs) prompt,
+- **Zsh that starts in under 100ms.** A [Starship](https://starship.rs) prompt,
   fzf-tab completion, and syntax highlighting, wired up by hand in
-  [`config/zsh`](config/zsh), with none of the [Oh My Zsh](https://ohmyz.sh)
-  bloat.
-- **Neovim, under 100ms too.** Modern IDE features (LSP, Treesitter, fuzzy
-  finding) with a minimal UI, so the code stays front-and-centre. It's
-  commented throughout and has [its own README](config/nvim).
+  [`config/zsh`](config/zsh).
+- **Neovim, under 100ms too.** LSP, Treesitter, and fuzzy finding, with the UI
+  stripped back so the code is the only thing on screen. It's commented
+  throughout and has [its own README](config/nvim).
 - **One command to update everything.** `./upgrade` bumps Homebrew packages,
   Mise tools, and Neovim plugins.
-- **A version-controlled Claude Code setup.** Custom skills, settings, and a
-  statusline live in [`config/claude`](config/claude).
+- **Claude Code skills, homegrown and borrowed.** Mine live in
+  [`config/claude`](config/claude), symlinked into `~/.claude` alongside my
+  settings and statusline. Other people's I pull from their source repos at
+  install time, so I'm not redistributing anyone's work.
+
+It's all [MIT licensed](LICENSE), so take what's useful.
 
 ## How it works
 
@@ -49,7 +52,7 @@ installs a tool and symlinks its config. Run them all, or one at a time:
 The pieces:
 
 - [`config/`](config): every config file, symlinked into `~` and `~/.config`
-  by the steps. Edit it in place here.
+  by the steps.
 - [`environments/`](environments): the `Brewfile` and `mise.toml` for my home
   machine. Work machines use a different pair. See below.
 - [`project-templates/`](project-templates): drop-in editor and tooling config
@@ -63,8 +66,3 @@ private repo and set `DOTFILES_ENV=ferocia` (my employer) on those machines.
 `steps/ferocia.bash` clones that repo to `~/.dotfiles-ferocia`, and the other
 steps pull config out of it with `link_ferocia_file`. So I run the same dotfiles
 on both machines, and no work config lands in a public repo.
-
-## Borrow freely
-
-Take whatever's useful, whether a whole config, a single alias, or an idea.
-Everything here is [MIT licensed](LICENSE).
