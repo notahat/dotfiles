@@ -8,27 +8,41 @@
 // from the command palette or from `Zed` application menu.
 {
   "cli_default_open_behavior": "new_window",
-  "diff_view_style": "unified",
+  "diff_view_style": "split",
   "collaboration_panel": {
     "dock": "right",
   },
   "agent": {
-    // At work, use Copilot.
     "default_model": {
       "effort": "high",
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4.6",
+      "model": "gpt-5.6-luna",
       "enable_thinking": true,
     },
     "dock": "left",
-    "favorite_models": [],
+    "favorite_models": [
+      {
+        "provider": "copilot_chat",
+        "model": "gpt-5.6-luna",
+        "enable_thinking": true,
+        "effort": "high"
+      },
+      {
+        "provider": "copilot_chat",
+        "model": "claude-sonnet-5",
+        "enable_thinking": true,
+        "effort": "high"
+      },
+      {
+        "provider": "copilot_chat",
+        "model": "claude-opus-5",
+        "enable_thinking": true,
+        "effort": "high"
+      }
+    ],
     "model_parameters": [],
   },
   "agent_servers": {
-    "github-copilot-cli": {
-      "type": "registry",
-    },
-    // At home, use Claude through its agent.
     "claude-acp": {
       "type": "registry",
     },
