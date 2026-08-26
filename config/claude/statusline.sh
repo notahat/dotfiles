@@ -20,21 +20,18 @@
 # (Every variable below is assigned by the eval of jq's output, which the
 # linter can't see through.)
 
-payload=$(cat)
-
 # Claude reports the model as "Opus 5 (1M context)". The parenthetical says the
 # same thing on every line of every session, so it's dropped to keep the capsule
 # short. Starship reads the model straight out of the blob, so the name has to
 # be shortened here rather than on the way past.
-payload=$(printf '%s' "$payload" |
-  jq -c 'if .model.display_name
-         then .model.display_name |= sub(" \\([^)]*\\)$"; "")
-         else . end')
+payload=$(jq -c 'if .model.display_name
+                 then .model.display_name |= sub(" \\([^)]*\\)$"; "")
+                 else . end')
 
 # Pull the fields Starship can't see out of the JSON in one pass, as
 # `name=value` lines. Fields Claude didn't send come back as empty strings.
 # @sh quotes the values, so directories with spaces in them survive the eval.
-eval "$(printf '%s' "$payload" | jq -r '
+eval "$(jq -r <<<"$payload" '
   @sh "current_dir=\(.workspace.current_dir // "")",
   @sh "input_tokens=\(.context_window.total_input_tokens // "")",
   @sh "output_tokens=\(.context_window.total_output_tokens // "")",
@@ -91,6 +88,5 @@ seven_day=$(format_rate_limit "$seven_day_percentage" "$seven_day_reset" "%a %H:
 # Both paths need giving. Starship finds the git repo from --path, but takes
 # the directory it displays from --logical-path, which otherwise falls back to
 # whichever directory Claude happened to launch this script from.
-printf '%s' "$payload" |
-  starship statusline claude-code --profile claude-code \
-    --path "$current_dir" --logical-path "$current_dir"
+starship statusline claude-code --profile claude-code \
+  --path "$current_dir" --logical-path "$current_dir" <<<"$payload"

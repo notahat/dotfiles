@@ -47,15 +47,12 @@ symbol = ' '
 
 [directory]
 style = 'bg:frost fg:night'
-truncation_length = 3
 truncation_symbol = '…/'
-truncate_to_repo = true
 read_only = ' '
 read_only_style = 'bg:frost fg:red'
 format = '[](frost)[ $path]($style)[$read_only]($read_only_style)[ ]($style)[](frost) '
 
 [git_branch]
-symbol = ' '
 style = 'bg:purple fg:night'
 format = '[](purple)[ $symbol$branch]($style)'
 
@@ -111,7 +108,6 @@ format = '[](yellow)[ $symbol $version ]($style)[](yellow) '
 # Only worth mentioning when a command took long enough that you'd have looked
 # away from the terminal.
 [cmd_duration]
-min_time = 2000
 style = 'bg:gray fg:frost'
 format = '[](gray)[  $duration ]($style)[](gray) '
 
@@ -156,10 +152,6 @@ threshold = 0.0
 style = 'bg:gray fg:green'
 
 [[claude_context.display]]
-threshold = 30.0
-style = 'bg:gray fg:green'
-
-[[claude_context.display]]
 threshold = 60.0
 style = 'bg:gray fg:yellow'
 
@@ -172,7 +164,6 @@ style = 'bg:gray fg:red'
 # the window, but has no variable for the two counts added together.
 
 [env_var.CLAUDE_TOKENS]
-variable = 'CLAUDE_TOKENS'
 style = 'bg:gray fg:white'
 format = '[](gray)[ $env_value ]($style)[](gray) '
 
@@ -182,12 +173,10 @@ format = '[](gray)[ $env_value ]($style)[](gray) '
 # isn't set, which is what happens when Claude didn't send that limit.
 
 [env_var.CLAUDE_LIMIT_5H]
-variable = 'CLAUDE_LIMIT_5H'
 style = 'bg:gray fg:frost'
 format = '[](gray)[ 5h $env_value ]($style)[](gray) '
 
 [env_var.CLAUDE_LIMIT_7D]
-variable = 'CLAUDE_LIMIT_7D'
 style = 'bg:gray fg:blue'
 format = '[](gray)[ 7d $env_value ]($style)[](gray) '
 
