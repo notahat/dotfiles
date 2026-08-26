@@ -60,13 +60,27 @@ style = 'bg:purple fg:night'
 format = '[](purple)[ $symbol$branch]($style)'
 
 # Git gets a single capsule: the branch opens it and the status closes it, so a
-# clean repo still gets a closed capsule rather than a dangling end. The only
-# part of the status worth showing is whether something is stashed, since that's
-# easy to stash and then forget about.
+# clean repo still gets a closed capsule rather than a dangling end. Stashes are
+# worth showing because they're easy to make and then forget about, and a dot
+# says there's something uncommitted. A clean tree gets neither, so the capsule
+# holds just the branch.
+#
+# The dot doesn't say what kind of change it is, because knowing the tree isn't
+# clean is enough to go and look. Starship has no variable for that, so the dot
+# is a literal inside a group, and a group is only printed when something in it
+# is non-empty. Each kind of change is listed with a zero-width space for a
+# symbol, which prints as nothing but is enough to make the group appear.
 [git_status]
 style = 'bg:purple fg:night'
-format = '([ $stashed]($style))[ ]($style)[](purple) '
+format = '([ $stashed]($style))([ $conflicted$deleted$renamed$modified$typechanged$staged$untracked●]($style))[ ]($style)[](purple) '
 stashed = '≡'
+conflicted = "\u200B"
+deleted = "\u200B"
+renamed = "\u200B"
+modified = "\u200B"
+typechanged = "\u200B"
+staged = "\u200B"
+untracked = "\u200B"
 
 # Shown while a rebase, merge, or bisect is in progress, so an interrupted
 # operation is hard to walk away from.
