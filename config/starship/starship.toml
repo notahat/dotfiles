@@ -59,8 +59,13 @@ format = '[](purple)[ $symbol$branch]($style)'
 # Git gets a single capsule: the branch opens it and the status closes it, so a
 # clean repo still gets a closed capsule rather than a dangling end. Stashes are
 # worth showing because they're easy to make and then forget about, and a dot
-# says there's something uncommitted. A clean tree gets neither, so the capsule
-# holds just the branch.
+# says there's something uncommitted. A repo with nothing outstanding shows none
+# of these marks, so the capsule holds just the branch.
+#
+# The arrows count commits that haven't been reconciled with origin: ⇡ is
+# committed but not pushed, and ⇣ is fetched but not merged. Both are worked out
+# from the last state of the remote branch this repo fetched, because drawing a
+# prompt shouldn't touch the network, so ⇣ says nothing until something fetches.
 #
 # The dot doesn't say what kind of change it is, because knowing the tree isn't
 # clean is enough to go and look. Starship has no variable for that, so the dot
@@ -69,8 +74,11 @@ format = '[](purple)[ $symbol$branch]($style)'
 # symbol, which prints as nothing but is enough to make the group appear.
 [git_status]
 style = 'bg:purple fg:night'
-format = '([ $stashed]($style))([ $conflicted$deleted$renamed$modified$typechanged$staged$untracked●]($style))[ ]($style)[](purple) '
+format = '([ $ahead_behind]($style))([ $stashed]($style))([ $conflicted$deleted$renamed$modified$typechanged$staged$untracked●]($style))[ ]($style)[](purple) '
 stashed = '≡'
+ahead = '⇡$count'
+behind = '⇣$count'
+diverged = '⇡$ahead_count⇣$behind_count'
 conflicted = "\u200B"
 deleted = "\u200B"
 renamed = "\u200B"
