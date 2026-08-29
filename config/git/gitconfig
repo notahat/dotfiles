@@ -11,11 +11,7 @@
 [github]
 	user = notahat
 
-[color]
-	ui = true
-
 [core]
-	excludesfile = ~/.config/git/ignore
 	pager = delta
 
 # Delta is the pager set above. It gives diffs syntax highlighting, and
@@ -39,9 +35,6 @@
 	# Show a block that moved as moved, rather than as a delete plus an add.
 	colorMoved = default
 
-[difftool]
-	prompt = false
-
 [init]
 	defaultBranch = main
 
@@ -60,8 +53,6 @@
 # New branches rebase on git pull.
 [branch]
 	autosetuprebase = always
-[merge]
-	defaultToUpstream = true
 
 [alias]
 	root = !pwd
