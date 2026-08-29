@@ -63,13 +63,13 @@ brew 'mise'
 brew 'neovim'
 brew 'opam'
 cask 'orbstack' # Docker host and CLI. Replaces Docker Desktop.
-brew 'python@3.14'
 brew 'shellcheck'
 brew 'stylua'
 brew 'swiftformat'
 cask 'swiftformat-for-xcode'
 brew 'swiftlint'
 brew 'tree-sitter-cli' # For nvim-treesitter.
+brew 'uv' # Runs Python scripts that declare their own dependencies inline.
 cask 'visual-studio-code'
 mas 'Xcode', id: 497799835
 cask 'zed'
