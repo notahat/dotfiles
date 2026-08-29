@@ -22,6 +22,11 @@ if [[ ${HOST%%.*} == fer-* ]] {
 #
 # We save some time by manually doing everything that would normally be done by
 # `brew shellenv` and `mise activate zsh --shims`.
+#
+# OrbStack's shims and completions are listed here too, rather than left to the
+# `source ~/.orbstack/shell/init.zsh` stanza its installer adds to ~/.zprofile.
+# That stanza only runs for login shells, so docker goes missing in any other
+# shell, and it sits outside this repo, so it wouldn't survive a new machine.
 
 export HOMEBREW_PREFIX=/opt/homebrew
 export HOMEBREW_CELLAR=/opt/homebrew/Cellar
@@ -37,12 +42,13 @@ path=(
   /usr/sbin
   /sbin
   $HOME/.local/bin
-  $HOME/.rd/bin
+  $HOME/.orbstack/bin
 )
 
 fpath=(
   $HOMEBREW_PREFIX/share/zsh/site-functions(N)
   $HOMEBREW_PREFIX/share/zsh-completions(N)
+  $HOME/.orbstack/shell/completions/zsh(N)
   $fpath
 )
 
