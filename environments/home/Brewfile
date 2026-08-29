@@ -2,8 +2,6 @@
 
 cask_args force: true
 
-tap 'homebrew/autoupdate'
-
 # If we don't list mas explicitly, brew bundle cleanup will remove it.
 brew 'mas'
 
@@ -92,14 +90,12 @@ brew 'fzf'
 brew 'jq'
 brew 'pstree'
 brew 'ripgrep'
-brew 'terminal-notifier'
 brew 'wget'
 brew 'zoxide'
 
 # Zsh plugins =========================================================
 
 brew 'fzf-tab'
-brew 'pure'
 brew 'starship'
 brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
