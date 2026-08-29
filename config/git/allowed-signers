@@ -1,0 +1,13 @@
+# The public keys git will accept as having signed a commit, pointed at by
+# gpg.ssh.allowedSignersFile in gitconfig. Git has no default location for
+# this file, and without it `git log --show-signature` and `git verify-commit`
+# fail: signing a commit and trusting a signature are separate decisions, so
+# user.signingkey alone doesn't make a key trusted for verification.
+#
+# This is the public half of that same key. GitHub publishes it too, at
+# /users/notahat/ssh_signing_keys on api.github.com.
+#
+# The namespaces field confines the trust to git signing, so this entry can't
+# be used to accept a signature made over anything else.
+
+pete@notahat.com namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2BA/e0q3tXws2U27FUJYj0x+Td0muwZMdJtpJu5lAi

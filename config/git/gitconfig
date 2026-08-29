@@ -38,11 +38,14 @@
 [init]
 	defaultBranch = main
 
-# Sign commits with the SSH key above, through 1Password.
+# Sign commits with the SSH key above, through 1Password. The allowed
+# signers file is what lets git verify those signatures as well as make
+# them; git has no default location for it.
 [gpg]
 	format = ssh
 [gpg "ssh"]
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+	allowedSignersFile = ~/.config/git/allowed-signers
 [commit]
 	gpgsign = true
 
