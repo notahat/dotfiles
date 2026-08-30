@@ -37,7 +37,7 @@ function echo_green {
 # configure a home machine for work. Guarding here rather than in install
 # covers a step run on its own, which is how they're meant to be testable.
 if [[ $DOTFILES_ENV != home && $DOTFILES_ENV != ferocia ]]; then
-  echo_red "Set DOTFILES_ENV to home or ferocia first. (config/zsh/zshenv does it from the hostname.)"
+  echo_red "Set DOTFILES_ENV to home or ferocia first. (config/zsh/zshenv does it from the hostname.)" >&2
   exit 1
 fi
 
