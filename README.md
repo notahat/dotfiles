@@ -51,10 +51,9 @@ installs a tool and symlinks its config. Run them all, or one at a time:
 
 The pieces:
 
-- [`config/`](config): every config file, symlinked into `~` and `~/.config`
-  by the steps.
-- [`environments/`](environments): the `Brewfile` and `mise.toml` for my home
-  machine. Work machines use a different pair. See below.
+- [`config/`](config): every config file, one directory per tool. The steps
+  symlink most of them into `~` and `~/.config`; a few, like the
+  [`Brewfile`](config/homebrew/Brewfile), get read in place.
 - [`project-templates/`](project-templates): drop-in editor and tooling config
   for new Rails and Vite projects.
 

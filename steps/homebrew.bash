@@ -14,7 +14,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # The home Brewfile is public, but Ferocia's lives in the private overlay
 # repo instead.
 if [[ $DOTFILES_ENV == home ]]; then
-  brewfile="$dotfiles_dir/environments/home/Brewfile"
+  brewfile="$dotfiles_dir/config/homebrew/Brewfile"
 else
   brewfile="$ferocia_dir/Brewfile"
 fi

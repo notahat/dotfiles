@@ -5,10 +5,10 @@ set -o errexit
 # shellcheck source=../lib/dotfiles.bash
 source "$(dirname "$0")/../lib/dotfiles.bash"
 
-# The home mise.toml is public, but Ferocia's lives in the private overlay
+# The home Mise config is public, but Ferocia's lives in the private overlay
 # repo instead.
 if [[ $DOTFILES_ENV == home ]]; then
-  link_file environments/home/mise.toml ~/.config/mise/config.toml
+  link_file config/mise/config.toml ~/.config/mise/config.toml
 else
   link_ferocia_file mise.toml ~/.config/mise/config.toml
 fi
