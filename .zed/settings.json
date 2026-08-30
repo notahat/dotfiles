@@ -3,11 +3,6 @@
 // For a full list of overridable settings, and general information on folder-specific settings,
 // see the documentation: https://zed.dev/docs/configuring-zed#settings-files
 {
-  // Zed's defaults already cover .zed/*.json and zed/settings.json, but not
-  // this one, and it carries comments explaining where it has to live.
-  "file_types": {
-    "JSONC": [".luarc.json"],
-  },
   "languages": {
     // Zed treats Brewfile as Ruby, so it tries to start the Ruby language
     // servers. This isn't a Ruby project and has no Gemfile, so none of them
@@ -16,7 +11,7 @@
       "language_servers": [],
     },
     // Format with stylua, to match what conform.nvim does in Neovim.
-    // Passing the buffer path lets stylua find config/nvim/stylua.toml
+    // Passing the buffer path lets stylua find config/nvim/.stylua.toml
     // itself, so the style settings only live in one place.
     "Lua": {
       "formatter": {

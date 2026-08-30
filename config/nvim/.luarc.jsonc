@@ -1,9 +1,11 @@
 {
-  // Settings for lua-language-server, shared by Neovim and Zed.
+  // Settings for lua-language-server, shared by Neovim and Zed. The server
+  // accepts either .luarc.json or .luarc.jsonc, but editors only treat the
+  // comments below as valid in the .jsonc one.
   //
   // This lives here, rather than at the repo root, so that it travels through
   // the ~/.config/nvim symlink and applies when an editor is opened on
-  // ~/.config/nvim directly. lua-language-server reads .luarc.json from the
+  // ~/.config/nvim directly. lua-language-server reads its config from the
   // workspace root only, and never from a subdirectory, so the repo root has
   // a symlink pointing back here for when an editor is opened on the repo.
   //
