@@ -6,7 +6,7 @@ the result.
 I keep the UI much more minimal than a normal IDE. I'm easily distracted, so I
 want my code front-and-centre with not too much other information.
 
-But I also like modern tools for navigating and editing code, like languagge
+But I also like modern tools for navigating and editing code, like language
 servers and treesitter.
 
 And it must be fast. Startup time is less than 100 ms.
