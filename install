@@ -6,7 +6,7 @@ set -o errexit
 source "$(dirname "$0")/lib/dotfiles.bash"
 
 steps_dir="$dotfiles_dir/steps"
-steps=(macos ferocia homebrew mise zsh ssh git ghostty neovim zed bat herdr claude copilot gemini)
+steps=(macos ferocia homebrew mise zsh ssh git ghostty neovim zed editorconfig bat herdr claude copilot gemini)
 
 # The PATH every step runs with. Each step is its own program, so this is the
 # single place that puts the Homebrew and Mise binaries where the steps can
