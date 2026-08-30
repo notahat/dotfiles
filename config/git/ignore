@@ -3,3 +3,7 @@ tags
 favorites.json
 
 **/.claude/settings.local.json
+
+# Claude Code stages atomic writes in these, and leaves them behind when it's
+# done. They turn up in whichever directory it was writing to.
+.cc-writes/
