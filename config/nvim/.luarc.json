@@ -1,0 +1,17 @@
+{
+  // Settings for lua-language-server, shared by Neovim and Zed.
+  //
+  // This lives here, rather than at the repo root, so that it travels through
+  // the ~/.config/nvim symlink and applies when an editor is opened on
+  // ~/.config/nvim directly. lua-language-server reads .luarc.json from the
+  // workspace root only, and never from a subdirectory, so the repo root has
+  // a symlink pointing back here for when an editor is opened on the repo.
+  //
+  // Neovim resolves the runtime directory dynamically as $VIMRUNTIME, which
+  // JSON can't do, so this uses the version-stable Homebrew symlink instead.
+  // If that ever moves, the vim global stops resolving and the undefined
+  // global warnings come back.
+  "runtime.version": "LuaJIT",
+  "workspace.checkThirdParty": false,
+  "workspace.library": ["/opt/homebrew/share/nvim/runtime", "${3rd}/luv/library"]
+}

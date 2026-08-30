@@ -8,17 +8,5 @@ return {
       vim.lsp.enable({ "sorbet" })
       -- relay_lsp is missing, see https://github.com/neovim/nvim-lspconfig/issues/3705
     end
-
-    vim.lsp.config("lua_ls", {
-      settings = {
-        Lua = {
-          runtime = { version = "LuaJIT" },
-          workspace = {
-            checkThirdParty = false,
-            library = { vim.env.VIMRUNTIME, "${3rd}/luv/library" },
-          },
-        },
-      },
-    })
   end,
 }

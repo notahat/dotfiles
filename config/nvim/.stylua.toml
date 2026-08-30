@@ -1,0 +1,11 @@
+# This lives here, rather than at the repo root, because stylua searches
+# upward from the file being formatted. Neovim edits these files through the
+# ~/.config/nvim symlink, and walking up from there reaches ~/.config, never
+# this repo.
+#
+# .luarc.json sits alongside it for the same reason, though that one also
+# needs a symlink at the repo root. See the comment in it for why.
+
+indent_type = "Spaces"
+indent_width = 2
+column_width = 100
