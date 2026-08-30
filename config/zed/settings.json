@@ -10,12 +10,12 @@
   "edit_predictions": {
     "provider": "copilot"
   },
-  "theme": "Nord Darker",
+  "theme": "One Dark",
   "auto_install_extensions": {
     "nord": true,
   },
   "cli_default_open_behavior": "new_window",
-  "diff_view_style": "split",
+  "diff_view_style": "unified",
   "collaboration_panel": {
     "dock": "right",
   },
