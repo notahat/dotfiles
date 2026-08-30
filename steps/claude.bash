@@ -12,9 +12,10 @@ link_file config/claude/statusline.sh ~/.claude/statusline.sh
 # Link our skills individually, rather than linking the directory they live in,
 # so that skills installed by Claude and by other tools land in ~/.claude
 # instead of in this repo.
-link_file config/claude/skills/diataxis ~/.claude/skills/diataxis
-link_file config/claude/skills/dune-watcher ~/.claude/skills/dune-watcher
-link_file config/claude/skills/install-project-template ~/.claude/skills/install-project-template
+for skill_dir in "$dotfiles_dir"/config/claude/skills/*/; do
+  skill=$(basename "$skill_dir")
+  link_file "config/claude/skills/$skill" ~/.claude/skills/"$skill"
+done
 
 # The two functions below bring in borrowed skills from other people's public
 # repos. We pull these from upstream rather than committing copies, so we're
