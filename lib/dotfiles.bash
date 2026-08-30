@@ -31,21 +31,49 @@ function echo_green {
   echo -e "${green}${1}${reset}"
 }
 
-# Symlinks a file or directory from this repo into place, creating the parent
-# directory if it needs to. Refuses to clobber anything already there.
+# Symlinks a file or directory into place, creating the parent directory if it
+# needs to. Refuses to clobber anything already there.
+#
+# The source is an absolute path. Steps call link_file or link_ferocia_file
+# below instead, which say which repo the source comes from.
+function create_link {
+  local source=$1 destination=$2
+
+  mkdir -p "$(dirname "$destination")"
+
+  if [[ -L $destination ]]; then
+    check_link "$source" "$destination"
+  elif [[ -e $destination ]]; then
+    echo_red "$destination already exists, skipping. (You might not want this, so check the file.)"
+  else
+    ln -s "$source" "$destination"
+    echo "Linked $destination"
+  fi
+}
+
+# Reports on a link that's already in place. One pointing anywhere other than
+# the file being installed is worth knowing about: it's usually left behind by
+# a config file that's since been renamed or moved, in which case it's now
+# dangling and whatever reads it has quietly lost its config.
+#
+# This compares the path the link holds rather than where it resolves to, so
+# that it still says something useful about a link that's dangling.
+function check_link {
+  local source=$1 destination=$2 target
+  target=$(readlink "$destination")
+
+  if [[ $target == "$source" ]]; then
+    echo "$destination is already linked, skipping."
+  else
+    echo_red "$destination links to $target, not $source. (Remove it and re-run to fix it.)"
+  fi
+}
+
+# Symlinks a file or directory from this repo into place.
 #
 # The source is given relative to the root of this repo.
 function link_file {
-  mkdir -p "$(dirname "$2")"
-
-  if [[ -L "$2" ]]; then
-    echo "$2 is already linked, skipping."
-  elif [[ -e "$2" ]]; then
-    echo_red "$2 already exists, skipping. (You might not want this, so check the file.)"
-  else
-    ln -s "$dotfiles_dir/$1" "$2"
-    echo "Linked $2"
-  fi
+  create_link "$dotfiles_dir/$1" "$2"
 }
 
 # Same as link_file, but for the private, Ferocia-only overlay repo. Silently
@@ -57,14 +85,5 @@ function link_ferocia_file {
     return
   fi
 
-  mkdir -p "$(dirname "$2")"
-
-  if [[ -L "$2" ]]; then
-    echo "$2 is already linked, skipping."
-  elif [[ -e "$2" ]]; then
-    echo_red "$2 already exists, skipping. (You might not want this, so check the file.)"
-  else
-    ln -s "$ferocia_dir/$1" "$2"
-    echo "Linked $2"
-  fi
+  create_link "$ferocia_dir/$1" "$2"
 }
