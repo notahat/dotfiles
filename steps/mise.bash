@@ -13,8 +13,8 @@ else
   link_ferocia_file mise.toml ~/.config/mise/config.toml
 fi
 
-# Ferocia machines have no Homebrew, so mise installs itself into
-# ~/.local/bin, which install puts on the PATH.
+# Mise doesn't come from Homebrew on Ferocia machines, so this installs it
+# directly, into ~/.local/bin, which install puts on the PATH.
 if [[ $DOTFILES_ENV == ferocia && ! -f ~/.local/bin/mise ]]; then
   curl https://mise.run | MISE_VERSION="v2025.8.20" sh
 fi
