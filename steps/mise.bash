@@ -16,8 +16,11 @@ fi
 
 # Mise doesn't come from Homebrew on Ferocia machines, so this installs it
 # directly, into ~/.local/bin, which install puts on the PATH.
+#
+# -f matters on a URL we pipe into a shell: without it curl prints the error
+# page and still exits 0, so an outage would feed HTML to sh.
 if [[ $DOTFILES_ENV == ferocia && ! -f ~/.local/bin/mise ]]; then
-  curl https://mise.run | MISE_VERSION="v2025.8.20" sh
+  curl -fsSL https://mise.run | MISE_VERSION="v2025.8.20" sh
 fi
 
 eval "$(mise activate bash)"
