@@ -1,13 +1,83 @@
 # CLAUDE.md
 
-## Verification
+Public dotfiles for two machines. The install script symlinks everything in
+`config/` into `~`, so the file you edit here is the file your machine reads.
+No build step, nothing to deploy.
 
-After making changes, run the relevant step script from `steps/` directly to verify it applies cleanly (e.g., `./install zsh`). Run `./install` for a full idempotent re-run across all steps.
+## Invariants
 
-## Structure
+- **Re-running is safe.** Every step has to be idempotent. `./install` runs on
+  a working machine as often as on a new one.
+- **`create_link` never overwrites.** It warns about whatever already sits in
+  the destination, including a link pointing somewhere unexpected. Leave it
+  warning. Don't teach it to relink: that warning usually means you renamed a
+  config file and left its old link behind, which is worth seeing.
+- **This repo is public.** Nothing work-specific or secret goes in it. The
+  Ferocia overlay exists to hold that.
+- **It has to run on a fresh machine.** `#!/bin/bash` is deliberate: the only
+  bash there is macOS's 3.2, and Homebrew's isn't installed yet. No bash 4+
+  syntax, and don't switch to `/usr/bin/env bash`.
+- **Steps run standalone.** A step may depend on `lib/dotfiles.bash` and
+  nothing else outside itself.
 
-Config files live in `config/` and are symlinked into `~/` and `~/.config/` by the install script. Edit them in place in the repo.
+## Link the narrowest thing
+
+Link individual files, not the directory around them, wherever a tool keeps its
+own state next to its config. `steps/herdr.bash` links one config file and
+leaves the sockets and logs alone. `steps/claude.bash` links skills one at a
+time, so the ones Claude installs don't land in this repo.
+
+Some tools rewrite their own config, and those you don't link at all.
+`steps/git.bash` leaves `~/.config/git/config` real and points at this repo
+with `include.path`. Nothing here touches Copilot's `config.json`.
+
+`steps/claude.bash` fetches borrowed skills from upstream instead of committing
+copies, so this repo doesn't redistribute other people's work. Keep it that
+way.
+
+## Layout
+
+One directory per tool under `config/`. Name the file for where it lands, not
+for the tool, so the step that links it reads as a straight move:
+`config/ssh/config` becomes `~/.ssh/config`, and `config/git/gitconfig` becomes
+`~/.gitconfig`.
+
+No installed config lives at the repo root. The root holds this repo's own
+tooling, like `.shellcheckrc` and `.zed/`, plus symlinks back into `config/`
+for tools that insist on finding their config at the root of whatever tree you
+open them on. `.editorconfig` and `.luarc.jsonc` are both that.
+
+## Adding a step
+
+One step per tool, named after the tool. It needs the file in `steps/` and an
+entry in the `steps` array in `install`. That array sets the run order, so
+don't sort it: `ferocia` has to come before any step calling
+`link_ferocia_file`, and `homebrew` before `mise`, which the Brewfile installs
+on home machines.
+
+Start from an existing step. Give `curl -fsSL` to anything you pipe into a
+shell, because bare curl exits 0 on an HTTP error and hands the error page to
+`sh`.
 
 ## Environments
 
-`DOTFILES_ENV` controls home vs Ferocia configuration and is auto-detected from hostname in `config/zsh/zshenv`. The home Brewfile and Mise config live in `config/homebrew/` and `config/mise/`; Ferocia's equivalents live in the private `dotfiles-ferocia` repo, pulled down to `~/.dotfiles-ferocia` by `steps/ferocia.bash` and linked out with `link_ferocia_file`.
+`DOTFILES_ENV` is `home` or `ferocia`. `config/zsh/zshenv` works it out from
+the hostname, and `lib/dotfiles.bash` refuses to run without it. Don't drop
+that guard: steps branching on it ask whether it's `home` and take the Ferocia
+path otherwise, so an unset value configures a home machine for work without
+telling you.
+
+The private `dotfiles-ferocia` repo holds Ferocia's Brewfile, Mise config and
+agent config. `steps/ferocia.bash` clones it to `~/.dotfiles-ferocia`, and
+`link_ferocia_file` links files out of it, doing nothing when the overlay isn't
+there.
+
+## Verification
+
+Run the step you changed, as `./install zsh` or `./steps/zsh.bash`, with
+`DOTFILES_ENV` set. Then run shellcheck, which passes on this tree:
+
+    shellcheck install upgrade lib/dotfiles.bash steps/*.bash config/claude/statusline.sh
+
+A home machine can't exercise the Ferocia branches at all, because the overlay
+repo isn't there. Say so rather than implying you tested them.
