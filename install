@@ -48,8 +48,6 @@ function usage {
   exit 1
 }
 
-if [[ $DOTFILES_ENV != "home" && $DOTFILES_ENV != "ferocia" ]]; then usage; fi
-
 if [[ $1 == "-h" || $1 == "--help" ]]; then
   usage
 elif [[ -n $1 ]]; then

@@ -31,6 +31,16 @@ function echo_green {
   echo -e "${green}${1}${reset}"
 }
 
+# Nothing in here is meaningful without knowing which machine it's configuring,
+# and there's no safe default: steps that branch on this ask whether it's home
+# and take the Ferocia path otherwise, so an unset variable would quietly
+# configure a home machine for work. Guarding here rather than in install
+# covers a step run on its own, which is how they're meant to be testable.
+if [[ $DOTFILES_ENV != home && $DOTFILES_ENV != ferocia ]]; then
+  echo_red "Set DOTFILES_ENV to home or ferocia first. (config/zsh/zshenv does it from the hostname.)"
+  exit 1
+fi
+
 # Symlinks a file or directory into place, creating the parent directory if it
 # needs to. Refuses to clobber anything already there.
 #
