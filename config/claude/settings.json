@@ -21,7 +21,14 @@
     "mattpocock-skills@claude-plugins-official": true,
     "context7@claude-plugins-official": true
   },
+  "voice": {
+    "enabled": false,
+    "mode": "hold"
+  },
   "skipWorkflowUsageWarning": true,
   "editorMode": "vim",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": false,
   "disableTips": true
 }
