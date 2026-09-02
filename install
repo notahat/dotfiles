@@ -3,7 +3,7 @@
 set -o errexit
 set -o pipefail
 
-steps=(macos ferocia homebrew mise zsh ssh git ghostty neovim zed editorconfig bat herdr claude copilot gemini)
+steps=(macos ferocia homebrew mise zsh ssh git ghostty neovim rancher-desktop zed editorconfig bat herdr claude copilot gemini)
 
 # Prints usage. Callers pick the stream and the exit status, because asking for
 # help and getting it wrong want different ones.
