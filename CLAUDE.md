@@ -17,7 +17,7 @@ No build step, nothing to deploy.
 - **It has to run on a fresh machine.** `#!/bin/bash` is deliberate: the only
   bash there is macOS's 3.2, and Homebrew's isn't installed yet. No bash 4+
   syntax, and don't switch to `/usr/bin/env bash`.
-- **Steps run standalone.** A step may depend on `lib/dotfiles.bash` and
+- **Steps run standalone.** A step may depend on the files in `lib/` and
   nothing else outside itself.
 
 ## Link the narrowest thing
@@ -31,9 +31,10 @@ Some tools rewrite their own config, and those you don't link at all.
 `steps/git.bash` leaves `~/.config/git/config` real and points at this repo
 with `include.path`. Nothing here touches Copilot's `config.json`.
 
-`steps/claude.bash` fetches borrowed skills from upstream instead of committing
-copies, so this repo doesn't redistribute other people's work. Keep it that
-way.
+`lib/claude-skills.bash` fetches borrowed skills from upstream instead of
+committing copies, so this repo doesn't redistribute other people's work. Keep
+it that way. `steps/claude.bash` only installs the ones that are missing;
+`upgrade` is what brings them up to date.
 
 ## Layout
 
@@ -77,7 +78,7 @@ there.
 Run the step you changed, as `./install zsh` or `./steps/zsh.bash`, with
 `DOTFILES_ENV` set. Then run shellcheck, which passes on this tree:
 
-    shellcheck install upgrade lib/dotfiles.bash steps/*.bash config/claude/statusline.sh
+    shellcheck install upgrade lib/*.bash steps/*.bash config/claude/statusline.sh
 
 A home machine can't exercise the Ferocia branches at all, because the overlay
 repo isn't there. Say so rather than implying you tested them.

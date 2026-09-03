@@ -5,6 +5,8 @@ set -o pipefail
 
 # shellcheck source=lib/dotfiles.bash
 source "$(dirname "$0")/lib/dotfiles.bash"
+# shellcheck source=lib/claude-skills.bash
+source "$(dirname "$0")/lib/claude-skills.bash"
 
 echo_green "Upgrading homebrew packages..."
 brew upgrade --yes
@@ -16,6 +18,10 @@ mise up
 echo
 echo_green "Upgrading Neovim plugins..."
 nvim --headless "+Lazy! sync" +qa
+
+echo
+echo_green "Upgrading borrowed Claude skills..."
+upgrade_borrowed_skills
 
 echo
 echo_green "Upgrade complete."
