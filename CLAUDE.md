@@ -52,9 +52,11 @@ open them on. `.editorconfig` and `.luarc.jsonc` are both that.
 
 One step per tool, named after the tool. It needs the file in `steps/` and an
 entry in the `steps` array in `install`. That array sets the run order, so
-don't sort it: `ferocia` has to come before any step calling
-`link_ferocia_file`, and `homebrew` before `mise`, which the Brewfile installs
-on home machines.
+don't sort it. `ferocia` needs `homebrew` for git, `onepassword` for the SSH
+agent, and `ssh` for the config that points at it, and has to come before
+any step calling `link_ferocia_file`. `brewfile` is separate from `homebrew`
+because on Ferocia machines the Brewfile is inside the overlay, and it has
+to come before `mise`, which the Brewfile installs on home machines.
 
 Start from an existing step. Give `curl -fsSL` to anything you pipe into a
 shell, because bare curl exits 0 on an HTTP error and hands the error page to

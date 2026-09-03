@@ -6,18 +6,14 @@ set -o pipefail
 # shellcheck source=../lib/dotfiles.bash
 source "$(dirname "$0")/../lib/dotfiles.bash"
 
-if [[ ! -f /opt/homebrew/bin/brew ]]; then
+# This only installs Homebrew itself. The packages come later, in
+# steps/brewfile.bash, because on a Ferocia machine the Brewfile lives in the
+# private overlay repo, and cloning that needs git, which the Homebrew
+# installer brings in with the Xcode Command Line Tools, and the 1Password SSH
+# agent, which steps/onepassword.bash installs with brew.
+
+if [[ -f /opt/homebrew/bin/brew ]]; then
+  echo "Homebrew is already installed, skipping."
+else
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
-
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# The home Brewfile is public, but Ferocia's lives in the private overlay
-# repo instead.
-if [[ $DOTFILES_ENV == home ]]; then
-  brewfile="$dotfiles_dir/config/homebrew/Brewfile"
-else
-  brewfile="$ferocia_dir/Brewfile"
-fi
-
-brew bundle --file "$brewfile"

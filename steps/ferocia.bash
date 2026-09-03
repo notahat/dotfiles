@@ -13,7 +13,10 @@ source "$(dirname "$0")/../lib/dotfiles.bash"
 # DOTFILES_ENV=ferocia, so other steps use link_ferocia_file, which copes
 # with it being absent.
 #
-# This has to run before any step that calls link_ferocia_file.
+# This has to run before any step that calls link_ferocia_file, and after
+# the ones that make the clone possible: homebrew, for git; onepassword,
+# for the SSH agent that holds the key; and ssh, for the config that points
+# at that agent.
 
 if [[ $DOTFILES_ENV != ferocia ]]; then
   echo "Not a Ferocia machine, skipping."
