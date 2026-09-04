@@ -26,9 +26,11 @@
     "mode": "hold"
   },
   "skipWorkflowUsageWarning": true,
+  "theme": "dark-ansi",
   "editorMode": "vim",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "voiceEnabled": false,
-  "disableTips": true
+  "disableTips": true,
+  "model": "claude-fable-5-1[1m]"
 }

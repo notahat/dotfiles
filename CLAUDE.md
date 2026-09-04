@@ -31,10 +31,11 @@ Some tools rewrite their own config, and those you don't link at all.
 `steps/git.bash` leaves `~/.config/git/config` real and points at this repo
 with `include.path`. Nothing here touches Copilot's `config.json`.
 
-`lib/claude-skills.bash` fetches borrowed skills from upstream instead of
-committing copies, so this repo doesn't redistribute other people's work. Keep
-it that way. `steps/claude.bash` only installs the ones that are missing;
-`upgrade` is what brings them up to date.
+`steps/claude.bash` installs borrowed skills from upstream with `npx skills`
+instead of committing copies, so this repo doesn't redistribute other people's
+work. Keep it that way. The step only installs the ones that are missing;
+`upgrade` is what brings them up to date, using the sources the CLI records in
+`~/.agents/.skill-lock.json`.
 
 ## Layout
 

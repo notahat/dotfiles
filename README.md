@@ -30,11 +30,12 @@ every day.
   stripped back so the code is the only thing on screen. It's commented
   throughout and has [its own README](config/nvim).
 - **One command to update everything.** `./upgrade` bumps Homebrew packages,
-  Mise tools, and Neovim plugins.
+  Mise tools, Neovim plugins, and borrowed Claude Code skills.
 - **Claude Code skills, homegrown and borrowed.** Mine live in
   [`config/claude`](config/claude), symlinked into `~/.claude` alongside my
-  settings and statusline. Other people's I pull from their source repos at
-  install time, so I'm not redistributing anyone's work.
+  settings and statusline. Other people's I install from their source repos
+  with [`npx skills`](https://github.com/vercel-labs/skills), so I'm not
+  redistributing anyone's work.
 
 It's all [MIT licensed](LICENSE), so take what's useful.
 

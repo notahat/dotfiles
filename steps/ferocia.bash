@@ -30,9 +30,8 @@ else
 fi
 
 # The overlay repo can bring its own script defining work-specific skills
-# for both Copilot and Gemini (it defines install_agent_skills/
-# upgrade_agent_skills, the same convention as lib/claude-skills.bash). It's
-# optional, so this copes with it being absent.
+# for both Copilot and Gemini (it defines install_agent_skills and
+# upgrade_agent_skills). It's optional, so this copes with it being absent.
 #
 # Only missing skills get installed here. Refreshing the ones already
 # installed is what upgrade does, so that install stays a no-op on a machine

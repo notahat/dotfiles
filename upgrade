@@ -5,8 +5,6 @@ set -o pipefail
 
 # shellcheck source=lib/dotfiles.bash
 source "$(dirname "$0")/lib/dotfiles.bash"
-# shellcheck source=lib/claude-skills.bash
-source "$(dirname "$0")/lib/claude-skills.bash"
 
 echo_green "Upgrading homebrew packages..."
 brew upgrade --yes
@@ -20,12 +18,9 @@ echo_green "Upgrading Neovim plugins..."
 nvim --headless "+Lazy! sync" +qa
 
 echo
-echo_green "Upgrading borrowed Claude skills..."
-upgrade_borrowed_skills
+echo_green "Upgrading Claude skills..."
+DO_NOT_TRACK=1 npx --yes skills update --global --yes
 
-# The Ferocia overlay only exists on a Ferocia machine, and only defines
-# upgrade_agent_skills if it brings its own skills.bash. Both are optional,
-# same as in steps/ferocia.bash.
 if [[ -f "$ferocia_dir/skills.bash" ]]; then
   echo
   echo_green "Upgrading Ferocia agent skills..."
