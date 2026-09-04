@@ -23,5 +23,16 @@ echo
 echo_green "Upgrading borrowed Claude skills..."
 upgrade_borrowed_skills
 
+# The Ferocia overlay only exists on a Ferocia machine, and only defines
+# upgrade_agent_skills if it brings its own skills.bash. Both are optional,
+# same as in steps/ferocia.bash.
+if [[ -f "$ferocia_dir/skills.bash" ]]; then
+  echo
+  echo_green "Upgrading Ferocia agent skills..."
+  # shellcheck source=/dev/null
+  source "$ferocia_dir/skills.bash"
+  upgrade_agent_skills
+fi
+
 echo
 echo_green "Upgrade complete."
