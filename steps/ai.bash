@@ -18,20 +18,17 @@ function install_local_skill {
 # The skills CLI has no quiet mode and narrates every install at length, so
 # its output is held back unless the install fails.
 function install_remote_skill {
-  local name=$1 skill=$2 log
+  local name=$1 skill=$2 output
   if [[ -e "$HOME/.claude/skills/$name" ]]; then
     echo "$name skill is already installed, skipping."
     return
   fi
 
-  log=$(mktemp)
-  if ! DO_NOT_TRACK=1 npx --yes skills add "$skill" --global --agent claude-code --yes >"$log" 2>&1; then
-    cat "$log"
-    rm -f "$log"
+  if ! output=$(DO_NOT_TRACK=1 npx --yes skills add "$skill" --global --agent claude-code --yes 2>&1); then
+    echo "$output"
     echo_red "Installing $name skill failed."
     return 1
   fi
-  rm -f "$log"
   echo "Installed $name skill."
 }
 
