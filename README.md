@@ -53,8 +53,7 @@ installs a tool and symlinks its config. Run them all, or one at a time:
 The pieces:
 
 - [`config/`](config): every config file, one directory per tool. The steps
-  symlink most of them into `~` and `~/.config`; a few, like the
-  [`Brewfile`](config/homebrew/Brewfile), get read in place.
+  symlink most of them into `~` and `~/.config`.
 - [`project-templates/`](project-templates): drop-in editor and tooling config
   for new Rails and Vite projects.
 
