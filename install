@@ -29,6 +29,18 @@ fi
 # shellcheck source=lib/dotfiles.bash
 source "$(dirname "$0")/lib/dotfiles.bash"
 
+# Which machine this is: home, or ferocia (my employer), whose machines have
+# hostnames starting fer-. Only this script cares; the steps never read it.
+if [[ $(hostname -s) == fer-* ]]; then
+  DOTFILES_ENV=ferocia
+else
+  DOTFILES_ENV=home
+fi
+
+# Where the private, Ferocia-only overlay repo lives. It's cloned by hand, and
+# only on Ferocia machines.
+ferocia_dir="$HOME/.dotfiles-ferocia"
+
 if [[ $DOTFILES_ENV == ferocia && ! -d $ferocia_dir ]]; then
   echo_red "Clone dotfiles-ferocia to $ferocia_dir first." >&2
   exit 1

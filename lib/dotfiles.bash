@@ -20,20 +20,6 @@ export PATH="$HOME/.local/share/mise/shims:/opt/homebrew/bin:/opt/homebrew/sbin:
 # than whoever sourced it, which is what makes the lookup reliable.
 dotfiles_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# Which machine this is: home, or ferocia (my employer), whose machines have
-# hostnames starting fer-. Used by install, not by steps.
-# shellcheck disable=SC2034
-if [[ $(hostname -s) == fer-* ]]; then
-  DOTFILES_ENV=ferocia
-else
-  DOTFILES_ENV=home
-fi
-
-# Where the private, Ferocia-only overlay repo lives. It's cloned by hand, and
-# only on Ferocia machines.
-# shellcheck disable=SC2034
-ferocia_dir="$HOME/.dotfiles-ferocia"
-
 red="\033[31m"
 green="\033[32m"
 reset="\033[0;39m"

@@ -65,8 +65,8 @@ shell, because bare curl exits 0 on an HTTP error and hands the error page to
 
 ## Environments
 
-`DOTFILES_ENV` is `home` or `ferocia`. `lib/dotfiles.bash` works it out from
-the hostname, and only `install` reads it.
+`DOTFILES_ENV` is `home` or `ferocia`. `install` works it out from the
+hostname, and nothing else reads it.
 
 Every step in this repo is a home step. The private `dotfiles-ferocia` repo,
 cloned by hand to `~/.dotfiles-ferocia`, has its own `steps/` directory, and
