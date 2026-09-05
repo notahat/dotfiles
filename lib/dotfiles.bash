@@ -18,7 +18,7 @@ export PATH="${HOME}/.local/share/mise/shims:/opt/homebrew/bin:/opt/homebrew/sbi
 # Where this repo lives, resolved to an absolute path so the steps work no
 # matter which directory install was run from. BASH_SOURCE is this file rather
 # than whoever sourced it, which is what makes the lookup reliable.
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+DOTFILES_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")/..")
 readonly DOTFILES_DIR
 
 readonly RED="\033[31m"
