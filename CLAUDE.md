@@ -14,12 +14,16 @@ No build step, nothing to deploy.
   config file and left its old link behind, which is worth seeing.
 - **This repo is public.** Nothing work-specific or secret goes in it. The
   Ferocia overlay exists to hold that.
+- **Borrowed skills are installed, never committed.** `steps/ai.bash` pulls
+  them from upstream with `npx skills`, so this repo doesn't redistribute
+  other people's work. The step only installs the ones that are missing;
+  `upgrade` brings them up to date, using the sources the CLI records in
+  `~/.agents/.skill-lock.json`.
 - **It has to run on a fresh machine.** `#!/bin/bash` is deliberate: the only
   bash there is macOS's 3.2, and Homebrew's isn't installed yet. No bash 4+
   syntax, and don't switch to `/usr/bin/env bash`.
 - **Steps run standalone.** A step may depend on the files in `lib/` and
-  nothing else outside itself. In particular, no step reads `DOTFILES_ENV`.
-  Only `install` does, to pick which repo a step comes from.
+  nothing else outside itself.
 
 ## Link the narrowest thing
 
@@ -30,30 +34,27 @@ time, so the ones Claude installs don't land in this repo.
 
 Some tools rewrite their own config, and those you don't link at all.
 `steps/git.bash` leaves `~/.config/git/config` real and points at this repo
-with `include.path`. Nothing here touches Copilot's `config.json`.
-
-`steps/ai.bash` installs borrowed skills from upstream with `npx skills`
-instead of committing copies, so this repo doesn't redistribute other people's
-work. Keep it that way. The step only installs the ones that are missing;
-`upgrade` is what brings them up to date, using the sources the CLI records in
-`~/.agents/.skill-lock.json`.
+with `include.path`.
 
 ## Layout
 
 One directory per tool under `config/`. Name the file for where it lands, not
 for the tool, so the step that links it reads as a straight move:
-`config/ssh/config` becomes `~/.ssh/config`, and `config/git/gitconfig` becomes
-`~/.gitconfig`.
+`config/ssh/config` becomes `~/.ssh/config`, and `config/zsh/zshrc` becomes
+`~/.zshrc`.
 
 No installed config lives at the repo root. The root holds this repo's own
 tooling, like `.shellcheckrc` and `.zed/`, plus symlinks back into `config/`
 for tools that insist on finding their config at the root of whatever tree you
 open them on. `.editorconfig` and `.luarc.jsonc` are both that.
 
-## Adding a step
+## Adding or changing a step
+
+Before editing `install`, `upgrade`, or anything in `lib/` or `steps/`, read
+`docs/shell-style.md`.
 
 One step per tool, named after the tool. It needs the file in `steps/` and an
-entry in the `steps` array in `install`. That array sets the run order, so
+entry in the `STEPS` array in `install`. That array sets the run order, so
 don't sort it. `homebrew` installs `mise`, and `mise` installs the node that
 `ai` needs. `ai` is the exception to naming steps after tools: it's the slot
 for whichever AI tools a machine gets, which differ entirely between home
@@ -78,12 +79,13 @@ doesn't override runs as it would at home, so `install` refuses to run as
 
 ## Verification
 
-The shell conventions are in `docs/shell-style.md`.
-
 Run the step you changed, as `./install zsh` or `./steps/zsh.bash`. Then run
-shellcheck, which passes on this tree:
+shellcheck from the repo root, so `.shellcheckrc` applies. It passes on this
+tree:
 
     shellcheck install upgrade lib/*.bash steps/*.bash config/claude/statusline.sh
 
-A home machine can't exercise the overlay's steps at all, because the overlay
-repo isn't there. Say so rather than implying you tested them.
+Don't run the overlay's steps on a home machine: each one links work config
+into `~`. From `~/.dotfiles-ferocia`, run shellcheck over `lib/*.bash` and
+`steps/*.bash` and check they parse with `bash -n`, and say that's all you
+did.
