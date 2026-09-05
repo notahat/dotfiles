@@ -11,7 +11,7 @@
 # compinit's security audit of every directory in fpath costs ~25ms, so skip it
 # with -C and do one full run a day to pick up newly installed completions.
 #
-# The glob qualifiers match the stamp only if it exists (N), is a regular fle
+# The glob qualifiers match the stamp only if it exists (N), is a regular file
 # (.), and was last modified less than 24 hours ago (mh-24). A non-empty match
 # means the last full run was recent enough for the dump to be trusted.
 

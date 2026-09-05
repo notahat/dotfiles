@@ -4,7 +4,7 @@
 source "$(dirname "$0")/../lib/dotfiles.bash"
 
 # Don't show recents in the dock.
-defaults write com.apple.dock show-recents -boolean FALSE
+defaults write com.apple.dock show-recents -bool false
 killall Dock
 
 # Don't have the fn key open the emoji picker.

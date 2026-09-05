@@ -8,7 +8,7 @@ brew upgrade --yes
 
 echo
 echo_green "Upgrading mise tools..."
-mise up
+mise upgrade
 
 echo
 echo_green "Upgrading Neovim plugins..."
