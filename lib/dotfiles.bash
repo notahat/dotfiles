@@ -50,7 +50,7 @@ function create_link() {
     echo_red "${destination} already exists, skipping. (You might not want this, so check the file.)"
   else
     ln -s "${source}" "${destination}"
-    echo "Linked ${destination}"
+    echo "Linked ${destination/#${HOME}/~}"
   fi
 }
 
@@ -60,21 +60,9 @@ function check_link() {
   target=$(readlink "${destination}")
 
   if [[ ${target} == "${source}" ]]; then
-    echo "$(abbreviate_home "${destination}") is already linked, skipping."
+    echo "${destination/#${HOME}/~} is already linked, skipping."
   else
     echo_red "${destination} links to ${target}, not ${source}. (Remove it and re-run to fix it.)"
-  fi
-}
-
-# Prints a path with the home directory shortened to "~", so a message full of
-# links into home is easier to scan.
-function abbreviate_home() {
-  local path=$1
-
-  if [[ ${path} == "${HOME}" || ${path} == "${HOME}/"* ]]; then
-    echo "~${path#"${HOME}"}"
-  else
-    echo "${path}"
   fi
 }
 
