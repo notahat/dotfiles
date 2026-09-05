@@ -10,3 +10,10 @@ source-path=SCRIPTDIR
 # Every named variable is written as ${name}, never $name, so the two forms
 # don't mix. Positional parameters and specials like $1, $@ and $? stay bare.
 enable=require-variable-braces
+
+# Tests use [[ ]] rather than [ ], and every expansion outside one is quoted,
+# even where the value can't split. An uppercase name that's read but never
+# assigned is a typo in a constant, which would otherwise expand to nothing.
+enable=require-double-brackets
+enable=quote-safe-variables
+enable=check-unassigned-uppercase
