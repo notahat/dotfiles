@@ -6,3 +6,7 @@ external-sources=true
 # Resolve the paths in `# shellcheck source=` directives relative to the
 # script doing the sourcing, rather than to wherever shellcheck was run from.
 source-path=SCRIPTDIR
+
+# Every named variable is written as ${name}, never $name, so the two forms
+# don't mix. Positional parameters and specials like $1, $@ and $? stay bare.
+enable=require-variable-braces

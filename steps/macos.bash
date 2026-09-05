@@ -25,7 +25,7 @@ fi
 
 # Turn on filevault.
 if ! fdesetup status | grep -qE "FileVault is (On|Off, but will be enabled after the next restart)."; then
-  sudo fdesetup enable -user "$USER" | tee ~/Desktop/"FileVault Recovery Key.txt"
+  sudo fdesetup enable -user "${USER}" | tee ~/Desktop/"FileVault Recovery Key.txt"
   echo "Turned on FileVault. The recovery key is on the Desktop."
 else
   echo "FileVault is already on, skipping."
@@ -36,8 +36,8 @@ fi
 # connections and also reports as enabled, so the check is for "disabled"
 # rather than for a particular state number.
 firewall=/usr/libexec/ApplicationFirewall/socketfilterfw
-if "$firewall" --getglobalstate | grep -q "Firewall is disabled"; then
-  sudo "$firewall" --setglobalstate on
+if "${firewall}" --getglobalstate | grep -q "Firewall is disabled"; then
+  sudo "${firewall}" --setglobalstate on
   echo "Turned on the firewall."
 else
   echo "Firewall is already on, skipping."

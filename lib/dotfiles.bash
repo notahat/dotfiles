@@ -13,7 +13,7 @@ set -o errexit
 set -o pipefail
 
 # Make sure all the steps can find things installed with mise and homebrew.
-export PATH="$HOME/.local/share/mise/shims:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+export PATH="${HOME}/.local/share/mise/shims:/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}"
 
 # Where this repo lives, resolved to an absolute path so the steps work no
 # matter which directory install was run from. BASH_SOURCE is this file rather
@@ -42,27 +42,27 @@ function echo_green {
 function create_link {
   local source=$1 destination=$2
 
-  mkdir -p "$(dirname "$destination")"
+  mkdir -p "$(dirname "${destination}")"
 
-  if [[ -L $destination ]]; then
-    check_link "$source" "$destination"
-  elif [[ -e $destination ]]; then
-    echo_red "$destination already exists, skipping. (You might not want this, so check the file.)"
+  if [[ -L ${destination} ]]; then
+    check_link "${source}" "${destination}"
+  elif [[ -e ${destination} ]]; then
+    echo_red "${destination} already exists, skipping. (You might not want this, so check the file.)"
   else
-    ln -s "$source" "$destination"
-    echo "Linked $destination"
+    ln -s "${source}" "${destination}"
+    echo "Linked ${destination}"
   fi
 }
 
 # Reports on a link that's already in place.
 function check_link {
   local source=$1 destination=$2 target
-  target=$(readlink "$destination")
+  target=$(readlink "${destination}")
 
-  if [[ $target == "$source" ]]; then
-    echo "$destination is already linked, skipping."
+  if [[ ${target} == "${source}" ]]; then
+    echo "${destination} is already linked, skipping."
   else
-    echo_red "$destination links to $target, not $source. (Remove it and re-run to fix it.)"
+    echo_red "${destination} links to ${target}, not ${source}. (Remove it and re-run to fix it.)"
   fi
 }
 
@@ -70,5 +70,5 @@ function check_link {
 #
 # The source is given relative to the root of this repo.
 function link_file {
-  create_link "$DOTFILES_DIR/$1" "$2"
+  create_link "${DOTFILES_DIR}/$1" "$2"
 }

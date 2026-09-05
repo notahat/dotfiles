@@ -31,7 +31,7 @@ payload=$(jq -c 'if .model.display_name
 # Pull the fields Starship can't see out of the JSON in one pass, as
 # `name=value` lines. Fields Claude didn't send come back as empty strings.
 # @sh quotes the values, so directories with spaces in them survive the eval.
-eval "$(jq -r <<<"$payload" '
+eval "$(jq -r <<<"${payload}" '
   @sh "current_dir=\(.workspace.current_dir // "")",
   @sh "input_tokens=\(.context_window.total_input_tokens // "")",
   @sh "output_tokens=\(.context_window.total_output_tokens // "")",
@@ -47,11 +47,11 @@ function format_token_count {
   local count=$1
 
   if ((count >= 1000000)); then
-    awk -v count="$count" 'BEGIN { printf "%.1fM", count / 1000000 }'
+    awk -v count="${count}" 'BEGIN { printf "%.1fM", count / 1000000 }'
   elif ((count >= 1000)); then
-    awk -v count="$count" 'BEGIN { printf "%.1fk", count / 1000 }'
+    awk -v count="${count}" 'BEGIN { printf "%.1fk", count / 1000 }'
   else
-    printf '%d' "$count"
+    printf '%d' "${count}"
   fi
 }
 
@@ -61,11 +61,11 @@ function format_token_count {
 function format_rate_limit {
   local percentage=$1 resets_at=$2 reset_format=$3
 
-  if [[ -n $percentage ]]; then
-    printf '%.0f%%' "$percentage"
+  if [[ -n ${percentage} ]]; then
+    printf '%.0f%%' "${percentage}"
 
-    if [[ -n $resets_at ]]; then
-      printf ' · %s' "$(date -r "$resets_at" +"$reset_format")"
+    if [[ -n ${resets_at} ]]; then
+      printf ' · %s' "$(date -r "${resets_at}" +"${reset_format}")"
     fi
   fi
 }
@@ -74,19 +74,19 @@ function format_rate_limit {
 # capsule for a variable that's set but empty, which would leave a blank one
 # sitting in the status line.
 tokens=""
-if [[ -n $input_tokens && -n $output_tokens ]]; then
+if [[ -n ${input_tokens} && -n ${output_tokens} ]]; then
   tokens=$(format_token_count $((input_tokens + output_tokens)))
 fi
 
-five_hour=$(format_rate_limit "$five_hour_percentage" "$five_hour_reset" "%H:%M")
-seven_day=$(format_rate_limit "$seven_day_percentage" "$seven_day_reset" "%a %H:%M")
+five_hour=$(format_rate_limit "${five_hour_percentage}" "${five_hour_reset}" "%H:%M")
+seven_day=$(format_rate_limit "${seven_day_percentage}" "${seven_day_reset}" "%a %H:%M")
 
-[[ -n $tokens ]] && export CLAUDE_TOKENS="$tokens"
-[[ -n $five_hour ]] && export CLAUDE_LIMIT_5H="$five_hour"
-[[ -n $seven_day ]] && export CLAUDE_LIMIT_7D="$seven_day"
+[[ -n ${tokens} ]] && export CLAUDE_TOKENS="${tokens}"
+[[ -n ${five_hour} ]] && export CLAUDE_LIMIT_5H="${five_hour}"
+[[ -n ${seven_day} ]] && export CLAUDE_LIMIT_7D="${seven_day}"
 
 # Both paths need giving. Starship finds the git repo from --path, but takes
 # the directory it displays from --logical-path, which otherwise falls back to
 # whichever directory Claude happened to launch this script from.
 starship statusline claude-code --profile claude-code \
-  --path "$current_dir" --logical-path "$current_dir" <<<"$payload"
+  --path "${current_dir}" --logical-path "${current_dir}" <<<"${payload}"
