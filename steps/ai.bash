@@ -10,13 +10,13 @@ link_file config/claude/CLAUDE.md ~/.claude/CLAUDE.md
 link_file config/claude/settings.json ~/.claude/settings.json
 link_file config/claude/statusline.sh ~/.claude/statusline.sh
 
-# Install skills from this repo.
+# Links a skill kept in this repo into ~/.claude/skills.
 function install_local_skill {
   local skill=$1
   link_file "config/claude/skills/$skill" ~/.claude/skills/"$skill"
 }
 
-# Install skills from github, etc.
+# Installs a skill from the internet.
 function install_remote_skill {
   local name=$1 skill=$2
   if [[ ! -e "$HOME/.claude/skills/$name" ]]; then

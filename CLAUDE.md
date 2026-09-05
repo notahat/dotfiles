@@ -18,20 +18,21 @@ No build step, nothing to deploy.
   bash there is macOS's 3.2, and Homebrew's isn't installed yet. No bash 4+
   syntax, and don't switch to `/usr/bin/env bash`.
 - **Steps run standalone.** A step may depend on the files in `lib/` and
-  nothing else outside itself.
+  nothing else outside itself. In particular, no step reads `DOTFILES_ENV`.
+  Only `install` does, to pick which repo a step comes from.
 
 ## Link the narrowest thing
 
 Link individual files, not the directory around them, wherever a tool keeps its
 own state next to its config. `steps/herdr.bash` links one config file and
-leaves the sockets and logs alone. `steps/claude.bash` links skills one at a
+leaves the sockets and logs alone. `steps/ai.bash` links skills one at a
 time, so the ones Claude installs don't land in this repo.
 
 Some tools rewrite their own config, and those you don't link at all.
 `steps/git.bash` leaves `~/.config/git/config` real and points at this repo
 with `include.path`. Nothing here touches Copilot's `config.json`.
 
-`steps/claude.bash` installs borrowed skills from upstream with `npx skills`
+`steps/ai.bash` installs borrowed skills from upstream with `npx skills`
 instead of committing copies, so this repo doesn't redistribute other people's
 work. Keep it that way. The step only installs the ones that are missing;
 `upgrade` is what brings them up to date, using the sources the CLI records in
@@ -53,11 +54,10 @@ open them on. `.editorconfig` and `.luarc.jsonc` are both that.
 
 One step per tool, named after the tool. It needs the file in `steps/` and an
 entry in the `steps` array in `install`. That array sets the run order, so
-don't sort it. `ferocia` needs `homebrew` for git, `onepassword` for the SSH
-agent, and `ssh` for the config that points at it, and has to come before
-any step calling `link_ferocia_file`. `brewfile` is separate from `homebrew`
-because on Ferocia machines the Brewfile is inside the overlay, and it has
-to come before `mise`, which the Brewfile installs on home machines.
+don't sort it. `homebrew` installs `mise`, and `mise` installs the node that
+`ai` needs. `ai` is the exception to naming steps after tools: it's the slot
+for whichever AI tools a machine gets, which differ entirely between home
+and work.
 
 Start from an existing step. Give `curl -fsSL` to anything you pipe into a
 shell, because bare curl exits 0 on an HTTP error and hands the error page to
@@ -65,23 +65,23 @@ shell, because bare curl exits 0 on an HTTP error and hands the error page to
 
 ## Environments
 
-`DOTFILES_ENV` is `home` or `ferocia`. `config/zsh/zshenv` works it out from
-the hostname, and `lib/dotfiles.bash` refuses to run without it. Don't drop
-that guard: steps branching on it ask whether it's `home` and take the Ferocia
-path otherwise, so an unset value configures a home machine for work without
-telling you.
+`DOTFILES_ENV` is `home` or `ferocia`. `lib/dotfiles.bash` works it out from
+the hostname, and only `install` reads it.
 
-The private `dotfiles-ferocia` repo holds Ferocia's Brewfile, Mise config and
-agent config. `steps/ferocia.bash` clones it to `~/.dotfiles-ferocia`, and
-`link_ferocia_file` links files out of it, doing nothing when the overlay isn't
-there.
+Every step in this repo is a home step. The private `dotfiles-ferocia` repo,
+cloned by hand to `~/.dotfiles-ferocia`, has its own `steps/` directory, and
+on a Ferocia machine a step there replaces the one here with the same name.
+That's the whole mechanism: there's no branching on `DOTFILES_ENV` inside
+steps, and nothing here links files out of the overlay. A step the overlay
+doesn't override runs as it would at home, so `install` refuses to run as
+`ferocia` without the overlay present.
 
 ## Verification
 
-Run the step you changed, as `./install zsh` or `./steps/zsh.bash`, with
-`DOTFILES_ENV` set. Then run shellcheck, which passes on this tree:
+Run the step you changed, as `./install zsh` or `./steps/zsh.bash`. Then run
+shellcheck, which passes on this tree:
 
     shellcheck install upgrade lib/*.bash steps/*.bash config/claude/statusline.sh
 
-A home machine can't exercise the Ferocia branches at all, because the overlay
+A home machine can't exercise the overlay's steps at all, because the overlay
 repo isn't there. Say so rather than implying you tested them.

@@ -3,18 +3,29 @@
 # Shared helpers for the install script and for the steps it runs.
 #
 # Each step is its own program, and sources this file directly. It's the only
-# thing a step depends on from outside itself, which is what lets a step be
-# read, and run, on its own.
+# thing a step depends on from outside itself, beyond the steps before it
+# having run, which is what lets a step be read, and run, on its own.
+
+# Make sure all the steps can find things installed with mise and homebrew.
+export PATH="$HOME/.local/share/mise/shims:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 
 # Where this repo lives, resolved to an absolute path so the steps work no
 # matter which directory install was run from. BASH_SOURCE is this file rather
 # than whoever sourced it, which is what makes the lookup reliable.
 dotfiles_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# Where the private, Ferocia-only overlay repo lives, if it's present at all.
-# It only exists on Ferocia machines, cloned by steps/ferocia.bash, so
-# anything that uses it has to cope with it being absent (e.g. on a home
-# machine, or before that step has run).
+# Which machine this is: home, or ferocia (my employer), whose machines have
+# hostnames starting fer-. Used by install, not by steps.
+# shellcheck disable=SC2034
+if [[ $(hostname -s) == fer-* ]]; then
+  DOTFILES_ENV=ferocia
+else
+  DOTFILES_ENV=home
+fi
+
+# Where the private, Ferocia-only overlay repo lives. It's cloned by hand, and
+# only on Ferocia machines.
+# shellcheck disable=SC2034
 ferocia_dir="$HOME/.dotfiles-ferocia"
 
 red="\033[31m"
@@ -31,21 +42,10 @@ function echo_green {
   echo -e "${green}${1}${reset}"
 }
 
-# Nothing in here is meaningful without knowing which machine it's configuring,
-# and there's no safe default: steps that branch on this ask whether it's home
-# and take the Ferocia path otherwise, so an unset variable would quietly
-# configure a home machine for work. Guarding here rather than in install
-# covers a step run on its own, which is how they're meant to be testable.
-if [[ $DOTFILES_ENV != home && $DOTFILES_ENV != ferocia ]]; then
-  echo_red "Set DOTFILES_ENV to home or ferocia first. (config/zsh/zshenv does it from the hostname.)" >&2
-  exit 1
-fi
-
 # Symlinks a file or directory into place, creating the parent directory if it
 # needs to. Refuses to clobber anything already there.
 #
-# The source is an absolute path. Steps call link_file or link_ferocia_file
-# below instead, which say which repo the source comes from.
+# The source is an absolute path. Steps in this repo use link_file instead.
 function create_link {
   local source=$1 destination=$2
 
@@ -61,13 +61,7 @@ function create_link {
   fi
 }
 
-# Reports on a link that's already in place. One pointing anywhere other than
-# the file being installed is worth knowing about: it's usually left behind by
-# a config file that's since been renamed or moved, in which case it's now
-# dangling and whatever reads it has quietly lost its config.
-#
-# This compares the path the link holds rather than where it resolves to, so
-# that it still says something useful about a link that's dangling.
+# Reports on a link that's already in place.
 function check_link {
   local source=$1 destination=$2 target
   target=$(readlink "$destination")
@@ -84,16 +78,4 @@ function check_link {
 # The source is given relative to the root of this repo.
 function link_file {
   create_link "$dotfiles_dir/$1" "$2"
-}
-
-# Same as link_file, but for the private, Ferocia-only overlay repo. Silently
-# does nothing if that repo hasn't been cloned (e.g. on a home machine), so
-# steps can call this unconditionally without checking DOTFILES_ENV
-# themselves.
-function link_ferocia_file {
-  if [[ ! -d $ferocia_dir ]]; then
-    return
-  fi
-
-  create_link "$ferocia_dir/$1" "$2"
 }

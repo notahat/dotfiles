@@ -7,7 +7,7 @@ setting up a Mac the way I like it:
 xcode-select --install
 git clone https://github.com/notahat/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-DOTFILES_ENV=home ./install
+./install
 ```
 
 I keep them lean. Anything I stop using I delete, so what's left is what I run
@@ -60,9 +60,10 @@ The pieces:
 
 ### Work machines
 
-I use these dotfiles at work too, where I need a few extra tools and some config
+I use these dotfiles at work too, where I need different tools and some config
 I'd rather not publish. Rather than fork, I keep the work-only bits in a second,
-private repo and set `DOTFILES_ENV=ferocia` (my employer) on those machines.
-`steps/ferocia.bash` clones that repo to `~/.dotfiles-ferocia`, and the other
-steps pull config out of it with `link_ferocia_file`. So I run the same dotfiles
-on both machines, and no work config lands in a public repo.
+private repo with its own `steps/` directory, cloned by hand to
+`~/.dotfiles-ferocia`. On a work machine, which `install` recognises by its
+hostname, a step in that repo replaces the one here with the same name. So work
+gets its own Brewfile, Mise config and AI tools, everything else is shared, and
+no work config lands in a public repo.

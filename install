@@ -3,13 +3,10 @@
 set -o errexit
 set -o pipefail
 
-steps=(macos homebrew onepassword ssh ferocia brewfile mise zsh git ghostty neovim rancher-desktop zed editorconfig bat herdr claude copilot gemini)
+steps=(macos homebrew ssh mise zsh starship git ghostty neovim zed editorconfig bat herdr ai)
 
-# Prints usage. Callers pick the stream and the exit status, because asking for
-# help and getting it wrong want different ones.
 function usage {
   echo "Usage:"
-  echo "  export DOTFILES_ENV=home|ferocia"
   echo
   echo "Run all steps:"
   echo "  install"
@@ -20,9 +17,6 @@ function usage {
   echo "Available steps: ${steps[*]}"
 }
 
-# Answered before lib/dotfiles.bash is sourced, because that insists on
-# DOTFILES_ENV being set, and someone reading the usage is the most likely
-# person not to have set it yet.
 if [[ $1 == "-h" || $1 == "--help" ]]; then
   usage
   exit 0
@@ -31,17 +25,28 @@ fi
 # shellcheck source=lib/dotfiles.bash
 source "$(dirname "$0")/lib/dotfiles.bash"
 
-steps_dir="$dotfiles_dir/steps"
+if [[ $DOTFILES_ENV == ferocia && ! -d $ferocia_dir ]]; then
+  echo_red "Clone dotfiles-ferocia to $ferocia_dir first." >&2
+  exit 1
+fi
 
-# The PATH every step runs with. Each step is its own program, so this is the
-# single place that puts the Homebrew and Mise binaries where the steps can
-# find them. It mirrors what config/zsh/zshenv sets up for an interactive
-# shell. Entries that don't exist yet on a fresh machine do no harm.
-export PATH="$HOME/.local/share/mise/shims:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH:$HOME/.local/bin"
+# Prints the path of a step's script. On a Ferocia machine, a step in the
+# overlay's steps directory replaces the one here.
+function find_step {
+  local overlay_step="$ferocia_dir/steps/$1.bash"
 
-# Runs a single step, complaining if there's no such thing.
+  if [[ $DOTFILES_ENV == ferocia && -f $overlay_step ]]; then
+    echo "$overlay_step"
+  else
+    echo "$dotfiles_dir/steps/$1.bash"
+  fi
+}
+
 function run_step {
-  if [[ ! -f "$steps_dir/$1.bash" ]]; then
+  local step
+  step=$(find_step "$1")
+
+  if [[ ! -f $step ]]; then
     echo_red "There's no step called \"$1\"." >&2
     echo >&2
     usage >&2
@@ -49,8 +54,12 @@ function run_step {
   fi
 
   echo
-  echo_green "Configuring $1..."
-  "$steps_dir/$1.bash"
+  if [[ $step == "$ferocia_dir"/* ]]; then
+    echo_green "Configuring $1 (from .dotfiles-ferocia)..."
+  else
+    echo_green "Configuring $1..."
+  fi
+  "$step"
 }
 
 function run_all_steps {

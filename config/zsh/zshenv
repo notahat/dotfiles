@@ -9,30 +9,10 @@
 unsetopt global_rcs
 
 # ------------------------------------------------------------------------------------------
-# Decide whether this is a home or Ferocia machine, based on the hostname.
-
-if [[ ${HOST%%.*} == fer-* ]] {
-  export DOTFILES_ENV=ferocia
-} else {
-  export DOTFILES_ENV=home
-}
-
-# ------------------------------------------------------------------------------------------
 # Build the path.
 #
 # We save some time by manually doing everything that would normally be done by
 # `brew shellenv` and `mise activate zsh --shims`.
-#
-# OrbStack's shims and completions are listed here too, rather than left to the
-# `source ~/.orbstack/shell/init.zsh` stanza its installer adds to ~/.zprofile.
-# That stanza only runs for login shells, so docker goes missing in any other
-# shell, and it sits outside this repo, so it wouldn't survive a new machine.
-#
-# Rancher Desktop's ~/.rd/bin is listed unconditionally alongside it. It only
-# exists on Ferocia machines, but a path entry that doesn't exist costs
-# nothing. docker and kubectl there are already shadowed by the Homebrew
-# formula and mise shim above, but helm, nerdctl, rdctl, kuberlr, and spin
-# only ever come from Rancher's own directory.
 
 export HOMEBREW_PREFIX=/opt/homebrew
 export HOMEBREW_CELLAR=/opt/homebrew/Cellar
