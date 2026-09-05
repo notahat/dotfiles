@@ -3,7 +3,14 @@
 set -o errexit
 set -o pipefail
 
-steps=(macos homebrew ssh mise zsh starship git ghostty neovim zed editorconfig bat herdr ai)
+steps=(
+  macos homebrew mise      # Core system stuff
+  ghostty zsh starship     # Terminal
+  git ssh                  # Git & GitHub
+  neovim zed editorconfig  # Editors
+  bat
+  herdr ai                 # AI stuff
+)
 
 function usage {
   echo "Usage:"
