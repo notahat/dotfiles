@@ -18,20 +18,21 @@ export PATH="$HOME/.local/share/mise/shims:/opt/homebrew/bin:/opt/homebrew/sbin:
 # Where this repo lives, resolved to an absolute path so the steps work no
 # matter which directory install was run from. BASH_SOURCE is this file rather
 # than whoever sourced it, which is what makes the lookup reliable.
-dotfiles_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly DOTFILES_DIR
 
-red="\033[31m"
-green="\033[32m"
-reset="\033[0;39m"
+readonly RED="\033[31m"
+readonly GREEN="\033[32m"
+readonly RESET="\033[0;39m"
 
 # Prints a message in red, for something the user should look at.
 function echo_red {
-  echo -e "${red}${1}${reset}"
+  echo -e "${RED}${1}${RESET}"
 }
 
 # Prints a message in green, for progress.
 function echo_green {
-  echo -e "${green}${1}${reset}"
+  echo -e "${GREEN}${1}${RESET}"
 }
 
 # Symlinks a file or directory into place, creating the parent directory if it
@@ -69,5 +70,5 @@ function check_link {
 #
 # The source is given relative to the root of this repo.
 function link_file {
-  create_link "$dotfiles_dir/$1" "$2"
+  create_link "$DOTFILES_DIR/$1" "$2"
 }

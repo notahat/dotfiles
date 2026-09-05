@@ -34,25 +34,26 @@ if [[ $(hostname -s) == fer-* ]]; then
 else
   DOTFILES_ENV=home
 fi
+readonly DOTFILES_ENV
 
 # Where the private, Ferocia-only overlay repo lives. It's cloned by hand, and
 # only on Ferocia machines.
-ferocia_dir="$HOME/.dotfiles-ferocia"
+readonly FEROCIA_DIR="$HOME/.dotfiles-ferocia"
 
-if [[ $DOTFILES_ENV == ferocia && ! -d $ferocia_dir ]]; then
-  echo_red "Clone dotfiles-ferocia to $ferocia_dir first." >&2
+if [[ $DOTFILES_ENV == ferocia && ! -d $FEROCIA_DIR ]]; then
+  echo_red "Clone dotfiles-ferocia to $FEROCIA_DIR first." >&2
   exit 1
 fi
 
 # Prints the path of a step's script. On a Ferocia machine, a step in the
 # overlay's steps directory replaces the one here.
 function find_step {
-  local overlay_step="$ferocia_dir/steps/$1.bash"
+  local overlay_step="$FEROCIA_DIR/steps/$1.bash"
 
   if [[ $DOTFILES_ENV == ferocia && -f $overlay_step ]]; then
     echo "$overlay_step"
   else
-    echo "$dotfiles_dir/steps/$1.bash"
+    echo "$DOTFILES_DIR/steps/$1.bash"
   fi
 }
 
@@ -68,7 +69,7 @@ function run_step {
   fi
 
   echo
-  if [[ $step == "$ferocia_dir"/* ]]; then
+  if [[ $step == "$FEROCIA_DIR"/* ]]; then
     echo_green "Configuring $1 (from .dotfiles-ferocia)..."
   else
     echo_green "Configuring $1..."
@@ -77,6 +78,7 @@ function run_step {
 }
 
 function run_all_steps {
+  local step
   for step in "${steps[@]}"; do
     run_step "$step"
   done

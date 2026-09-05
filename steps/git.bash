@@ -10,4 +10,4 @@ link_file config/git/allowed-signers ~/.config/git/allowed-signers
 # when you run `git config --global`. So it gets an include pointing at this
 # repo's settings rather than being a symlink to them.
 touch ~/.config/git/config
-git config --global include.path "$dotfiles_dir/config/git/gitconfig"
+git config --global include.path "$DOTFILES_DIR/config/git/gitconfig"
