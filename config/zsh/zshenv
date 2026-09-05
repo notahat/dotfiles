@@ -29,7 +29,6 @@ path=(
   /sbin
   $HOME/.local/bin
   $HOME/.orbstack/bin
-  $HOME/.rd/bin
 )
 
 fpath=(
