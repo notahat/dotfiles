@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# shellcheck source=lib/dotfiles.bash
+source "$(dirname "$0")/lib/dotfiles.bash"
+
 readonly STEPS=(
   macos homebrew mise      # Core system stuff
   ghostty zsh starship     # Terminal
@@ -8,9 +11,6 @@ readonly STEPS=(
   bat
   herdr ai                 # AI stuff
 )
-
-# shellcheck source=lib/dotfiles.bash
-source "$(dirname "$0")/lib/dotfiles.bash"
 
 # Which machine this is: home, or ferocia (my employer), whose machines have
 # hostnames starting fer-. Only this script cares; the steps never read it.
@@ -25,11 +25,7 @@ readonly DOTFILES_ENV
 # only on Ferocia machines.
 readonly FEROCIA_DIR="$HOME/.dotfiles-ferocia"
 
-if [[ $DOTFILES_ENV == ferocia && ! -d $FEROCIA_DIR ]]; then
-  echo_red "Clone dotfiles-ferocia to $FEROCIA_DIR first." >&2
-  exit 1
-fi
-
+# Prints how to run this script, and the steps it knows about.
 function usage {
   echo "Usage: install [step]"
   echo
@@ -52,6 +48,8 @@ function find_step {
   fi
 }
 
+# Runs one step by name, saying where it came from. Exits with the usage
+# message when there's no such step.
 function run_step {
   local step
   step=$(find_step "$1")
@@ -72,6 +70,7 @@ function run_step {
   "$step"
 }
 
+# Runs every step, in order.
 function run_all_steps {
   local step
   for step in "${STEPS[@]}"; do
@@ -79,16 +78,26 @@ function run_all_steps {
   done
 }
 
-if [[ $1 == "-h" || $1 == "--help" ]]; then
-  usage
-  exit 0
-fi
+# Runs the step named on the command line, or all of them.
+function main {
+  if [[ $1 == "-h" || $1 == "--help" ]]; then
+    usage
+    exit 0
+  fi
 
-if [[ -n $1 ]]; then
-  run_step "$1"
-else
-  run_all_steps
-fi
+  if [[ $DOTFILES_ENV == ferocia && ! -d $FEROCIA_DIR ]]; then
+    echo_red "Clone dotfiles-ferocia to $FEROCIA_DIR first." >&2
+    exit 1
+  fi
 
-echo
-echo_green "Install complete."
+  if [[ -n $1 ]]; then
+    run_step "$1"
+  else
+    run_all_steps
+  fi
+
+  echo
+  echo_green "Install complete."
+}
+
+main "$@"
