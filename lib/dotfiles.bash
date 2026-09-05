@@ -5,6 +5,12 @@
 # Each step is its own program, and sources this file directly. It's the only
 # thing a step depends on from outside itself, beyond the steps before it
 # having run, which is what lets a step be read, and run, on its own.
+#
+# Sourcing this also turns on errexit and pipefail for the caller, so a step
+# stops at the first thing that goes wrong without saying so itself.
+
+set -o errexit
+set -o pipefail
 
 # Make sure all the steps can find things installed with mise and homebrew.
 export PATH="$HOME/.local/share/mise/shims:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"

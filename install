@@ -1,8 +1,5 @@
 #!/bin/bash
 
-set -o errexit
-set -o pipefail
-
 steps=(
   macos homebrew mise      # Core system stuff
   ghostty zsh starship     # Terminal
