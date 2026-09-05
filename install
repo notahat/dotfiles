@@ -10,15 +10,13 @@ steps=(
 )
 
 function usage {
-  echo "Usage:"
+  echo "Usage: install [step]"
   echo
-  echo "Run all steps:"
-  echo "  install"
+  echo "Set up this machine from the dotfiles. With no step, runs every step in"
+  echo "order. With a step name, runs just that one."
   echo
-  echo "Run a single step:"
-  echo "  install [step name]"
-  echo
-  echo "Available steps: ${steps[*]}"
+  echo "Steps, in the order they run:"
+  echo "  ${steps[*]}"
 }
 
 if [[ $1 == "-h" || $1 == "--help" ]]; then
