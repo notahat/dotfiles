@@ -1,6 +1,6 @@
 #!/bin/bash
 
-steps=(
+readonly STEPS=(
   macos homebrew mise      # Core system stuff
   ghostty zsh starship     # Terminal
   git ssh                  # Git & GitHub
@@ -8,21 +8,6 @@ steps=(
   bat
   herdr ai                 # AI stuff
 )
-
-function usage {
-  echo "Usage: install [step]"
-  echo
-  echo "Set up this machine from the dotfiles. With no step, runs every step in"
-  echo "order. With a step name, runs just that one."
-  echo
-  echo "Steps, in the order they run:"
-  echo "  ${steps[*]}"
-}
-
-if [[ $1 == "-h" || $1 == "--help" ]]; then
-  usage
-  exit 0
-fi
 
 # shellcheck source=lib/dotfiles.bash
 source "$(dirname "$0")/lib/dotfiles.bash"
@@ -44,6 +29,16 @@ if [[ $DOTFILES_ENV == ferocia && ! -d $FEROCIA_DIR ]]; then
   echo_red "Clone dotfiles-ferocia to $FEROCIA_DIR first." >&2
   exit 1
 fi
+
+function usage {
+  echo "Usage: install [step]"
+  echo
+  echo "Set up this machine from the dotfiles. With no step, runs every step in"
+  echo "order. With a step name, runs just that one."
+  echo
+  echo "Steps, in the order they run:"
+  echo "  ${STEPS[*]}"
+}
 
 # Prints the path of a step's script. On a Ferocia machine, a step in the
 # overlay's steps directory replaces the one here.
@@ -79,10 +74,15 @@ function run_step {
 
 function run_all_steps {
   local step
-  for step in "${steps[@]}"; do
+  for step in "${STEPS[@]}"; do
     run_step "$step"
   done
 }
+
+if [[ $1 == "-h" || $1 == "--help" ]]; then
+  usage
+  exit 0
+fi
 
 if [[ -n $1 ]]; then
   run_step "$1"
