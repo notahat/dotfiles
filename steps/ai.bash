@@ -3,10 +3,6 @@
 # shellcheck source=../lib/dotfiles.bash
 source "$(dirname "$0")/../lib/dotfiles.bash"
 
-link_file config/claude/CLAUDE.md ~/.claude/CLAUDE.md
-link_file config/claude/settings.json ~/.claude/settings.json
-link_file config/claude/statusline.sh ~/.claude/statusline.sh
-
 # Links a skill kept in this repo into ~/.claude/skills.
 function install_local_skill {
   local skill=$1
@@ -32,9 +28,18 @@ function install_remote_skill {
   echo "Installed ${name} skill."
 }
 
-install_local_skill diataxis
-install_local_skill dune-watcher
-install_local_skill install-project-template
+# Links Claude Code's config into place, then installs the skills.
+function main {
+  link_file config/claude/CLAUDE.md ~/.claude/CLAUDE.md
+  link_file config/claude/settings.json ~/.claude/settings.json
+  link_file config/claude/statusline.sh ~/.claude/statusline.sh
 
-install_remote_skill doc-coauthoring "https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring"
-install_remote_skill stop-slop "hardikpandya/stop-slop"
+  install_local_skill diataxis
+  install_local_skill dune-watcher
+  install_local_skill install-project-template
+
+  install_remote_skill doc-coauthoring "https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring"
+  install_remote_skill stop-slop "hardikpandya/stop-slop"
+}
+
+main "$@"
