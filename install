@@ -4,12 +4,18 @@
 source "$(dirname "$0")/lib/dotfiles.bash"
 
 readonly STEPS=(
-  macos homebrew mise      # Core system stuff
-  ghostty zsh starship     # Terminal
-  git ssh                  # Git & GitHub
-  neovim zed editorconfig  # Editors
+  # Core system stuff:
+  macos homebrew mise
+  # Terminal:
+  ghostty zsh starship
+  # Git & GitHub:
+  git ssh
+  # Editors:
+  neovim zed editorconfig
+  # AI stuff:
+  herdr ai
+  # Utilities:
   bat
-  herdr ai                 # AI stuff
 )
 
 # Which machine this is: home, or ferocia (my employer), whose machines have
