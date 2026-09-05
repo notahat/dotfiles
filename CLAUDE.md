@@ -78,6 +78,8 @@ doesn't override runs as it would at home, so `install` refuses to run as
 
 ## Verification
 
+The shell conventions are in `docs/shell-style.md`.
+
 Run the step you changed, as `./install zsh` or `./steps/zsh.bash`. Then run
 shellcheck, which passes on this tree:
 
