@@ -18,16 +18,8 @@ echo_green "Upgrading Neovim plugins..."
 nvim --headless "+Lazy! sync" +qa
 
 echo
-echo_green "Upgrading Claude skills..."
+echo_green "Upgrading AI skills..."
 DO_NOT_TRACK=1 npx --yes skills update --global --yes
-
-if [[ -f "$ferocia_dir/skills.bash" ]]; then
-  echo
-  echo_green "Upgrading Ferocia agent skills..."
-  # shellcheck source=/dev/null
-  source "$ferocia_dir/skills.bash"
-  upgrade_agent_skills
-fi
 
 echo
 echo_green "Upgrade complete."
