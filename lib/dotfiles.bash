@@ -26,12 +26,12 @@ readonly GREEN="\033[32m"
 readonly RESET="\033[0;39m"
 
 # Prints a message in red, for something the user should look at.
-function echo_red {
+function echo_red() {
   echo -e "${RED}${1}${RESET}"
 }
 
 # Prints a message in green, for progress.
-function echo_green {
+function echo_green() {
   echo -e "${GREEN}${1}${RESET}"
 }
 
@@ -39,7 +39,7 @@ function echo_green {
 # needs to. Refuses to clobber anything already there.
 #
 # The source is an absolute path. Steps in this repo use link_file instead.
-function create_link {
+function create_link() {
   local source=$1 destination=$2
 
   mkdir -p "$(dirname "${destination}")"
@@ -55,7 +55,7 @@ function create_link {
 }
 
 # Reports on a link that's already in place.
-function check_link {
+function check_link() {
   local source=$1 destination=$2 target
   target=$(readlink "${destination}")
 
@@ -69,6 +69,6 @@ function check_link {
 # Symlinks a file or directory from this repo into place.
 #
 # The source is given relative to the root of this repo.
-function link_file {
+function link_file() {
   create_link "${DOTFILES_DIR}/$1" "$2"
 }

@@ -43,7 +43,7 @@ eval "$(jq -r <<<"${payload}" '
 
 # Formats a token count compactly, so 5400 becomes "5.4k" and 2345678 becomes
 # "2.3M". Counts under 1000 are printed as they are.
-function format_token_count {
+function format_token_count() {
   local count=$1
 
   if ((count >= 1000000)); then
@@ -58,7 +58,7 @@ function format_token_count {
 # Renders a rate limit as "18% · 14:00", for the capsule to label. The reset
 # time is formatted with the given `date` format string, and left off when
 # Claude didn't send one. Renders nothing without a percentage.
-function format_rate_limit {
+function format_rate_limit() {
   local percentage=$1 resets_at=$2 reset_format=$3
 
   if [[ -n ${percentage} ]]; then

@@ -4,7 +4,7 @@
 source "$(dirname "$0")/../lib/dotfiles.bash"
 
 # Links a skill kept in this repo into ~/.claude/skills.
-function install_local_skill {
+function install_local_skill() {
   local skill=$1
   link_file "config/claude/skills/${skill}" ~/.claude/skills/"${skill}"
 }
@@ -13,7 +13,7 @@ function install_local_skill {
 #
 # The skills CLI has no quiet mode and narrates every install at length, so
 # its output is held back unless the install fails.
-function install_remote_skill {
+function install_remote_skill() {
   local name=$1 skill=$2 output
   if [[ -e "${HOME}/.claude/skills/${name}" ]]; then
     echo "${name} skill is already installed, skipping."
@@ -29,7 +29,7 @@ function install_remote_skill {
 }
 
 # Links Claude Code's config into place, then installs the skills.
-function main {
+function main() {
   link_file config/claude/CLAUDE.md ~/.claude/CLAUDE.md
   link_file config/claude/settings.json ~/.claude/settings.json
   link_file config/claude/statusline.sh ~/.claude/statusline.sh
