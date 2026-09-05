@@ -3,7 +3,7 @@
 The conventions the bash scripts in this repo and the Ferocia overlay
 follow. Google's shell style guide is the starting point; where this
 document differs from it, this document wins. Shellcheck enforces the rules
-it can, using the settings in `.shellcheckrc`.
+it can, using the settings in `.shellcheckrc`, and shfmt handles layout.
 
 ## Shell
 
@@ -140,15 +140,23 @@ Beyond its defaults, `.shellcheckrc` enables `require-variable-braces`,
 `check-unassigned-uppercase`. The last one catches a misspelled constant,
 which would otherwise expand to nothing.
 
-There is no formatter. Indentation is two spaces, set by `.editorconfig`.
+shfmt formats layout: indentation, spacing, and where redirections and
+`then`/`do` sit. It reads `.editorconfig` for the two-space indent, so run it
+without flags, as any formatting flag makes it ignore that file and fall
+back to tabs. From the repo root:
+
+```bash
+shfmt -d install upgrade lib/*.bash steps/*.bash config/claude/statusline.sh
+```
+
+`shfmt -w` with the same files rewrites them in place. Zed runs it on save
+for shell scripts, passing `--indent 2` so scripts outside this repo get the
+same indent rather than shfmt's default tabs.
 
 ## Not adopted
 
 Parts of Google's guide that were considered and left out:
 
-- **shfmt.** Tried, and the only changes it wanted were to unalign the
-  comments on the `STEPS` array and reorder a here-string. Not worth a
-  tool.
 - **80-column lines.** Long lines are mostly URLs, `npx` invocations and
   message strings, and wrapping them made each harder to read.
 - **File header comments on every step.** A step is a handful of

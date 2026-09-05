@@ -84,6 +84,7 @@ shellcheck from the repo root, so `.shellcheckrc` applies. It passes on this
 tree:
 
     shellcheck install upgrade lib/*.bash steps/*.bash config/claude/statusline.sh
+    shfmt -d install upgrade lib/*.bash steps/*.bash config/claude/statusline.sh
 
 Don't run the overlay's steps on a home machine: each one links work config
 into `~`. From `~/.dotfiles-ferocia`, run shellcheck over `lib/*.bash` and

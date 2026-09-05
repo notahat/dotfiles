@@ -31,7 +31,7 @@ payload=$(jq -c 'if .model.display_name
 # Pull the fields Starship can't see out of the JSON in one pass, as
 # `name=value` lines. Fields Claude didn't send come back as empty strings.
 # @sh quotes the values, so directories with spaces in them survive the eval.
-eval "$(jq -r <<<"${payload}" '
+eval "$(jq -r '
   @sh "current_dir=\(.workspace.current_dir // "")",
   @sh "input_tokens=\(.context_window.total_input_tokens // "")",
   @sh "output_tokens=\(.context_window.total_output_tokens // "")",
@@ -39,7 +39,7 @@ eval "$(jq -r <<<"${payload}" '
   @sh "five_hour_reset=\(.rate_limits.five_hour.resets_at // "")",
   @sh "seven_day_percentage=\(.rate_limits.seven_day.used_percentage // "")",
   @sh "seven_day_reset=\(.rate_limits.seven_day.resets_at // "")"
-')"
+' <<<"${payload}")"
 
 # Formats a token count compactly, so 5400 becomes "5.4k" and 2345678 becomes
 # "2.3M". Counts under 1000 are printed as they are.
