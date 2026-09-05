@@ -12,4 +12,6 @@ else
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-brew bundle --file "$dotfiles_dir/config/homebrew/Brewfile"
+link_file config/homebrew/Brewfile ~/.homebrew/Brewfile
+
+brew bundle --global
