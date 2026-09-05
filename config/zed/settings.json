@@ -41,15 +41,4 @@
   "soft_wrap": "editor_width",
   "tab_size": 2,
   "vim_mode": true,
-  "languages": {
-    "Shell Script": {
-      "format_on_save": "on",
-      "formatter": {
-        "external": {
-          "command": "shfmt",
-          "arguments": ["--filename", "{buffer_path}", "--indent", "2"],
-        },
-      },
-    },
-  },
 }

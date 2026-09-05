@@ -21,5 +21,16 @@
         },
       },
     },
+    // Format with shfmt. Passing the buffer path lets it find .editorconfig
+    // for the indent, so it formats the same way as it does from the command
+    // line.
+    "Shell Script": {
+      "formatter": {
+        "external": {
+          "command": "shfmt",
+          "arguments": ["--filename", "{buffer_path}"],
+        },
+      },
+    },
   },
 }

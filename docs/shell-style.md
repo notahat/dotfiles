@@ -149,9 +149,8 @@ back to tabs. From the repo root:
 shfmt -d install upgrade lib/*.bash steps/*.bash config/claude/statusline.sh
 ```
 
-`shfmt -w` with the same files rewrites them in place. Zed runs it on save
-for shell scripts, passing `--indent 2` so scripts outside this repo get the
-same indent rather than shfmt's default tabs.
+`shfmt -w` with the same files rewrites them in place. The repo's
+`.zed/settings.json` has Zed run it on save for shell scripts.
 
 ## Not adopted
 
