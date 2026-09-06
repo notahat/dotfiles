@@ -1,4 +1,10 @@
 {
+  "permissions": {
+    "allow": ["Bash(./install:*)", "Bash(./upgrade)"]
+  },
+  "sandbox": {
+    "excludedCommands": ["./install", "./install *", "./upgrade"]
+  },
   "hooks": {
     "PostToolUse": [
       {
