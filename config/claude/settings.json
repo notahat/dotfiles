@@ -4,7 +4,7 @@
   },
   "sandbox": {
     "enabled": true,
-    "excludedCommands": ["git commit *"],
+    "excludedCommands": ["git commit *", "git push", "git push *"],
     "filesystem": {
       "allowRead": ["~/.local/share/mise", "~/.config/mise"],
       "allowWrite": ["~/Library/Caches/mise", "~/.local/state/mise"]
