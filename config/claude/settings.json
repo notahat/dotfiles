@@ -1,4 +1,10 @@
 {
+  "permissions": {
+    "blockReadsOutsideWorkingDirectories": true
+  },
+  "sandbox": {
+    "enabled": true
+  },
   "hooks": {
     "SessionStart": [
       {
