@@ -3,7 +3,8 @@
     "blockReadsOutsideWorkingDirectories": true
   },
   "sandbox": {
-    "enabled": true
+    "enabled": true,
+    "excludedCommands": ["git commit *"]
   },
   "hooks": {
     "SessionStart": [
