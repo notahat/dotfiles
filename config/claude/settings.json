@@ -4,7 +4,10 @@
   },
   "sandbox": {
     "enabled": true,
-    "excludedCommands": ["git commit *"]
+    "excludedCommands": ["git commit *"],
+    "filesystem": {
+      "allowRead": ["~/.local/share/mise", "~/.config/mise"]
+    }
   },
   "hooks": {
     "SessionStart": [
