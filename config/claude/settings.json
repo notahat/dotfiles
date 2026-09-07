@@ -6,8 +6,8 @@
     "enabled": true,
     "excludedCommands": ["git commit *", "git push", "git push *"],
     "filesystem": {
-      "allowRead": ["~/.local/share/mise", "~/.config/mise"],
-      "allowWrite": ["~/Library/Caches/mise", "~/.local/state/mise"]
+      "allowRead": ["~/.local/share/mise", "~/.config/mise", "~/.cache"],
+      "allowWrite": ["~/Library/Caches/mise", "~/.local/state/mise", "~/.cache"]
     }
   },
   "hooks": {
