@@ -7,10 +7,13 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "minimap": {
+    "show": "never"
+  },
   "edit_predictions": {
     "provider": "copilot"
   },
-  "theme": "One Dark",
+  "theme": "Nightfox - blurred",
   "auto_install_extensions": {
     "nord": true,
   },
