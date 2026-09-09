@@ -1,5 +1,7 @@
 # :vim:ft=conf:
 
+# Install casks even when the app is already in /Applications, so that
+# Homebrew takes over apps installed by hand or by an earlier Homebrew.
 cask_args force: true
 
 # If we don't list mas explicitly, brew bundle cleanup will remove it.
@@ -72,8 +74,6 @@ brew 'uv' # Runs Python scripts that declare their own dependencies inline.
 cask 'visual-studio-code'
 mas 'Xcode', id: 497799835
 cask 'zed'
-
-cask 'font-inconsolata-nerd-font'
 
 # AI tools ============================================================
 
