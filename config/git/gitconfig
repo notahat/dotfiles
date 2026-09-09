@@ -8,9 +8,6 @@
 	email = pete@notahat.com
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2BA/e0q3tXws2U27FUJYj0x+Td0muwZMdJtpJu5lAi
 
-[github]
-	user = notahat
-
 [core]
 	pager = delta
 
