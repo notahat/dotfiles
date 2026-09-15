@@ -23,6 +23,7 @@ cask 'appcleaner'
 cask 'hstracker'
 cask 'raycast'
 cask 'scroll-reverser'
+cask 'stillcolor' # Stops Dell monitors flickering by turning off temporal dithering.
 cask 'notahat/tap/shunt'
 cask 'the-unarchiver'
 
