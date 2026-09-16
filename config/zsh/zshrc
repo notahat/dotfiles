@@ -79,13 +79,16 @@ setopt HIST_IGNORE_ALL_DUPS # Keep only the most recent copy of a command.
 setopt HIST_REDUCE_BLANKS   # Remove leading/trailing whitespace from commands.
 
 # ------------------------------------------------------------------------------------------
-# Use Starship to set up the prompt.
+# Use Pure to set up the prompt.
 #
-# https://starship.rs
-#
-# The prompt itself is configured in config/starship/starship.toml.
+# https://github.com/sindresorhus/pure
 
-eval "$(starship init zsh)"
+autoload -U promptinit && promptinit
+# Show a symbol when there's stuff stashed.
+zstyle :prompt:pure:git:stash show yes
+# Don't do git fetches for me, coz I'd rather not have 1Password prompts popping up randomly.
+export PURE_GIT_PULL=0
+prompt pure
 
 # ------------------------------------------------------------------------------------------
 # Set flags for a couple of tools.

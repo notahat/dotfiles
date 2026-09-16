@@ -23,8 +23,8 @@ every day.
   anything I always want at the latest version (apps, CLI tools, even Mac App
   Store apps). [Mise](https://mise.jdx.dev) manages anything I need pinned to a
   particular version, like language runtimes.
-- **Zsh that starts in under 100ms.** A [Starship](https://starship.rs) prompt,
-  fzf-tab completion, and syntax highlighting, wired up by hand in
+- **Zsh that starts in under 100ms.** A [Pure](https://github.com/sindresorhus/pure)
+  prompt, fzf-tab completion, and syntax highlighting, wired up by hand in
   [`config/zsh`](config/zsh).
 - **Neovim, under 100ms too.** LSP, Treesitter, and fuzzy finding, with the UI
   stripped back so the code is the only thing on screen. It's commented

@@ -7,7 +7,7 @@ readonly STEPS=(
   # Core system stuff:
   macos homebrew mise
   # Terminal:
-  ghostty zsh starship
+  ghostty zsh
   # Git & GitHub:
   git ssh
   # Editors:
