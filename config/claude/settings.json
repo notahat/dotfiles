@@ -1,6 +1,7 @@
 {
   "permissions": {
-    "blockReadsOutsideWorkingDirectories": true
+    "blockReadsOutsideWorkingDirectories": true,
+    "defaultMode": "acceptEdits"
   },
   "sandbox": {
     "enabled": true,
