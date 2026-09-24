@@ -14,7 +14,7 @@
   "edit_predictions": {
     "provider": "copilot"
   },
-  "theme": "Nightfox - blurred",
+  "theme": "One Dark",
   "auto_install_extensions": {
     "charmed-icons": true,
     "nvim-nightfox": true

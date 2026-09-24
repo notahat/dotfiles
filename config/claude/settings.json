@@ -1,16 +1,9 @@
 {
   "permissions": {
-    "blockReadsOutsideWorkingDirectories": true,
-    "defaultMode": "acceptEdits"
+    "defaultMode": "acceptEdits",
+    "blockReadsOutsideWorkingDirectories": true
   },
-  "sandbox": {
-    "enabled": true,
-    "excludedCommands": ["git commit *", "git push", "git push *"],
-    "filesystem": {
-      "allowRead": ["~/.local/share/mise", "~/.config/mise", "~/.cache"],
-      "allowWrite": ["~/Library/Caches/mise", "~/.local/state/mise", "~/.cache"]
-    }
-  },
+  "model": "claude-fable-5-1[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -33,6 +26,27 @@
     "mattpocock-skills@claude-plugins-official": true,
     "context7@claude-plugins-official": true
   },
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "allowWrite": [
+        "~/Library/Caches/mise",
+        "~/.local/state/mise",
+        "~/.cache"
+      ],
+      "allowRead": [
+        "~/.local/share/mise",
+        "~/.config/mise",
+        "~/.cache"
+      ]
+    },
+    "excludedCommands": [
+      "git commit *",
+      "git push",
+      "git push *"
+    ]
+  },
+  "tui": "fullscreen",
   "voice": {
     "enabled": false,
     "mode": "hold"
@@ -43,6 +57,5 @@
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "voiceEnabled": false,
-  "disableTips": true,
-  "model": "claude-fable-5-1[1m]"
+  "disableTips": true
 }
