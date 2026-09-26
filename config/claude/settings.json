@@ -52,7 +52,7 @@
     "mode": "hold"
   },
   "skipWorkflowUsageWarning": true,
-  "theme": "dark-ansi",
+  "theme": "auto",
   "editorMode": "vim",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
