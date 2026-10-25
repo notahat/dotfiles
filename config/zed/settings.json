@@ -7,56 +7,56 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "bottom_dock_layout": "right_aligned",
-  "tab_bar": {
-    "show_tab_bar_buttons": true,
+  "agent": {
+    "dock": "right",
   },
-  "tabs": {
-    "show_diagnostics": "all",
-    "file_icons": true,
-    "git_status": true,
-  },
-  "title_bar": {
-    "show_branch_status_icon": true,
-  },
-  "icon_theme": "Base Charmed Icons",
-  "minimap": {
-    "show": "never",
-  },
-  "edit_predictions": {
-    "provider": "copilot",
-  },
-  "theme": "One Dark",
   "auto_install_extensions": {
     "charmed-icons": true,
     "nvim-nightfox": true,
   },
-  "cli_default_open_behavior": "new_window",
-  "diff_view_style": "unified",
-  "collaboration_panel": { "dock": "right" },
   "autosave": "on_focus_change",
+  "bottom_dock_layout": "right_aligned",
   "buffer_font_family": "BerkeleyMono Nerd Font",
   "buffer_font_features": {
     "calt": false, // Don't use ligatures.
   },
+  "cli_default_open_behavior": "new_window",
+  "collaboration_panel": { "dock": "right" },
+  "diff_view_style": "unified",
+  "edit_predictions": {
+    "provider": "copilot",
+  },
   "git": {
     "inline_blame": { "enabled": false },
   },
-  "agent": {
-    "dock": "right",
+  "git_panel": {
+    "tree_view": true,
   },
+  "icon_theme": "Base Charmed Icons",
   "languages": {
     "JSON": { "format_on_save": "on" },
     "JSONC": { "format_on_save": "on" },
   },
-  "git_panel": {
-    "tree_view": true,
+  "minimap": {
+    "show": "never",
   },
   "project_panel": {
     "dock": "left",
   },
   "relative_line_numbers": "enabled",
   "soft_wrap": "editor_width",
+  "tab_bar": {
+    "show_tab_bar_buttons": true,
+  },
   "tab_size": 2,
+  "tabs": {
+    "file_icons": true,
+    "git_status": true,
+    "show_diagnostics": "all",
+  },
+  "theme": "One Dark",
+  "title_bar": {
+    "show_branch_status_icon": true,
+  },
   "vim_mode": true,
 }

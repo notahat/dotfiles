@@ -56,5 +56,6 @@
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "voiceEnabled": false,
-  "disableTips": true
+  "disableTips": true,
+  "model": "opus"
 }
