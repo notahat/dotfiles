@@ -5,13 +5,15 @@ ruby = "latest"
 usage = "latest"
 yarn = "latest"
 
-# Language servers and formatters for Neovim. They live here rather than in
-# Homebrew so they run on mise's Node and Ruby, which means the project's
-# version when you're inside one.
+# Language servers and formatters for Neovim and Claude Code's LSP plugins.
+# They live here rather than in Homebrew so they run on mise's Node and Ruby,
+# which means the project's version when you're inside one.
+"gem:ruby-lsp" = "0.26" # "latest" picks up 0.27 betas; bump once 0.27 ships.
 "gem:syntax_tree" = "latest"
 "npm:@fsouza/prettierd" = "latest"
 "npm:bash-language-server" = "latest"
 "npm:typescript" = "latest"
+"npm:typescript-language-server" = "latest"
 "npm:vscode-langservers-extracted" = "latest" # The eslint language server.
 
 [settings]
