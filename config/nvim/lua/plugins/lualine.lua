@@ -26,7 +26,12 @@ local function refresh_status_line()
 end
 
 return {
-  "nvim-lualine/lualine.nvim",
+  -- Upstream calls vim.validate{} in a form Nvim 0.11+ deprecates, which
+  -- puts warnings in checkhealth. This fork carries the fix. Switch back to
+  -- nvim-lualine/lualine.nvim once
+  -- https://github.com/nvim-lualine/lualine.nvim/pull/1517 merges.
+  "notahat/lualine.nvim",
+  branch = "fix-vim-validate-deprecation",
   dependencies = { "nvim-tree/nvim-web-devicons" },
   config = function(_, opts)
     require("lualine").setup(opts)
