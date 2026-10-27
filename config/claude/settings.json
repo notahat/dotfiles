@@ -3,6 +3,7 @@
     "defaultMode": "acceptEdits",
     "blockReadsOutsideWorkingDirectories": true
   },
+  "model": "opus",
   "hooks": {
     "SessionStart": [
       {
@@ -23,7 +24,11 @@
   },
   "enabledPlugins": {
     "mattpocock-skills@claude-plugins-official": true,
-    "context7@claude-plugins-official": true
+    "context7@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true
   },
   "sandbox": {
     "enabled": true,
@@ -56,6 +61,5 @@
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "voiceEnabled": false,
-  "disableTips": true,
-  "model": "opus"
+  "disableTips": true
 }
