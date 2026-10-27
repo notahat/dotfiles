@@ -2,6 +2,9 @@
 # This file is sourced rather than run, so the shebang is only here to stop
 # editors and linters treating it as bash and flagging the zsh-only syntax.
 
+# Stop shellcheck trying to process this file. (It doesn't support zsh.)
+# shellcheck disable=SC1071
+
 # See also .zshenv, which gets run before .zshrc to set environment variables.
 # That sets up the path, including homebrew and mise.
 

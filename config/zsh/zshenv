@@ -2,6 +2,9 @@
 # This file is sourced rather than run, so the shebang is only here to stop
 # editors and linters treating it as bash and flagging the zsh-only syntax.
 
+# Stop shellcheck trying to process this file. (It doesn't support zsh.)
+# shellcheck disable=SC1071
+
 # ------------------------------------------------------------------------------------------
 # Prevent the MacOS /etc/zprofile running its path helper and adding all sorts
 # of unnecessary nonsense to my path.
