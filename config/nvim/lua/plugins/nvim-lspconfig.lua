@@ -2,7 +2,7 @@
 return {
   "neovim/nvim-lspconfig",
   config = function()
-    vim.lsp.enable({ "bashls", "lua_ls", "eslint", "ts_ls" })
+    vim.lsp.enable({ "bashls", "lua_ls", "eslint", "tsc" })
 
     -- Sorbet is only installed on work machines.
     if vim.fn.executable("srb") == 1 then

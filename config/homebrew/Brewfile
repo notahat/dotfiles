@@ -59,6 +59,7 @@ brew 'git'
 brew 'gpg' # Mise uses this to verify packages.
 cask 'ghostty'
 brew 'lazygit'
+brew 'lua-language-server'
 brew 'mise'
 brew 'neovim'
 brew 'opam'
@@ -100,8 +101,3 @@ brew 'fzf-tab'
 brew 'pure'
 brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
-
-# mason.nvim needs these to build gems ================================
-
-brew 'coreutils'
-brew 'libyaml'

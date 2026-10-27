@@ -36,7 +36,7 @@ return {
     })
   end,
   opts = {
-    extensions = { "lazy", "man", "mason", "oil", "quickfix" },
+    extensions = { "lazy", "man", "oil", "quickfix" },
     sections = {
       lualine_a = { "mode" },
       lualine_b = { { "diagnostics", on_click = open_diagnostics } },

@@ -22,7 +22,8 @@ every day.
 - **A clear rule for Homebrew vs. Mise.** [Homebrew](https://brew.sh) installs
   anything I always want at the latest version (apps, CLI tools, even Mac App
   Store apps). [Mise](https://mise.jdx.dev) manages anything I need pinned to a
-  particular version, like language runtimes.
+  particular version, like language runtimes, plus the editor tools that have
+  to run on those runtimes.
 - **Zsh that starts in under 100ms.** A [Pure](https://github.com/sindresorhus/pure)
   prompt, fzf-tab completion, and syntax highlighting, wired up by hand in
   [`config/zsh`](config/zsh).
