@@ -28,7 +28,8 @@
     "lua-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
-    "ruby-lsp@claude-plugins-official": true
+    "ruby-lsp@claude-plugins-official": true,
+    "typescript-native-lsp@anthropic-plugin-directory": true
   },
   "sandbox": {
     "enabled": true,
@@ -38,17 +39,9 @@
         "~/.local/state/mise",
         "~/.cache"
       ],
-      "allowRead": [
-        "~/.local/share/mise",
-        "~/.config/mise",
-        "~/.cache"
-      ]
+      "allowRead": ["~/.local/share/mise", "~/.config/mise", "~/.cache"]
     },
-    "excludedCommands": [
-      "git commit *",
-      "git push",
-      "git push *"
-    ]
+    "excludedCommands": ["git commit *", "git push", "git push *"]
   },
   "tui": "fullscreen",
   "voice": {
