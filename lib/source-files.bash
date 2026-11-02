@@ -7,7 +7,7 @@
 # Prints the bash scripts. The zsh config is left out because zsh syntax
 # isn't something shellcheck or shfmt can parse.
 function list_shell_files() {
-  printf '%s\0' install upgrade lint format lib/*.bash steps/*.bash config/claude/statusline.sh
+  printf '%s\0' install upgrade lint format format-file lib/*.bash steps/*.bash config/claude/statusline.sh
 }
 
 # Prints the JSON files git tracks, which leaves out local files like Claude

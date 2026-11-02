@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Formats a single file the way `format` would, choosing the formatter from
+# the same file lists. Claude Code's PostToolUse hook runs it after every
+# edit. A file that isn't in any list, including one outside this repo, is
+# left alone.
+
+# shellcheck source=lib/dotfiles.bash
+source "$(dirname "$0")/lib/dotfiles.bash"
+# shellcheck source=lib/source-files.bash
+source "$(dirname "$0")/lib/source-files.bash"
+
+# Succeeds if the first argument appears in the NUL-separated list read from
+# stdin. It reads the whole list even after a match, because stopping early
+# could kill the command writing the list, and pipefail would then report the
+# match as a failure.
+function is_listed() {
+  local wanted=$1 listed is_found=false
+  while IFS= read -r -d '' listed; do
+    if [[ ${listed} == "${wanted}" ]]; then
+      is_found=true
+    fi
+  done
+  [[ ${is_found} == true ]]
+}
+
+# Formats the file named by the first argument, which may be absolute or
+# relative to the current directory. Exits with the formatter's status, so
+# a file the formatter can't parse is reported rather than skipped.
+function main() {
+  local path
+  path=$(realpath "$1")
+  local file=${path#"${DOTFILES_DIR}"/}
+  cd "${DOTFILES_DIR}"
+
+  if list_shell_files | is_listed "${file}"; then
+    shfmt --write "${file}"
+  elif [[ ${file} == config/nvim/*.lua ]]; then
+    stylua "${file}"
+  elif list_json_files | is_listed "${file}"; then
+    prettier --write --log-level warn "${file}"
+  fi
+}
+
+main "$@"
