@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Formats the repo the way the editors do on save: shfmt for the bash
+# scripts, stylua for the Neovim config, and prettier for JSON. shfmt and
+# prettier list the files they change; stylua changes them silently.
+
+# shellcheck source=lib/dotfiles.bash
+source "$(dirname "$0")/lib/dotfiles.bash"
+# shellcheck source=lib/source-files.bash
+source "$(dirname "$0")/lib/source-files.bash"
+
+cd "${DOTFILES_DIR}"
+
+echo_green "Formatting shell scripts..."
+list_shell_files | xargs -0 shfmt --list --write
+
+echo_green "Formatting Lua..."
+stylua config/nvim
+
+echo_green "Formatting JSON..."
+list_json_files | xargs -0 prettier --write --list-different

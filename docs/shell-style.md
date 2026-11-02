@@ -128,12 +128,9 @@ older `cd ... && pwd` idiom.
 
 ## Checking
 
-Run shellcheck over the whole tree from the repo root, so `.shellcheckrc`
-applies:
-
-```bash
-shellcheck install upgrade lib/*.bash steps/*.bash config/claude/statusline.sh
-```
+`./lint` runs shellcheck and shfmt over every script in the repo, and
+`./format` rewrites them in place with shfmt. Both take their list of
+scripts from `lib/source-files.bash`, so a new script needs adding there.
 
 Beyond its defaults, `.shellcheckrc` enables `require-variable-braces`,
 `require-double-brackets`, `quote-safe-variables` and
@@ -143,14 +140,8 @@ which would otherwise expand to nothing.
 shfmt formats layout: indentation, spacing, and where redirections and
 `then`/`do` sit. It reads `.editorconfig` for the two-space indent, so run it
 without flags, as any formatting flag makes it ignore that file and fall
-back to tabs. From the repo root:
-
-```bash
-shfmt -d install upgrade lib/*.bash steps/*.bash config/claude/statusline.sh
-```
-
-`shfmt -w` with the same files rewrites them in place. The repo's
-`.zed/settings.json` has Zed run it on save for shell scripts.
+back to tabs. The repo's `.zed/settings.json` has Zed run it on save for
+shell scripts.
 
 ## Not adopted
 

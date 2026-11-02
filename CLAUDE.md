@@ -80,11 +80,10 @@ doesn't override runs as it would at home, so `install` refuses to run as
 ## Verification
 
 Run the step you changed, as `./install zsh` or `./steps/zsh.bash`. Then run
-shellcheck from the repo root, so `.shellcheckrc` applies. It passes on this
-tree:
-
-    shellcheck install upgrade lib/*.bash steps/*.bash config/claude/statusline.sh
-    shfmt -d install upgrade lib/*.bash steps/*.bash config/claude/statusline.sh
+`./lint`, which runs shellcheck, shfmt, stylua and prettier over the repo and
+passes on this tree. `./format` fixes whatever the formatters report. A new
+shell script goes in the list in `lib/source-files.bash`; JSON files are found
+from git.
 
 Don't run the overlay's steps on a home machine: each one links work config
 into `~`. From `~/.dotfiles-ferocia`, run shellcheck over `lib/*.bash` and

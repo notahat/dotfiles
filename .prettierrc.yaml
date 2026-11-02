@@ -1,0 +1,9 @@
+# Zed reads its settings, keymap and tasks files as JSON with comments, and
+# formats them with trailing commas. Without this, prettier would treat them as
+# strict JSON because of the .json extension, and strip the commas back out.
+overrides:
+  - files:
+      - "**/.zed/*.json"
+      - "config/zed/*.json"
+    options:
+      parser: jsonc

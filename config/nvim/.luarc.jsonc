@@ -15,5 +15,8 @@
   // global warnings come back.
   "runtime.version": "LuaJIT",
   "workspace.checkThirdParty": false,
-  "workspace.library": ["/opt/homebrew/share/nvim/runtime", "${3rd}/luv/library"]
+  "workspace.library": [
+    "/opt/homebrew/share/nvim/runtime",
+    "${3rd}/luv/library",
+  ],
 }

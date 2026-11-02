@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Checks the repo the way the editors do on save: shellcheck and shfmt for
+# the bash scripts, stylua for the Neovim config, and prettier for JSON.
+# Changes nothing; `format` fixes what the formatters report.
+
+# shellcheck source=lib/dotfiles.bash
+source "$(dirname "$0")/lib/dotfiles.bash"
+# shellcheck source=lib/source-files.bash
+source "$(dirname "$0")/lib/source-files.bash"
+
+# Runs every check, even after one fails, so a single run reports everything
+# that needs fixing. Exits non-zero if any check failed.
+function main() {
+  cd "${DOTFILES_DIR}"
+  local has_failed=false
+
+  echo_green "Running shellcheck..."
+  list_shell_files | xargs -0 shellcheck || has_failed=true
+
+  echo_green "Checking shell formatting..."
+  list_shell_files | xargs -0 shfmt -d || has_failed=true
+
+  echo_green "Checking Lua formatting..."
+  stylua --check config/nvim || has_failed=true
+
+  echo_green "Checking JSON formatting..."
+  list_json_files | xargs -0 prettier --check --log-level warn || has_failed=true
+
+  if [[ ${has_failed} == true ]]; then
+    echo_red "Lint failed." >&2
+    exit 1
+  fi
+  echo_green "All clean."
+}
+
+main "$@"
