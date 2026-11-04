@@ -74,6 +74,6 @@ When working in plan mode:
 ## Tools
 
 - Prefer editing files directly over using the shell to create, read, or update files.
-- Keep shell commands simple enough that I can understand them at a glance when asked to approve them. Prefer running commands individually over chaining them. Chained commands are harder to read, and they don't match permission allow rules, so they trigger more prompts.
+- Keep shell commands simple enough that the user can understand them at a glance when asked to approve them. Prefer running commands individually over chaining them. Chained commands are harder to read, and they don't match permission allow rules, so they trigger more prompts.
 - Prefer `rg` to `grep` for finding files by content.
 - If you can't find `psql`, try `psql-18`. Ditto for other Postgres tools.
