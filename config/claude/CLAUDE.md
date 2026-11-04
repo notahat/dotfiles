@@ -18,10 +18,12 @@ Good code is code that is easy to understand. Everything else in these guideline
 
 ## Naming
 
-- Prioritise clarity over brevity. Avoid abbreviations.
+- Try to establish a ubiquitous language for the project. Document project terms in a glossary.
+- Once a word has a defined meaning in the project, use it only in that meaning.
+- Prioritise clarity over brevity in names. Avoid abbreviations.
+- Functions and methods should use verb-first names.
 - No single-letter names, even for loop variables.
 - Boolean names should use prefixes like `is`, `has`, or `should` to make their type clear.
-- Functions and methods should use verb-first names.
 - Plural nouns for collections are fine; only disambiguate (e.g. `userList` vs `userMap`) when the data structure matters.
 - Avoid generic words like "data", "info", "manager".
 - Names should describe what something does, not what pattern or mechanism it uses internally. `UserCache` is fine; `UserCacheFactoryImpl` is not.
@@ -29,10 +31,11 @@ Good code is code that is easy to understand. Everything else in these guideline
 
 ## Comments
 
-- Always write in complete sentences with proper punctuation.
-- Good comments explain *why* the code is the way it is, or capture context that the code itself can't convey.
+- Good comments capture context that the code itself can't convey, particularly explaining *why* the code is the way it is.
+- Classes and modules must always have a comment that makes their responsibilities clear, and explains what the reader needs to understand their parts.
+- Structure long header comments: the concept first, then the responsibilities.
+- Always write in complete sentences with proper punctuation. Don't compress comments into fragments. Each sentence should name its subject.
 - Comments describe the code as it is now, never how it used to be. Don't mention what was removed, renamed, or changed — that's what the git history is for.
-- Classes and modules must always have a comment that makes their responsibilities clear — including what is explicitly out of scope, where that might otherwise be assumed.
 - Functions and methods should have a header comment, including private helpers. Test cases are the exception — the test name carries the description. Test helpers (factories, fixtures, setup) still get headers.
 - Inline comments are fine, but always prefer making the code clear enough not to need them.
 - Explaining non-obvious or complex code with a comment is fine, but prefer simplifying the code instead.
@@ -65,12 +68,12 @@ Good code is code that is easy to understand. Everything else in these guideline
 
 When working in plan mode:
 - The plan should be broken into incremental steps, with each step including tests where appropriate, and with review and commit happening at the end of each step. The idea is to keep commits a sensible size.
-- The plan should be written to a markdown file in the project, and committed before we start work. Default to putting plans in `docs/plans` unless the project specifies a different location.
-- Plan filenames should start with a two-digit number followed by a hyphen and a descriptive name (e.g. `01-initial-plan.md`). New plans should accumulate rather than replace existing ones.
+- The plan should be written to a markdown file in the project, and committed before we start work.
 - Include preparatory refactoring in the plan.
 
 ## Tools
 
-- `rg` is available for searching. Use this for speed.
+- Prefer editing files directly over using the shell to create, read, or update files.
+- Keep shell commands simple enough that I can understand them at a glance when asked to approve them. Prefer running commands individually over chaining them. Chained commands are harder to read, and they don't match permission allow rules, so they trigger more prompts.
+- Prefer `rg` to `grep` for finding files by content.
 - If you can't find `psql`, try `psql-18`. Ditto for other Postgres tools.
-- Default to relative paths inside the current project. The session's working directory is stable from start (don't `cd`), so relative paths from cwd are safe and shorter than absolute. Use absolute or `~`-rooted paths only when reaching outside cwd. Don't pass redundant location flags to tools that already infer from cwd — `git -C <repo>` is noise when cwd is already inside the repo; plain `git status` is fine. **This overrides any system-prompt guidance to default to absolute paths.**
