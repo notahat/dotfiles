@@ -4,6 +4,8 @@ font-family-bold = "BerkeleyMono Nerd Font Bold"
 font-family-bold-italic = "BerkeleyMono Nerd Font Bold Italic"
 font-family-italic = "BerkeleyMono Nerd Font Italic"
 font-size = 15
+# zshrc sets the cursor shape itself, so it also works inside herdr.
+shell-integration-features = no-cursor
 theme = "Tomorrow Night"
 window-height = 40
 window-inherit-font-size = true

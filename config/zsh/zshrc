@@ -72,6 +72,34 @@ bindkey -v    # Use vim keybindings.
 KEYTIMEOUT=1  # Allow key sequences to be recognized faster.
 
 # ------------------------------------------------------------------------------------------
+# Match Neovim's cursor: a bar in insert mode and a block in normal mode.
+#
+# Ghostty's shell integration can do this, but shells started inside herdr
+# never load that integration. Doing it here works in both places, so the
+# Ghostty config turns its own version off.
+
+autoload -Uz add-zle-hook-widget
+
+# Sets the cursor shape to suit the current vi keymap.
+function set_cursor_for_keymap {
+  if [[ $KEYMAP == vicmd ]] {
+    print -n '\e[2 q' # Steady block.
+  } else {
+    print -n '\e[6 q' # Steady bar.
+  }
+}
+
+# Hands the cursor back to the terminal's default shape before a command runs,
+# so programs don't inherit the insert mode bar.
+function reset_cursor {
+  print -n '\e[0 q'
+}
+
+add-zle-hook-widget zle-line-init set_cursor_for_keymap
+add-zle-hook-widget zle-keymap-select set_cursor_for_keymap
+add-zle-hook-widget zle-line-finish reset_cursor
+
+# ------------------------------------------------------------------------------------------
 # Configure history.
 
 HISTFILE=$HOME/.zsh_history
