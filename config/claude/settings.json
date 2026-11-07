@@ -45,14 +45,14 @@
   },
   "tui": "fullscreen",
   "voice": {
-    "enabled": false,
-    "mode": "hold"
+    "enabled": true,
+    "mode": "tap"
   },
   "skipWorkflowUsageWarning": true,
   "theme": "auto",
   "editorMode": "vim",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": false,
+  "voiceEnabled": true,
   "disableTips": true
 }
