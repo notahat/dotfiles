@@ -13,7 +13,7 @@ readonly STEPS=(
   # Editors:
   neovim zed editorconfig
   # AI stuff:
-  herdr ai
+  herdr herdr-app ai
   # Utilities:
   bat
 )

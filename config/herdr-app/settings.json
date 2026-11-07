@@ -1,0 +1,11 @@
+{
+  "zoom": 1.0,
+  "sounds": {
+    "enabled": true
+  },
+  "font": "BerkeleyMono Nerd Font",
+  "font_size": 15.0,
+  "font_ligatures": false,
+  "minimum_contrast": 1.0,
+  "theme": "tomorrow-night"
+}
