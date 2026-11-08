@@ -3,7 +3,6 @@
     "defaultMode": "acceptEdits",
     "blockReadsOutsideWorkingDirectories": true
   },
-  "model": "opus",
   "hooks": {
     "SessionStart": [
       {
@@ -39,9 +38,17 @@
         "~/.local/state/mise",
         "~/.cache"
       ],
-      "allowRead": ["~/.local/share/mise", "~/.config/mise", "~/.cache"]
+      "allowRead": [
+        "~/.local/share/mise",
+        "~/.config/mise",
+        "~/.cache"
+      ]
     },
-    "excludedCommands": ["git commit *", "git push", "git push *"]
+    "excludedCommands": [
+      "git commit *",
+      "git push",
+      "git push *"
+    ]
   },
   "tui": "fullscreen",
   "voice": {
