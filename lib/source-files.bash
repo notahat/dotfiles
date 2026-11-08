@@ -11,11 +11,13 @@ function list_shell_files() {
 }
 
 # Prints the JSON files git tracks, which leaves out local files like Claude
-# Code's settings.local.json. Symlinks are left out too, because prettier
-# refuses them, and the files they point to are in the list anyway.
+# Code's settings.local.json. Claude Code's settings.json is left out because
+# Claude Code rewrites it in its own formatting, which differs from
+# prettier's. Symlinks are left out too, because prettier refuses them, and
+# the files they point to are in the list anyway.
 function list_json_files() {
   local file
-  git ls-files '*.json' '*.jsonc' | while read -r file; do
+  git ls-files '*.json' '*.jsonc' ':!config/claude/settings.json' | while read -r file; do
     if [[ ! -L ${file} ]]; then
       printf '%s\0' "${file}"
     fi
